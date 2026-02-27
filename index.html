@@ -9,8 +9,8 @@
 <body>
     <div class="auth-container">
         <h1>MicroJobs 💰</h1>
-        <p id="statusText">গুগল দিয়ে লগইন করে আয় শুরু করুন</p>
-        <button onclick="login()" class="btn-main" style="background:#4285F4;">
+        <p id="status">গুগল দিয়ে লগইন করে আয় শুরু করুন</p>
+        <button onclick="login()" class="btn-main" style="background:#4285F4; border:none; color:white; padding:15px; border-radius:10px; width:90%; font-weight:bold; cursor:pointer;">
             Google Login
         </button>
     </div>
@@ -37,12 +37,12 @@
             auth.signInWithRedirect(provider);
         }
 
-        auth.getRedirectResult().then((result) => {
-            if (result.user) {
-                const user = result.user;
-                db.collection("users").doc(user.uid).get().then((doc) => {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                const userRef = db.collection("users").doc(user.uid);
+                userRef.get().then((doc) => {
                     if (!doc.exists) {
-                        db.collection("users").doc(user.uid).set({
+                        userRef.set({
                             name: user.displayName,
                             balance: 0,
                             totalEarned: 0
