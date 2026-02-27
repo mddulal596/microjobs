@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MicroJobs - Phone Login</title>
+    <title>MicroJobs - Login</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,13 +12,13 @@
         <p id="status">ফোন নাম্বার দিয়ে লগইন করুন</p>
         
         <div id="phone-box">
-            <input type="text" id="phoneNumber" placeholder="+8801XXXXXXXXX" style="width: 80%; padding: 10px; margin-bottom: 10px;">
-            <button onclick="sendOTP()" class="btn">Send OTP</button>
+            <input type="text" id="phoneNumber" placeholder="+8801XXXXXXXXX" style="width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd;">
+            <button onclick="sendOTP()" class="btn-main">Send OTP</button>
         </div>
 
         <div id="otp-box" style="display:none;">
-            <input type="text" id="otpCode" placeholder="Enter 6-digit OTP" style="width: 80%; padding: 10px; margin-bottom: 10px;">
-            <button onclick="verifyOTP()" class="btn">Verify & Login</button>
+            <input type="text" id="otpCode" placeholder="Enter 6-digit OTP" style="width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd;">
+            <button onclick="verifyOTP()" class="btn-main" style="background: #27ae60;">Verify & Login</button>
         </div>
 
         <div id="recaptcha-container"></div>
@@ -30,29 +30,30 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyA-Oa4ZWgA3TrQFRUrEz3Y8CXkYd4hmyM",
+            apiKey: "AIzaSyA-Oa4ZWgGA3TrQFRUrEz3Y8CXkYd4hmyM",
             authDomain: "microjobs-13730.firebaseapp.com",
             projectId: "microjobs-13730",
-            storageBucket: "microjobs-13730.appspot.com",
+            storageBucket: "microjobs-13730.firebasestorage.app",
             messagingSenderId: "288652584372",
-            appId: "1:288652584372:web:331a3867f481ffe91bfee1"
+            appId: "1:288652584372:web:331a3867f481ffe91bfee1",
+            measurementId: "G-VXYSNKCSYD"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            'size': 'invisible'
-        });
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
 
         function sendOTP() {
             const number = document.getElementById('phoneNumber').value;
+            if(!number.startsWith("+")) return alert("নাম্বারের আগে +88 যোগ করুন (যেমন: +88017...)");
+            
             auth.signInWithPhoneNumber(number, window.recaptchaVerifier)
                 .then((confirmationResult) => {
                     window.confirmationResult = confirmationResult;
                     document.getElementById('phone-box').style.display = 'none';
                     document.getElementById('otp-box').style.display = 'block';
-                    document.getElementById('status').innerText = "আপনার ফোনে কোড পাঠানো হয়েছে।";
+                    document.getElementById('status').innerText = "ফোনে পাঠানো কোডটি নিচে দিন";
                 }).catch((error) => alert(error.message));
         }
 
@@ -60,17 +61,12 @@
             const code = document.getElementById('otpCode').value;
             confirmationResult.confirm(code).then((result) => {
                 const user = result.user;
-                // ডাটাবেস চেক ও সেভ
-                db.collection("users").doc(user.uid).get().then((doc) => {
-                    if (!doc.exists) {
-                        db.collection("users").doc(user.uid).set({
-                            phone: user.phoneNumber,
-                            balance: 0,
-                            totalEarned: 0
-                        }).then(() => window.location.href = "dashboard.html");
-                    } else {
-                        window.location.href = "dashboard.html";
-                    }
+                db.collection("users").doc(user.uid).set({
+                    phone: user.phoneNumber,
+                    balance: 0,
+                    totalEarned: 0
+                }, { merge: true }).then(() => {
+                    window.location.href = "dashboard.html";
                 });
             }).catch(() => alert("ভুল ওটিপি কোড!"));
         }
