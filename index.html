@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Easy Cash - Login</title>
+    <title>MicroJobs - Login</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="auth-container">
-        <h2>MicroJobs Login</h2>
+        <h1>MicroJobs 💰</h1>
+        <p>লগইন করুন এবং আয় শুরু করুন</p>
         <button onclick="loginWithGoogle()" class="google-btn">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20px">
             Google দিয়ে লগইন করুন
@@ -34,16 +35,35 @@
 
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
+            const urlParams = new URLSearchParams(window.location.search);
+            const referredBy = urlParams.get('ref');
+
             auth.signInWithPopup(provider).then((result) => {
                 const user = result.user;
-                db.collection("users").doc(user.uid).set({
-                    name: user.displayName,
-                    email: user.email,
-                    balance: 0
-                }, { merge: true }).then(() => {
-                    window.location.href = "dashboard.html";
+                const userRef = db.collection("users").doc(user.uid);
+
+                userRef.get().then((doc) => {
+                    if (!doc.exists) {
+                        userRef.set({
+                            name: user.displayName,
+                            email: user.email,
+                            balance: 0,
+                            totalEarned: 0,
+                            referredBy: referredBy || null
+                        }).then(() => {
+                            if (referredBy) {
+                                db.collection("users").doc(referredBy).update({
+                                    balance: firebase.firestore.FieldValue.increment(5.00),
+                                    totalEarned: firebase.firestore.FieldValue.increment(5.00)
+                                });
+                            }
+                            window.location.href = "dashboard.html";
+                        });
+                    } else {
+                        window.location.href = "dashboard.html";
+                    }
                 });
-            });
+            }).catch(err => alert(err.message));
         }
     </script>
 </body>
