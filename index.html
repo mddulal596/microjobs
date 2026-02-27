@@ -37,6 +37,7 @@
             auth.signInWithRedirect(provider);
         }
 
+        // রিডাইরেক্ট হয়ে ফেরার পর অটোমেটিক ড্যাশবোর্ডে পাঠানো
         auth.onAuthStateChanged((user) => {
             if (user) {
                 const userRef = db.collection("users").doc(user.uid);
@@ -45,11 +46,16 @@
                         userRef.set({
                             name: user.displayName,
                             balance: 0,
-                            totalEarned: 0
-                        }).then(() => { window.location.href = "dashboard.html"; });
+                            totalEarned: 0,
+                            email: user.email
+                        }).then(() => { 
+                            window.location.replace("dashboard.html"); 
+                        });
                     } else {
-                        window.location.href = "dashboard.html";
+                        window.location.replace("dashboard.html");
                     }
+                }).catch(err => {
+                    console.error("Firestore Error:", err);
                 });
             }
         });
