@@ -9,19 +9,10 @@
 <body>
     <div class="auth-container">
         <h1>MicroJobs 💰</h1>
-        <p id="status">ফোন নাম্বার দিয়ে লগইন করুন</p>
-        
-        <div id="phone-box">
-            <input type="text" id="phoneNumber" placeholder="+8801XXXXXXXXX" style="width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd;">
-            <button onclick="sendOTP()" class="btn-main">Send OTP</button>
-        </div>
-
-        <div id="otp-box" style="display:none;">
-            <input type="text" id="otpCode" placeholder="Enter 6-digit OTP" style="width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd;">
-            <button onclick="verifyOTP()" class="btn-main" style="background: #27ae60;">Verify & Login</button>
-        </div>
-
-        <div id="recaptcha-container"></div>
+        <p id="statusText">গুগল দিয়ে লগইন করে আয় শুরু করুন</p>
+        <button onclick="login()" class="btn-main" style="background:#4285F4;">
+            Google Login
+        </button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -35,41 +26,33 @@
             projectId: "microjobs-13730",
             storageBucket: "microjobs-13730.firebasestorage.app",
             messagingSenderId: "288652584372",
-            appId: "1:288652584372:web:331a3867f481ffe91bfee1",
-            measurementId: "G-VXYSNKCSYD"
+            appId: "1:288652584372:web:331a3867f481ffe91bfee1"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
-
-        function sendOTP() {
-            const number = document.getElementById('phoneNumber').value;
-            if(!number.startsWith("+")) return alert("নাম্বারের আগে +88 যোগ করুন (যেমন: +88017...)");
-            
-            auth.signInWithPhoneNumber(number, window.recaptchaVerifier)
-                .then((confirmationResult) => {
-                    window.confirmationResult = confirmationResult;
-                    document.getElementById('phone-box').style.display = 'none';
-                    document.getElementById('otp-box').style.display = 'block';
-                    document.getElementById('status').innerText = "ফোনে পাঠানো কোডটি নিচে দিন";
-                }).catch((error) => alert(error.message));
+        function login() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithRedirect(provider);
         }
 
-        function verifyOTP() {
-            const code = document.getElementById('otpCode').value;
-            confirmationResult.confirm(code).then((result) => {
+        auth.getRedirectResult().then((result) => {
+            if (result.user) {
                 const user = result.user;
-                db.collection("users").doc(user.uid).set({
-                    phone: user.phoneNumber,
-                    balance: 0,
-                    totalEarned: 0
-                }, { merge: true }).then(() => {
-                    window.location.href = "dashboard.html";
+                db.collection("users").doc(user.uid).get().then((doc) => {
+                    if (!doc.exists) {
+                        db.collection("users").doc(user.uid).set({
+                            name: user.displayName,
+                            balance: 0,
+                            totalEarned: 0
+                        }).then(() => { window.location.href = "dashboard.html"; });
+                    } else {
+                        window.location.href = "dashboard.html";
+                    }
                 });
-            }).catch(() => alert("ভুল ওটিপি কোড!"));
-        }
+            }
+        });
     </script>
 </body>
 </html>
