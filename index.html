@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Daily Cash Earn Pro</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <div class="auth-box">
+        <h2>Login / Register</h2>
+        <input type="email" id="email" placeholder="Enter Email">
+        <input type="password" id="password" placeholder="Enter Password">
+        <div class="btn-group">
+            <button onclick="login()">Login</button>
+            <button onclick="register()">Register</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="firebase-config.js"></script> <script>
+        function login() {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('password').value;
+            firebase.auth().signInWithEmailAndPassword(e, p)
+                .then(() => window.location.href = "dashboard.html")
+                .catch(err => alert(err.message));
+        }
+        function register() {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('password').value;
+            firebase.auth().createUserWithEmailAndPassword(e, p)
+                .then(() => alert("Registration Successful! Now Login."))
+                .catch(err => alert(err.message));
+        }
+    </script>
+</body>
+</html>
