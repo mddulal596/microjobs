@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Easy Cash - Dashboard</title>
+    <title>Dashboard - MicroJobs</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="header-card">
-        <div class="user-info">
-            <img id="userImg" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
-            <div class="balance-text">
-                <p id="userName">User Name</p>
-                <h2 id="balanceText">TK. 0.00</h2>
-            </div>
+        <img id="userImg" src="" style="width: 60px; border-radius: 50%; border: 2px solid white;">
+        <h2 id="userName">User</h2>
+        <div class="balance-container">
+            <div><small>Balance</small><h3 id="balanceText">TK. 0.00</h3></div>
+            <div style="border-left: 1px solid #fff; height: 30px;"></div>
+            <div><small>Total Earned</small><h3 id="totalEarnedText">TK. 0.00</h3></div>
         </div>
     </div>
 
@@ -24,16 +24,18 @@
     </div>
 
     <div class="task-grid">
-        <div class="card" onclick="completeTask(2.00)"><i class="fas fa-mobile-alt"></i><p>Task 1</p></div>
-        <div class="card" onclick="completeTask(1.50)"><i class="fas fa-ban"></i><p>Task 2</p></div>
-        <div class="card" onclick="completeTask(3.00)"><i class="fas fa-wind"></i><p>Task 3</p></div>
-        <div class="card" onclick="completeTask(2.00)"><i class="fas fa-headset"></i><p>Task 4</p></div>
-        <div class="card"><i class="fas fa-user-circle"></i><p>Profile</p></div>
-        <div class="card" onclick="logout()"><i class="fas fa-sign-out-alt"></i><p>Logout</p></div>
+        <div class="card" onclick="completeTask(2.00)"><i class="fas fa-play"></i><p>Task 1</p></div>
+        <div class="card" onclick="completeTask(2.00)"><i class="fas fa-play"></i><p>Task 2</p></div>
+        <div class="card" onclick="copyReferLink()"><i class="fas fa-users"></i><p>Refer</p></div>
     </div>
 
-    <script src="https://middayopened.com/52/b6/89/52b68995cb2e8ad52b08380d264d9f49.js"></script>
-    <script src="https://middayopened.com/41/1d/87/411d8724fed40c4782765dc176a1d806.js"></script>
+    <div class="withdraw-card">
+        <h3>Withdraw</h3>
+        <select id="method"><option>bKash</option><option>Nagad</option></select>
+        <input type="number" id="amount" placeholder="Amount">
+        <input type="text" id="number" placeholder="Number">
+        <button onclick="requestWithdraw()">Submit</button>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -44,30 +46,48 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // ইউজার ডাটা লোড করা
-        auth.onAuthStateChanged((user) => {
+        auth.onAuthStateChanged(user => {
             if (user) {
-                db.collection("users").doc(user.uid).onSnapshot((doc) => {
-                    document.getElementById('userName').innerText = doc.data().name;
-                    document.getElementById('balanceText').innerText = "TK. " + doc.data().balance.toFixed(2);
+                db.collection("users").doc(user.uid).onSnapshot(doc => {
+                    const data = doc.data();
+                    document.getElementById('userName').innerText = data.name;
+                    document.getElementById('balanceText').innerText = "TK. " + data.balance.toFixed(2);
+                    document.getElementById('totalEarnedText').innerText = "TK. " + (data.totalEarned || 0).toFixed(2);
                     document.getElementById('userImg').src = user.photoURL;
                 });
-            } else {
-                window.location.href = "index.html";
-            }
+            } else { window.location.href = "index.html"; }
         });
 
-        // টাস্ক কমপ্লিট করা (Adsterra Direct Link)
         function completeTask(amount) {
             window.open("https://middayopened.com/rmm8pbwe?key=a42d11bce0966c10bc9b3f909ae44009", "_blank");
-            const user = auth.currentUser;
-            db.collection("users").doc(user.uid).update({
-                balance: firebase.firestore.FieldValue.increment(amount)
+            db.collection("users").doc(auth.currentUser.uid).update({
+                balance: firebase.firestore.FieldValue.increment(amount),
+                totalEarned: firebase.firestore.FieldValue.increment(amount)
             });
         }
 
-        function logout() {
-            auth.signOut().then(() => window.location.href = "index.html");
+        function copyReferLink() {
+            const link = "https://mddulal596.github.io/microjobs/index.html?ref=" + auth.currentUser.uid;
+            navigator.clipboard.writeText(link).then(() => alert("Refer link copied!"));
+        }
+
+        function requestWithdraw() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const number = document.getElementById('number').value;
+            if (amount < 50) return alert("Min withdraw 50 TK");
+            
+            db.collection("withdraw_requests").add({
+                userId: auth.currentUser.uid,
+                amount: amount,
+                number: number,
+                method: document.getElementById('method').value,
+                status: "Pending"
+            }).then(() => {
+                db.collection("users").doc(auth.currentUser.uid).update({
+                    balance: firebase.firestore.FieldValue.increment(-amount)
+                });
+                alert("Request Sent!");
+            });
         }
     </script>
 </body>
