@@ -5,36 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - MicroJobs</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="header-card">
-        <img id="userImg" src="" style="width: 60px; border-radius: 50%; border: 2px solid white;">
-        <h2 id="userName">User</h2>
+        <h2 id="userPhone">User</h2>
         <div class="balance-container">
             <div><small>Balance</small><h3 id="balanceText">TK. 0.00</h3></div>
-            <div style="border-left: 1px solid #fff; height: 30px;"></div>
             <div><small>Total Earned</small><h3 id="totalEarnedText">TK. 0.00</h3></div>
         </div>
     </div>
 
-    <div style="text-align:center; margin: 15px 0;">
-        <script async="async" data-cfasync="false" src="https://middayopened.com/44ea16fb3bf3a48a9a140ddd4fa5dc93/invoke.js"></script> 
+    <div style="margin: 20px 0;">
+        <script async="async" data-cfasync="false" src="https://middayopened.com/44ea16fb3bf3a48a9a140ddd4fa5dc93/invoke.js"></script>
         <div id="container-44ea16fb3bf3a48a9a140ddd4fa5dc93"></div>
     </div>
 
     <div class="task-grid">
-        <div class="card" onclick="completeTask(2.00)"><i class="fas fa-play"></i><p>Task 1</p></div>
-        <div class="card" onclick="completeTask(2.00)"><i class="fas fa-play"></i><p>Task 2</p></div>
-        <div class="card" onclick="copyReferLink()"><i class="fas fa-users"></i><p>Refer</p></div>
+        <button class="task-btn" onclick="completeTask(2.00)">Task 1 (TK. 2)</button>
+        <button class="task-btn" onclick="completeTask(2.00)">Task 2 (TK. 2)</button>
     </div>
 
     <div class="withdraw-card">
         <h3>Withdraw</h3>
-        <select id="method"><option>bKash</option><option>Nagad</option></select>
-        <input type="number" id="amount" placeholder="Amount">
-        <input type="text" id="number" placeholder="Number">
-        <button onclick="requestWithdraw()">Submit</button>
+        <select id="method"><option>bKash</option><option>Nagad</option><option>Rocket</option></select>
+        <input type="number" id="amount" placeholder="Amount (Min 50)">
+        <input type="text" id="accNumber" placeholder="Account Number">
+        <button onclick="requestWithdraw()" class="btn-main">Submit Request</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -42,7 +38,16 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-        firebase.initializeApp(firebaseConfig); // index.html এর মত একই config দিন
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-Oa4ZWgGA3TrQFRUrEz3Y8CXkYd4hmyM",
+            authDomain: "microjobs-13730.firebaseapp.com",
+            projectId: "microjobs-13730",
+            storageBucket: "microjobs-13730.firebasestorage.app",
+            messagingSenderId: "288652584372",
+            appId: "1:288652584372:web:331a3867f481ffe91bfee1",
+            measurementId: "G-VXYSNKCSYD"
+        };
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
@@ -50,10 +55,9 @@
             if (user) {
                 db.collection("users").doc(user.uid).onSnapshot(doc => {
                     const data = doc.data();
-                    document.getElementById('userName').innerText = data.name;
+                    document.getElementById('userPhone').innerText = data.phone;
                     document.getElementById('balanceText').innerText = "TK. " + data.balance.toFixed(2);
                     document.getElementById('totalEarnedText').innerText = "TK. " + (data.totalEarned || 0).toFixed(2);
-                    document.getElementById('userImg').src = user.photoURL;
                 });
             } else { window.location.href = "index.html"; }
         });
@@ -66,18 +70,14 @@
             });
         }
 
-        function copyReferLink() {
-            const link = "https://mddulal596.github.io/microjobs/index.html?ref=" + auth.currentUser.uid;
-            navigator.clipboard.writeText(link).then(() => alert("Refer link copied!"));
-        }
-
         function requestWithdraw() {
             const amount = parseFloat(document.getElementById('amount').value);
-            const number = document.getElementById('number').value;
-            if (amount < 50) return alert("Min withdraw 50 TK");
+            const number = document.getElementById('accNumber').value;
+            if (amount < 50) return alert("কমপক্ষে ৫০ টাকা হতে হবে!");
             
             db.collection("withdraw_requests").add({
                 userId: auth.currentUser.uid,
+                phone: auth.currentUser.phoneNumber,
                 amount: amount,
                 number: number,
                 method: document.getElementById('method').value,
@@ -86,7 +86,7 @@
                 db.collection("users").doc(auth.currentUser.uid).update({
                     balance: firebase.firestore.FieldValue.increment(-amount)
                 });
-                alert("Request Sent!");
+                alert("রিকোয়েস্ট সফল হয়েছে!");
             });
         }
     </script>
