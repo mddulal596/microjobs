@@ -3,34 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - MicroJobs</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="header-card">
-        <h2 id="userPhone">User</h2>
+        <h2 id="uName">Loading...</h2>
         <div class="balance-container">
-            <div><small>Balance</small><h3 id="balanceText">TK. 0.00</h3></div>
-            <div><small>Total Earned</small><h3 id="totalEarnedText">TK. 0.00</h3></div>
+            <div><small>Balance</small><h3 id="bal">0.00</h3></div>
+            <div><small>Total</small><h3 id="total">0.00</h3></div>
         </div>
     </div>
 
-    <div style="margin: 20px 0;">
-        <script async="async" data-cfasync="false" src="https://middayopened.com/44ea16fb3bf3a48a9a140ddd4fa5dc93/invoke.js"></script>
-        <div id="container-44ea16fb3bf3a48a9a140ddd4fa5dc93"></div>
-    </div>
-
     <div class="task-grid">
-        <button class="task-btn" onclick="completeTask(2.00)">Task 1 (TK. 2)</button>
-        <button class="task-btn" onclick="completeTask(2.00)">Task 2 (TK. 2)</button>
+        <button class="task-btn" onclick="task(2.00)">Task 1 (2 TK)</button>
+        <button class="task-btn" onclick="task(2.00)">Task 2 (2 TK)</button>
     </div>
 
     <div class="withdraw-card">
         <h3>Withdraw</h3>
-        <select id="method"><option>bKash</option><option>Nagad</option><option>Rocket</option></select>
-        <input type="number" id="amount" placeholder="Amount (Min 50)">
-        <input type="text" id="accNumber" placeholder="Account Number">
-        <button onclick="requestWithdraw()" class="btn-main">Submit Request</button>
+        <input type="number" id="amt" placeholder="Amount (Min 50)">
+        <input type="text" id="num" placeholder="Account Number">
+        <button onclick="withdraw()" class="btn-main">Withdraw Now</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -44,8 +38,7 @@
             projectId: "microjobs-13730",
             storageBucket: "microjobs-13730.firebasestorage.app",
             messagingSenderId: "288652584372",
-            appId: "1:288652584372:web:331a3867f481ffe91bfee1",
-            measurementId: "G-VXYSNKCSYD"
+            appId: "1:288652584372:web:331a3867f481ffe91bfee1"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -54,39 +47,37 @@
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.collection("users").doc(user.uid).onSnapshot(doc => {
-                    const data = doc.data();
-                    document.getElementById('userPhone').innerText = data.phone;
-                    document.getElementById('balanceText').innerText = "TK. " + data.balance.toFixed(2);
-                    document.getElementById('totalEarnedText').innerText = "TK. " + (data.totalEarned || 0).toFixed(2);
+                    const d = doc.data();
+                    document.getElementById('uName').innerText = d.name;
+                    document.getElementById('bal').innerText = d.balance.toFixed(2);
+                    document.getElementById('total').innerText = d.totalEarned.toFixed(2);
                 });
             } else { window.location.href = "index.html"; }
         });
 
-        function completeTask(amount) {
+        function task(a) {
             window.open("https://middayopened.com/rmm8pbwe?key=a42d11bce0966c10bc9b3f909ae44009", "_blank");
             db.collection("users").doc(auth.currentUser.uid).update({
-                balance: firebase.firestore.FieldValue.increment(amount),
-                totalEarned: firebase.firestore.FieldValue.increment(amount)
+                balance: firebase.firestore.FieldValue.increment(a),
+                totalEarned: firebase.firestore.FieldValue.increment(a)
             });
         }
 
-        function requestWithdraw() {
-            const amount = parseFloat(document.getElementById('amount').value);
-            const number = document.getElementById('accNumber').value;
-            if (amount < 50) return alert("কমপক্ষে ৫০ টাকা হতে হবে!");
+        function withdraw() {
+            const amount = parseFloat(document.getElementById('amt').value);
+            const number = document.getElementById('num').value;
+            if (amount < 50) return alert("Min 50 TK");
             
             db.collection("withdraw_requests").add({
-                userId: auth.currentUser.uid,
-                phone: auth.currentUser.phoneNumber,
+                uId: auth.currentUser.uid,
                 amount: amount,
                 number: number,
-                method: document.getElementById('method').value,
                 status: "Pending"
             }).then(() => {
                 db.collection("users").doc(auth.currentUser.uid).update({
                     balance: firebase.firestore.FieldValue.increment(-amount)
                 });
-                alert("রিকোয়েস্ট সফল হয়েছে!");
+                alert("Request Sent!");
             });
         }
     </script>
