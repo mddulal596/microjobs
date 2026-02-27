@@ -32,20 +32,20 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // ১. লগইন বাটন ক্লিক করলে পপআপ ওপেন হবে (মোবাইল ক্রোমে এটি বেস্ট)
+        // ১. অটো চেক: ইউজার কি অলরেডি লগইন করা?
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('status').innerText = "অপেক্ষা করুন, ড্যাশবোর্ডে যাচ্ছি...";
+                handleUser(user);
+            }
+        });
+
         function login() {
-            document.getElementById('status').innerText = "অপেক্ষা করুন...";
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then((result) => {
-                handleUser(result.user);
-            }).catch((error) => {
-                // পপআপ ব্লক হলে রিডাইরেক্ট ট্রাই করবে
-                console.log("Popup blocked, trying redirect...");
-                auth.signInWithRedirect(provider);
-            });
+            // মোবাইল ক্রোমের জন্য রিডাইরেক্ট সবসময় কাজ করে
+            auth.signInWithRedirect(provider);
         }
 
-        // ২. লগইন সাকসেসফুল হলে ড্যাশবোর্ডে পাঠানোর ফাংশন
         function handleUser(user) {
             const userRef = db.collection("users").doc(user.uid);
             userRef.get().then((doc) => {
@@ -62,18 +62,10 @@
                     window.location.replace("dashboard.html");
                 }
             }).catch(err => {
-                alert("Database Error: Rules পাবলিশ করেছেন তো?");
+                console.error("Firestore error:", err);
+                alert("আপনার ডাটাবেস রুলস (Rules) কি পাবলিশ করা হয়েছে? না হলে চেক করুন।");
             });
         }
-
-        // ৩. রিডাইরেক্ট হয়ে ফিরে আসলে ডাটা চেক
-        auth.getRedirectResult().then((result) => {
-            if (result.user) handleUser(result.user);
-        });
-
-        auth.onAuthStateChanged((user) => {
-            if (user) handleUser(user);
-        });
     </script>
 </body>
 </html>
