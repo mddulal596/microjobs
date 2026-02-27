@@ -32,25 +32,20 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // ১. লগইন বাটন ক্লিক করলে পপআপ ওপেন হবে (মোবাইল ক্রোমে এটি বেস্ট)
         function login() {
+            document.getElementById('status').innerText = "অপেক্ষা করুন...";
             const provider = new firebase.auth.GoogleAuthProvider();
-            // মোবাইলের জন্য রিডাইরেক্ট সবচেয়ে ভালো কাজ করে
-            auth.signInWithRedirect(provider);
+            auth.signInWithPopup(provider).then((result) => {
+                handleUser(result.user);
+            }).catch((error) => {
+                // পপআপ ব্লক হলে রিডাইরেক্ট ট্রাই করবে
+                console.log("Popup blocked, trying redirect...");
+                auth.signInWithRedirect(provider);
+            });
         }
 
-        // রিডাইরেক্ট হয়ে ফেরার পর ইউজার চেক
-        auth.getRedirectResult().then((result) => {
-            if (result.user) {
-                handleUser(result.user);
-            }
-        });
-
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                handleUser(user);
-            }
-        });
-
+        // ২. লগইন সাকসেসফুল হলে ড্যাশবোর্ডে পাঠানোর ফাংশন
         function handleUser(user) {
             const userRef = db.collection("users").doc(user.uid);
             userRef.get().then((doc) => {
@@ -59,14 +54,26 @@
                         name: user.displayName,
                         email: user.email,
                         balance: 0,
-                        totalEarned: 0,
-                        joinDate: new Date().toLocaleDateString()
-                    }).then(() => { window.location.href = "dashboard.html"; });
+                        totalEarned: 0
+                    }).then(() => {
+                        window.location.replace("dashboard.html");
+                    });
                 } else {
-                    window.location.href = "dashboard.html";
+                    window.location.replace("dashboard.html");
                 }
-            }).catch(err => alert("Firestore Error: " + err.message));
+            }).catch(err => {
+                alert("Database Error: Rules পাবলিশ করেছেন তো?");
+            });
         }
+
+        // ৩. রিডাইরেক্ট হয়ে ফিরে আসলে ডাটা চেক
+        auth.getRedirectResult().then((result) => {
+            if (result.user) handleUser(result.user);
+        });
+
+        auth.onAuthStateChanged((user) => {
+            if (user) handleUser(user);
+        });
     </script>
 </body>
 </html>
