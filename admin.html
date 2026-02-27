@@ -12,9 +12,9 @@
         <p>Total Users: <span id="totalUsers">0</span></p>
     </div>
 
-    <div style="padding:10px;">
-        <h3>Withdraw Requests</h3>
-        <table border="1" style="width:100%; border-collapse:collapse;">
+    <div style="padding:15px; overflow-x:auto;">
+        <h3>Pending Withdraws</h3>
+        <table border="1" style="width:100%; border-collapse:collapse; background:white;">
             <thead>
                 <tr>
                     <th>Method</th>
@@ -33,7 +33,7 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyA-Oa4ZWgGA3TrQFRUrEz3Y8CXkYd4hmyM",
+            apiKey: "AIzaSyA-Oa4ZWGA3TrQFRUrEz3Y8CXkYd4hmyM",
             authDomain: "microjobs-13730.firebaseapp.com",
             projectId: "microjobs-13730",
             storageBucket: "microjobs-13730.firebasestorage.app",
@@ -54,13 +54,13 @@
                     <td>${d.method}</td>
                     <td>${d.number}</td>
                     <td>${d.amount}</td>
-                    <td><button onclick="markPaid('${doc.id}')">Paid</button></td>
+                    <td><button onclick="markPaid('${doc.id}')" style="background:green; color:white; padding:5px;">Done</button></td>
                 </tr>`;
             });
         });
 
         function markPaid(id) {
-            if(confirm("Paid?")) { db.collection("withdraw_requests").doc(id).update({ status: "Paid" }); }
+            if(confirm("টাকা পাঠিয়েছেন?")) { db.collection("withdraw_requests").doc(id).update({ status: "Paid" }); }
         }
     </script>
 </body>
