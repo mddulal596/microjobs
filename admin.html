@@ -2,65 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - MicroJobs</title>
+    <title>Admin Panel</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div style="background:#2c3e50; color:white; padding:20px;">
-        <h2>Admin Panel</h2>
-        <p>Total Users: <span id="totalUsers">0</span></p>
+        <h2>Admin Dashboard</h2>
+        <p>Pending Requests</p>
     </div>
-
-    <div style="padding:15px; overflow-x:auto;">
-        <h3>Pending Withdraws</h3>
-        <table border="1" style="width:100%; border-collapse:collapse; background:white;">
-            <thead>
-                <tr>
-                    <th>Method</th>
-                    <th>Number</th>
-                    <th>TK</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="reqList"></tbody>
-        </table>
-    </div>
+    <div id="reqList" style="padding:10px;"></div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyA-Oa4ZWGA3TrQFRUrEz3Y8CXkYd4hmyM",
-            authDomain: "microjobs-13730.firebaseapp.com",
-            projectId: "microjobs-13730",
-            storageBucket: "microjobs-13730.firebasestorage.app",
-            messagingSenderId: "288652584372",
-            appId: "1:288652584372:web:331a3867f481ffe91bfee1"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyA-Oa4ZWgGA3TrQFRUrEz3Y8CXkYd4hmyM", authDomain: "microjobs-13730.firebaseapp.com", projectId: "microjobs-13730", storageBucket: "microjobs-13730.firebasestorage.app", messagingSenderId: "288652584372", appId: "1:288652584372:web:331a3867f481ffe91bfee1" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        db.collection("users").onSnapshot(snap => { document.getElementById('totalUsers').innerText = snap.size; });
-
         db.collection("withdraw_requests").where("status", "==", "Pending").onSnapshot(snap => {
-            const list = document.getElementById('reqList');
-            list.innerHTML = "";
+            const container = document.getElementById('reqList');
+            container.innerHTML = "";
             snap.forEach(doc => {
                 const d = doc.data();
-                list.innerHTML += `<tr>
-                    <td>${d.method}</td>
-                    <td>${d.number}</td>
-                    <td>${d.amount}</td>
-                    <td><button onclick="markPaid('${doc.id}')" style="background:green; color:white; padding:5px;">Done</button></td>
-                </tr>`;
+                container.innerHTML += `<div style="border:1px solid #ddd; padding:10px; margin-bottom:5px; background:white; border-radius:8px;">
+                    <p><b>Name:</b> ${d.uName} | <b>Amount:</b> ${d.amount} TK</p>
+                    <p><b>Method:</b> ${d.method} | <b>Number:</b> ${d.number}</p>
+                    <button onclick="pay('${doc.id}')" style="background:green; color:white; border:none; padding:5px 15px; border-radius:5px;">Mark Paid</button>
+                </div>`;
             });
         });
 
-        function markPaid(id) {
-            if(confirm("টাকা পাঠিয়েছেন?")) { db.collection("withdraw_requests").doc(id).update({ status: "Paid" }); }
+        function pay(id) {
+            if(confirm("Confirm payment?")) {
+                db.collection("withdraw_requests").doc(id).update({ status: "Paid" });
+            }
         }
     </script>
 </body>
