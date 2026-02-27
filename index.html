@@ -10,7 +10,7 @@
     <div class="auth-container">
         <h1>MicroJobs 💰</h1>
         <p id="status">গুগল দিয়ে লগইন করে আয় শুরু করুন</p>
-        <button onclick="login()" class="btn-main" style="background:#4285F4; border:none; color:white; padding:15px; border-radius:10px; width:90%; font-weight:bold; cursor:pointer;">
+        <button id="loginBtn" onclick="login()" class="btn-main" style="background:#4285F4; border:none; color:white; padding:15px; border-radius:10px; width:90%; font-weight:bold; cursor:pointer;">
             Google Login
         </button>
     </div>
@@ -34,31 +34,39 @@
 
         function login() {
             const provider = new firebase.auth.GoogleAuthProvider();
+            // মোবাইলের জন্য রিডাইরেক্ট সবচেয়ে ভালো কাজ করে
             auth.signInWithRedirect(provider);
         }
 
-        // রিডাইরেক্ট হয়ে ফেরার পর অটোমেটিক ড্যাশবোর্ডে পাঠানো
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                const userRef = db.collection("users").doc(user.uid);
-                userRef.get().then((doc) => {
-                    if (!doc.exists) {
-                        userRef.set({
-                            name: user.displayName,
-                            balance: 0,
-                            totalEarned: 0,
-                            email: user.email
-                        }).then(() => { 
-                            window.location.replace("dashboard.html"); 
-                        });
-                    } else {
-                        window.location.replace("dashboard.html");
-                    }
-                }).catch(err => {
-                    console.error("Firestore Error:", err);
-                });
+        // রিডাইরেক্ট হয়ে ফেরার পর ইউজার চেক
+        auth.getRedirectResult().then((result) => {
+            if (result.user) {
+                handleUser(result.user);
             }
         });
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                handleUser(user);
+            }
+        });
+
+        function handleUser(user) {
+            const userRef = db.collection("users").doc(user.uid);
+            userRef.get().then((doc) => {
+                if (!doc.exists) {
+                    userRef.set({
+                        name: user.displayName,
+                        email: user.email,
+                        balance: 0,
+                        totalEarned: 0,
+                        joinDate: new Date().toLocaleDateString()
+                    }).then(() => { window.location.href = "dashboard.html"; });
+                } else {
+                    window.location.href = "dashboard.html";
+                }
+            }).catch(err => alert("Firestore Error: " + err.message));
+        }
     </script>
 </body>
 </html>
