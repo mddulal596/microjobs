@@ -1,10 +1,9 @@
-body { font-family: sans-serif; margin: 0; background: #f0f2f5; text-align: center; }
-.auth-container { margin-top: 100px; }
-.google-btn { padding: 10px 20px; border-radius: 5px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-weight: bold; }
-.header-card { background: linear-gradient(to right, #27ae60, #2ecc71); color: #fff; padding: 30px 10px; border-radius: 0 0 30px 30px; }
-.balance-container { display: flex; justify-content: space-around; margin-top: 20px; }
-.task-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 20px; }
-.card { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
-.withdraw-card { background: #fff; margin: 20px; padding: 20px; border-radius: 15px; }
-input, select, button { width: 90%; padding: 10px; margin: 5px; border-radius: 5px; border: 1px solid #ddd; }
-button { background: #27ae60; color: #fff; border: none; font-weight: bold; cursor: pointer; }
+body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; text-align: center; }
+.auth-container { margin-top: 80px; padding: 20px; }
+.btn-main { background: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 90%; }
+.header-card { background: #27ae60; color: white; padding: 30px 10px; border-radius: 0 0 20px 20px; }
+.balance-container { display: flex; justify-content: space-around; margin-top: 15px; }
+.task-grid { padding: 20px; }
+.task-btn { background: white; border: 1px solid #ddd; padding: 20px; margin: 5px; border-radius: 10px; width: 45%; cursor: pointer; }
+.withdraw-card { background: white; margin: 20px; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+input, select { width: 90%; padding: 10px; margin: 5px; border: 1px solid #ddd; border-radius: 5px; }
