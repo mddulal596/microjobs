@@ -9,8 +9,8 @@
 <body>
     <div class="auth-container">
         <h1>MicroJobs 💰</h1>
-        <p>লগইন করুন এবং আয় শুরু করুন</p>
-        <button onclick="loginWithGoogle()" class="google-btn">
+        <p id="status">লগইন করুন এবং আয় শুরু করুন</p>
+        <button onclick="loginWithGoogle()" class="google-btn" id="loginBtn">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20px">
             Google দিয়ে লগইন করুন
         </button>
@@ -33,18 +33,22 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // গুগল লগইন ফাংশন (Redirect Method)
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            const urlParams = new URLSearchParams(window.location.search);
-            const referredBy = urlParams.get('ref');
+            auth.signInWithRedirect(provider);
+        }
 
-            auth.signInWithPopup(provider).then((result) => {
+        // রিডাইরেক্ট হয়ে ফিরে আসার পর ডাটা প্রসেস করা
+        auth.getRedirectResult().then((result) => {
+            if (result.user) {
                 const user = result.user;
-                const userRef = db.collection("users").doc(user.uid);
+                const urlParams = new URLSearchParams(window.location.search);
+                const referredBy = urlParams.get('ref');
 
-                userRef.get().then((doc) => {
+                db.collection("users").doc(user.uid).get().then((doc) => {
                     if (!doc.exists) {
-                        userRef.set({
+                        db.collection("users").doc(user.uid).set({
                             name: user.displayName,
                             email: user.email,
                             balance: 0,
@@ -53,8 +57,8 @@
                         }).then(() => {
                             if (referredBy) {
                                 db.collection("users").doc(referredBy).update({
-                                    balance: firebase.firestore.FieldValue.increment(5.00),
-                                    totalEarned: firebase.firestore.FieldValue.increment(5.00)
+                                    balance: firebase.firestore.FieldValue.increment(5.0),
+                                    totalEarned: firebase.firestore.FieldValue.increment(5.0)
                                 });
                             }
                             window.location.href = "dashboard.html";
@@ -63,8 +67,11 @@
                         window.location.href = "dashboard.html";
                     }
                 });
-            }).catch(err => alert(err.message));
-        }
+            }
+        }).catch((error) => {
+            console.error("Error:", error.message);
+            document.getElementById('status').innerText = "ভুল হয়েছে: " + error.message;
+        });
     </script>
 </body>
 </html>
