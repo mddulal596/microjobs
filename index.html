@@ -3,36 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Daily Cash Earn Pro</title>
-    <link rel="stylesheet" href="style.css"> </head>
+    <title>Easy Cash - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <div class="auth-box">
-        <h2>Login / Register</h2>
-        <input type="email" id="email" placeholder="Enter Email">
-        <input type="password" id="password" placeholder="Enter Password">
-        <div class="btn-group">
-            <button onclick="login()">Login</button>
-            <button onclick="register()">Register</button>
-        </div>
+    <div class="auth-container">
+        <h2>MicroJobs Login</h2>
+        <button onclick="loginWithGoogle()" class="google-btn">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20px">
+            Google দিয়ে লগইন করুন
+        </button>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="firebase-config.js"></script> <script>
-        function login() {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('password').value;
-            firebase.auth().signInWithEmailAndPassword(e, p)
-                .then(() => window.location.href = "dashboard.html")
-                .catch(err => alert(err.message));
-        }
-        function register() {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('password').value;
-            firebase.auth().createUserWithEmailAndPassword(e, p)
-                .then(() => alert("Registration Successful! Now Login."))
-                .catch(err => alert(err.message));
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-Oa4ZWgA3TrQFRUrEz3Y8CXkYd4hmyM",
+            authDomain: "microjobs-13730.firebaseapp.com",
+            projectId: "microjobs-13730",
+            storageBucket: "microjobs-13730.appspot.com",
+            messagingSenderId: "288652584372",
+            appId: "1:288652584372:web:331a3867f481ffe91bfee1"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        function loginWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then((result) => {
+                const user = result.user;
+                db.collection("users").doc(user.uid).set({
+                    name: user.displayName,
+                    email: user.email,
+                    balance: 0
+                }, { merge: true }).then(() => {
+                    window.location.href = "dashboard.html";
+                });
+            });
         }
     </script>
 </body>
