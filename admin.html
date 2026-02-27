@@ -3,50 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - MicroJobs</title>
+    <title>Admin - MicroJobs</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .admin-header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
-        .stat-card { background: #fff; margin: 10px; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; font-size: 12px; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-        th { background: #27ae60; color: white; }
-        .pay-btn { background: #e67e22; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
-    </style>
 </head>
 <body>
-    <div class="admin-header">
-        <h1>Admin Control Panel</h1>
+    <div style="background:#2c3e50; color:white; padding:20px;">
+        <h2>Admin Panel</h2>
+        <p>Total Users: <span id="totalUsers">0</span></p>
     </div>
 
-    <div class="stat-grid">
-        <div class="stat-card">
-            <h2 id="totalUsers">0</h2>
-            <p>Total Users</p>
-        </div>
-        <div class="stat-card">
-            <h2 id="totalRequests">0</h2>
-            <p>Pending Payouts</p>
-        </div>
-    </div>
-
-    <div style="padding: 10px;">
+    <div style="padding:10px;">
         <h3>Withdraw Requests</h3>
-        <div style="overflow-x:auto;">
-            <table id="reqTable">
-                <thead>
-                    <tr>
-                        <th>Method</th>
-                        <th>Number</th>
-                        <th>Amount</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="payoutList">
-                    </tbody>
-            </table>
-        </div>
+        <table border="1" style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Number</th>
+                    <th>TK</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="reqList"></tbody>
+        </table>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -54,49 +32,35 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // আপনার Firebase Config (index.html থেকে কপি করে এখানে দিন)
         const firebaseConfig = {
-            apiKey: "AIzaSyA-Oa4ZWgA3TrQFRUrEz3Y8CXkYd4hmyM",
+            apiKey: "AIzaSyA-Oa4ZWgGA3TrQFRUrEz3Y8CXkYd4hmyM",
             authDomain: "microjobs-13730.firebaseapp.com",
             projectId: "microjobs-13730",
-            storageBucket: "microjobs-13730.appspot.com",
+            storageBucket: "microjobs-13730.firebasestorage.app",
             messagingSenderId: "288652584372",
             appId: "1:288652584372:web:331a3867f481ffe91bfee1"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // ১. মোট ইউজার এবং পেন্ডিং রিকোয়েস্ট সংখ্যা লোড করা
-        db.collection("users").onSnapshot(snap => {
-            document.getElementById('totalUsers').innerText = snap.size;
-        });
+        db.collection("users").onSnapshot(snap => { document.getElementById('totalUsers').innerText = snap.size; });
 
-        // ২. উইথড্র রিকোয়েস্ট তালিকা দেখানো
-        db.collection("withdraw_requests").where("status", "==", "Pending")
-        .onSnapshot(snap => {
-            document.getElementById('totalRequests').innerText = snap.size;
-            const list = document.getElementById('payoutList');
+        db.collection("withdraw_requests").where("status", "==", "Pending").onSnapshot(snap => {
+            const list = document.getElementById('reqList');
             list.innerHTML = "";
             snap.forEach(doc => {
-                const res = doc.data();
-                list.innerHTML += `
-                    <tr>
-                        <td>${res.method}</td>
-                        <td>${res.number}</td>
-                        <td>TK. ${res.amount}</td>
-                        <td><button class="pay-btn" onclick="markPaid('${doc.id}')">Done</button></td>
-                    </tr>
-                `;
+                const d = doc.data();
+                list.innerHTML += `<tr>
+                    <td>${d.method}</td>
+                    <td>${d.number}</td>
+                    <td>${d.amount}</td>
+                    <td><button onclick="markPaid('${doc.id}')">Paid</button></td>
+                </tr>`;
             });
         });
 
-        // ৩. পেমেন্ট সম্পন্ন করা
         function markPaid(id) {
-            if(confirm("টাকা পাঠিয়েছেন কি?")) {
-                db.collection("withdraw_requests").doc(id).update({
-                    status: "Paid"
-                }).then(() => alert("Payment Success!"));
-            }
+            if(confirm("Paid?")) { db.collection("withdraw_requests").doc(id).update({ status: "Paid" }); }
         }
     </script>
 </body>
