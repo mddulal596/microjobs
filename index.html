@@ -3,17 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MicroJobs - Login</title>
+    <title>MicroJobs - Phone Login</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="auth-container">
         <h1>MicroJobs 💰</h1>
-        <p id="status">লগইন করুন এবং আয় শুরু করুন</p>
-        <button onclick="loginWithGoogle()" class="google-btn" id="loginBtn">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20px">
-            Google দিয়ে লগইন করুন
-        </button>
+        <p id="status">ফোন নাম্বার দিয়ে লগইন করুন</p>
+        
+        <div id="phone-box">
+            <input type="text" id="phoneNumber" placeholder="+8801XXXXXXXXX" style="width: 80%; padding: 10px; margin-bottom: 10px;">
+            <button onclick="sendOTP()" class="btn">Send OTP</button>
+        </div>
+
+        <div id="otp-box" style="display:none;">
+            <input type="text" id="otpCode" placeholder="Enter 6-digit OTP" style="width: 80%; padding: 10px; margin-bottom: 10px;">
+            <button onclick="verifyOTP()" class="btn">Verify & Login</button>
+        </div>
+
+        <div id="recaptcha-container"></div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -33,45 +41,39 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // গুগল লগইন ফাংশন (Redirect Method)
-        function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithRedirect(provider);
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible'
+        });
+
+        function sendOTP() {
+            const number = document.getElementById('phoneNumber').value;
+            auth.signInWithPhoneNumber(number, window.recaptchaVerifier)
+                .then((confirmationResult) => {
+                    window.confirmationResult = confirmationResult;
+                    document.getElementById('phone-box').style.display = 'none';
+                    document.getElementById('otp-box').style.display = 'block';
+                    document.getElementById('status').innerText = "আপনার ফোনে কোড পাঠানো হয়েছে।";
+                }).catch((error) => alert(error.message));
         }
 
-        // রিডাইরেক্ট হয়ে ফিরে আসার পর ডাটা প্রসেস করা
-        auth.getRedirectResult().then((result) => {
-            if (result.user) {
+        function verifyOTP() {
+            const code = document.getElementById('otpCode').value;
+            confirmationResult.confirm(code).then((result) => {
                 const user = result.user;
-                const urlParams = new URLSearchParams(window.location.search);
-                const referredBy = urlParams.get('ref');
-
+                // ডাটাবেস চেক ও সেভ
                 db.collection("users").doc(user.uid).get().then((doc) => {
                     if (!doc.exists) {
                         db.collection("users").doc(user.uid).set({
-                            name: user.displayName,
-                            email: user.email,
+                            phone: user.phoneNumber,
                             balance: 0,
-                            totalEarned: 0,
-                            referredBy: referredBy || null
-                        }).then(() => {
-                            if (referredBy) {
-                                db.collection("users").doc(referredBy).update({
-                                    balance: firebase.firestore.FieldValue.increment(5.0),
-                                    totalEarned: firebase.firestore.FieldValue.increment(5.0)
-                                });
-                            }
-                            window.location.href = "dashboard.html";
-                        });
+                            totalEarned: 0
+                        }).then(() => window.location.href = "dashboard.html");
                     } else {
                         window.location.href = "dashboard.html";
                     }
                 });
-            }
-        }).catch((error) => {
-            console.error("Error:", error.message);
-            document.getElementById('status').innerText = "ভুল হয়েছে: " + error.message;
-        });
+            }).catch(() => alert("ভুল ওটিপি কোড!"));
+        }
     </script>
 </body>
 </html>
