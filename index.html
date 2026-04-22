@@ -1,71 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MicroJobs - Login</title>
-    <link rel="stylesheet" href="style.css">
+<title>Micro Jobs Pro</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="auth-container">
-        <h1>MicroJobs 💰</h1>
-        <p id="status">গুগল দিয়ে লগইন করে আয় শুরু করুন</p>
-        <button id="loginBtn" onclick="login()" class="btn-main" style="background:#4285F4; border:none; color:white; padding:15px; border-radius:10px; width:90%; font-weight:bold; cursor:pointer;">
-            Google Login
-        </button>
-    </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<div id="authBox">
+<h2>Login</h2>
+<input id="emailInput"><br>
+<input id="passwordInput" type="password"><br>
+<button onclick="register()">Register</button>
+<button onclick="login()">Login</button>
+</div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyA-Oa4ZWgGA3TrQFRUrEz3Y8CXkYd4hmyM",
-            authDomain: "microjobs-13730.firebaseapp.com",
-            projectId: "microjobs-13730",
-            storageBucket: "microjobs-13730.firebasestorage.app",
-            messagingSenderId: "288652584372",
-            appId: "1:288652584372:web:331a3867f481ffe91bfee1"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+<div id="dashboard" style="display:none;">
+<h2>Dashboard</h2>
+<button onclick="loadTasks()">Tasks</button>
+<button onclick="withdraw()">Withdraw</button>
+<div id="tasks"></div>
+</div>
 
-        // ১. অটো চেক: ইউজার কি অলরেডি লগইন করা?
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                document.getElementById('status').innerText = "অপেক্ষা করুন, ড্যাশবোর্ডে যাচ্ছি...";
-                handleUser(user);
-            }
-        });
-
-        function login() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            // মোবাইল ক্রোমের জন্য রিডাইরেক্ট সবসময় কাজ করে
-            auth.signInWithRedirect(provider);
-        }
-
-        function handleUser(user) {
-            const userRef = db.collection("users").doc(user.uid);
-            userRef.get().then((doc) => {
-                if (!doc.exists) {
-                    userRef.set({
-                        name: user.displayName,
-                        email: user.email,
-                        balance: 0,
-                        totalEarned: 0
-                    }).then(() => {
-                        window.location.replace("dashboard.html");
-                    });
-                } else {
-                    window.location.replace("dashboard.html");
-                }
-            }).catch(err => {
-                console.error("Firestore error:", err);
-                alert("আপনার ডাটাবেস রুলস (Rules) কি পাবলিশ করা হয়েছে? না হলে চেক করুন।");
-            });
-        }
-    </script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
