@@ -22,15 +22,12 @@
 </head>
 <body class="bg-darkbg text-slate-100 flex h-screen overflow-hidden">
     
-    <!-- Backdrop Overlay for Mobile/Screen Drawer -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
 
-    <!-- Sidebar (Collapsible Drawer for both Mobile & Desktop) -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800/80 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 shrink-0 shadow-2xl">
         <div class="p-6">
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">MicroJobPro</h1>
-                <!-- Close Button -->
                 <button id="closeSidebar" class="text-slate-400 hover:text-white transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -49,19 +46,14 @@
         </div>
     </aside>
 
-    <!-- Right Side Main Wrapper (Header + Content + Footer) -->
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        
-        <!-- Header with Hamburger Menu and Navigation Links -->
         <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
             <div class="flex items-center gap-3">
-                <!-- Hamburger Menu Button -->
                 <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                
                 <nav class="flex items-center gap-3 lg:gap-6 text-xs md:text-sm font-semibold text-slate-300 overflow-x-auto py-2 scrollbar-none">
-                    <a href="dashboard.html" class="hover:text-blue-400 transition-all shrink-0">Home</a>
+                    <a href="dashboard.html" class="text-blue-400 transition-all shrink-0">Home</a>
                     <a href="tasks.html" class="hover:text-blue-400 transition-all shrink-0">Jobs</a>
                     <a href="#" class="hover:text-blue-400 transition-all shrink-0">Advertisers</a>
                     <a href="#" class="hover:text-blue-400 transition-all shrink-0">Quiz</a>
@@ -71,7 +63,6 @@
                 </nav>
             </div>
             
-            <!-- User Profile Section -->
             <div class="flex items-center gap-3 shrink-0">
                 <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
                 <div class="hidden sm:block text-left">
@@ -81,7 +72,6 @@
             </div>
         </header>
 
-        <!-- Main Content Area -->
         <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto space-y-6">
             <div class="p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-4 relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -90,7 +80,6 @@
             </div>
         </main>
 
-        <!-- Footer -->
         <footer class="bg-cardbg border-t border-slate-800/80 py-6 px-8 mt-auto">
             <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
                 <p>&copy; 2026 MicroJobPro. All rights reserved.</p>
@@ -101,16 +90,13 @@
                 </div>
             </div>
         </footer>
-
     </div>
 
-    <!-- Scripting for Sidebar Toggle & User Details -->
     <script type="module">
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
         import { db } from '../firebase/firebase-config.js';
         import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Sidebar Toggle Logic
         const menuBtn = document.getElementById('menuBtn');
         const closeSidebar = document.getElementById('closeSidebar');
         const sidebar = document.getElementById('sidebar');
@@ -125,7 +111,6 @@
         closeSidebar.addEventListener('click', toggleSidebar);
         sidebarOverlay.addEventListener('click', toggleSidebar);
 
-        // Auth & User Profile Details
         observeAuthState(async (user) => {
             if (!user) {
                 window.location.href = 'login.html';
@@ -139,7 +124,6 @@
 
                 const userDocRef = doc(db, "users", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
-                
                 if (userDocSnap.exists()) {
                     const userData = userDocSnap.data();
                     fullName = userData.fullName || userData.name || userData.displayName || userData.username || fullName;
@@ -149,9 +133,8 @@
                 document.getElementById('userEmail').innerText = email;
                 document.getElementById('welcomeName').innerText = fullName;
                 document.getElementById('userAvatar').src = photoURL;
-
             } catch (error) {
-                console.error("Error loading user profile details:", error);
+                console.error("Error loading user profile:", error);
             }
         });
 
@@ -161,4 +144,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
