@@ -1,98 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MicroJobs Pro</title>
+    <title>Micro Job Pro - Earn Money Online & Complete Tasks</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <style>
-        .glass { background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(12px); }
-        .page { display: none; }
-        .page.active { display: block; }
-    </style>
-</head>
-<body class="bg-gray-950 text-white min-h-screen pb-24">
-
-    <div id="auth-screen" class="fixed inset-0 bg-gray-950 z-50 flex items-center justify-center p-6 hidden">
-        <div class="w-full max-w-md bg-gray-900 p-8 rounded-3xl border border-gray-800 shadow-2xl">
-            <h2 class="text-3xl font-bold mb-2 text-blue-500">Welcome</h2>
-            <p class="text-gray-400 mb-8">Login to start earning daily.</p>
-            <input type="email" id="email" placeholder="Email" class="w-full bg-gray-800 p-4 rounded-xl mb-4 border border-gray-700 outline-none focus:border-blue-500">
-            <input type="password" id="password" placeholder="Password" class="w-full bg-gray-800 p-4 rounded-xl mb-6 border border-gray-700 outline-none focus:border-blue-500">
-            <button id="login-btn" class="w-full bg-blue-600 p-4 rounded-xl font-bold shadow-lg shadow-blue-900/20">Login</button>
-            <button id="signup-btn" class="w-full mt-4 text-gray-500">New here? <span class="text-blue-400">Create Account</span></button>
-        </div>
-    </div>
-
-    <header class="p-5 flex justify-between items-center sticky top-0 glass z-40 border-b border-gray-800">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">M</div>
-            <h1 class="text-xl font-black tracking-tight">MJ PRO</h1>
-        </div>
-        <div class="bg-green-500/10 border border-green-500/20 px-4 py-1 rounded-full">
-            <span id="header-balance" class="text-green-400 font-bold">$0.00</span>
-        </div>
-    </header>
-
-    <main class="max-w-xl mx-auto p-5">
-        <div id="home" class="page active">
-            <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-6 mb-8 shadow-xl">
-                <p class="text-blue-100 text-sm opacity-80">Available for Withdrawal</p>
-                <h2 id="main-balance" class="text-4xl font-black mt-1">$0.00</h2>
-                <div class="flex gap-4 mt-6">
-                    <div class="bg-white/10 px-4 py-2 rounded-xl">
-                        <p class="text-[10px] uppercase opacity-60">Pending</p>
-                        <p id="pending-balance" class="font-bold text-yellow-300">$0.00</p>
-                    </div>
-                </div>
-            </div>
-
-            <h3 class="text-lg font-bold mb-4">Daily Jobs</h3>
-            <div id="task-list" class="space-y-4">
-                </div>
-        </div>
-
-        <div id="wallet" class="page">
-            <h2 class="text-2xl font-bold mb-6">Withdraw Money</h2>
-            <div class="bg-gray-900 p-6 rounded-3xl border border-gray-800 mb-6">
-                <input type="number" id="withdraw-amount" placeholder="Amount (min $1.00)" class="w-full bg-gray-800 p-4 rounded-xl mb-4 border border-gray-700">
-                <input type="text" id="payment-info" placeholder="Wallet Address / Number" class="w-full bg-gray-800 p-4 rounded-xl mb-4 border border-gray-700">
-                <button id="withdraw-btn" class="w-full bg-green-600 p-4 rounded-xl font-bold">Request Withdrawal</button>
-            </div>
-        </div>
-    </main>
-
-    <nav class="fixed bottom-0 left-0 right-0 glass border-t border-gray-800 p-4 flex justify-around items-center z-50">
-        <button onclick="nav('home')" class="nav-icon text-blue-500"><i class="fas fa-home text-xl"></i></button>
-        <button onclick="nav('wallet')" class="nav-icon text-gray-500"><i class="fas fa-wallet text-xl"></i></button>
-        <button id="logout-trigger" class="text-gray-500"><i class="fas fa-sign-out-alt text-xl"></i></button>
-    </nav>
-
-    <div id="task-modal" class="fixed inset-0 bg-black/90 z-[60] flex items-center justify-center p-6 hidden">
-        <div class="bg-gray-900 w-full max-w-md p-6 rounded-3xl border border-gray-800">
-            <h3 id="m-title" class="text-xl font-bold mb-2"></h3>
-            <p id="m-reward" class="text-green-400 font-bold mb-4"></p>
-            <p id="m-instr" class="text-gray-400 text-sm mb-6 bg-gray-800 p-4 rounded-xl"></p>
-            <label class="text-xs text-gray-500 mb-2 block">Submit Proof (Screenshot URL or Text)</label>
-            <input type="text" id="proof-input" class="w-full bg-gray-800 p-4 rounded-xl mb-6 border border-gray-700 outline-none">
-            <div class="flex gap-3">
-                <button id="submit-proof-btn" class="flex-1 bg-blue-600 p-4 rounded-xl font-bold">Submit Job</button>
-                <button onclick="closeTask()" class="px-6 bg-gray-800 rounded-xl">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script type="module" src="app.js"></script>
     <script>
-        function nav(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            document.querySelectorAll('.nav-icon').forEach(i => i.classList.replace('text-blue-500', 'text-gray-500'));
-            event.currentTarget.classList.replace('text-gray-500', 'text-blue-500');
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 900: '#1e3a8a' }
+                    }
+                }
+            }
         }
     </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased">
+    <!-- Navbar -->
+    <nav class="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl font-black bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">MicroJobPro</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="pages/login.html" class="text-slate-300 hover:text-white px-3 py-2 text-sm font-medium">Login</a>
+                <a href="pages/register.html" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-lg shadow-blue-600/30 transition-all">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-20 pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
+                Complete Simple Tasks, <br><span class="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">Earn Real Money Instantly</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-lg text-slate-400 mb-10">
+                The most trusted crowdsourcing platform connecting global brands with hardworking micro-taskers. Fast payouts via bKash, Nagad, and Bank Transfer.
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="pages/register.html" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-blue-600/40 transition-all">Start Earning Now</a>
+                <a href="pages/tasks.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-8 py-4 rounded-2xl font-bold border border-slate-700 transition-all">Browse Tasks</a>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
