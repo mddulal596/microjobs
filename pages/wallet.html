@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet - Micro Job Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 p-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-black text-white">My Wallet</h1>
+            <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-sm font-semibold">Back</a>
+        </div>
+        <div class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl flex justify-between items-center">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Main Balance</p>
+                <h2 id="walletBalance" class="text-4xl font-black text-emerald-400 mt-2">$0.00</h2>
+            </div>
+            <div class="flex gap-4">
+                <a href="deposit.html" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg">Deposit</a>
+                <a href="withdraw.html" class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg">Withdraw</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from '../firebase/firebase-config.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    document.getElementById('walletBalance').innerText = `$${(snap.data().balances?.main || 0).toFixed(2)}`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
