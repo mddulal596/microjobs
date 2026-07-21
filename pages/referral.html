@@ -6,36 +6,78 @@
     <title>Referrals - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 p-8">
-    <div class="max-w-3xl mx-auto space-y-8">
-        <div class="flex justify-between items-center">
-            <h1 class="text-3xl font-black text-white">Referral Program</h1>
-            <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-sm font-semibold">Back</a>
+<body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+        <div class="p-6">
+            <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">MicroJobPro</h1>
+            <nav class="mt-8 space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Dashboard</a>
+                <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Tasks Marketplace</a>
+                <a href="post-task.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Post New Job</a>
+                <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Wallet</a>
+                <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Withdraw</a>
+                <a href="referral.html" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-xl font-semibold">Referrals</a>
+            </nav>
         </div>
-        <div class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl space-y-4">
-            <p class="text-sm text-slate-400">Share your exclusive link and earn 5% lifetime commissions on all your referrals' completed jobs.</p>
-            <div class="flex gap-4">
-                <input type="text" id="refLink" readonly class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white font-mono text-sm" value="Loading...">
-                <button id="copyBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-xl font-bold">Copy</button>
+        <div class="p-6 border-t border-slate-800">
+            <button id="logoutBtn" class="w-full bg-red-600/10 text-red-500 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all">Logout</button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-y-auto">
+        <header class="h-20 bg-slate-900/50 border-b border-slate-800 px-8 flex items-center justify-between">
+            <h2 class="text-xl font-bold text-white">Referral Program</h2>
+        </header>
+
+        <div class="p-8 max-w-4xl w-full mx-auto space-y-6">
+            <!-- Referral Link Card -->
+            <div class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-4">
+                <h3 class="text-lg font-bold text-white">Invite Friends & Earn Commission</h3>
+                <p class="text-sm text-slate-400">Share your unique link with friends. When they join and complete tasks, you will earn lifetime bonuses!</p>
+                <div class="flex gap-3">
+                    <input type="text" id="refLink" readonly class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 text-sm focus:outline-none" value="Loading referral link...">
+                    <button id="copyBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold transition-all text-sm shrink-0">Copy Link</button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Referred Users</p>
+                    <h3 id="totalRefs" class="text-3xl font-black text-blue-400 mt-2">0</h3>
+                </div>
+                <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Referral Earnings</p>
+                    <h3 id="totalRefIncome" class="text-3xl font-black text-emerald-400 mt-2">$0.00</h3>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script type="module">
-        import { auth } from '../firebase/firebase-config.js';
+        import { observeAuthState, logoutUser } from '../firebase/auth.js';
 
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                const link = `${window.location.origin}/pages/register.html?ref=${user.uid}`;
-                document.getElementById('refLink').value = link;
+        observeAuthState((user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
             }
+            const refUrl = `${window.location.origin}/pages/register.html?ref=${user.uid}`;
+            document.getElementById('refLink').value = refUrl;
         });
 
         document.getElementById('copyBtn').addEventListener('click', () => {
-            const input = document.getElementById('refLink');
-            input.select();
-            navigator.clipboard.writeText(input.value);
+            const refInput = document.getElementById('refLink');
+            refInput.select();
+            navigator.clipboard.writeText(refInput.value);
             alert('Referral link copied to clipboard!');
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await logoutUser();
+            window.location.href = 'login.html';
         });
     </script>
 </body>
