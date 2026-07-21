@@ -5,68 +5,159 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wallet - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0B0F19',
+                        cardbg: '#111827',
+                        primary: '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+<body class="bg-darkbg text-slate-100 flex h-screen overflow-hidden">
+    
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800/80 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 shrink-0 shadow-2xl">
         <div class="p-6">
-            <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">MicroJobPro</h1>
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">MicroJobPro</h1>
+                <button id="closeSidebar" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
             <nav class="mt-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Dashboard</a>
-                <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Tasks Marketplace</a>
-                <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-xl font-semibold">Wallet</a>
-                <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Withdraw</a>
-                <a href="referral.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Referrals</a>
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Dashboard</a>
+                <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Tasks Marketplace</a>
+                <a href="post-task.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Post New Job</a>
+                <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25">Wallet</a>
+                <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Withdraw</a>
+                <a href="referral.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Referrals</a>
             </nav>
         </div>
-        <div class="p-6 border-t border-slate-800">
-            <button id="logoutBtn" class="w-full bg-red-600/10 text-red-500 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all">Logout</button>
+        <div class="p-6 border-t border-slate-800/80">
+            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm">Logout</button>
         </div>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col overflow-y-auto">
-        <header class="h-20 bg-slate-900/50 border-b border-slate-800 px-8 flex items-center justify-between">
-            <h2 class="text-xl font-bold text-white">My Wallet</h2>
-            <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition-all">Back to Dashboard</a>
-        </header>
-
-        <div class="p-8 max-w-4xl w-full mx-auto space-y-8">
-            <div class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl flex flex-col sm:flex-row justify-between items-center gap-6">
-                <div>
-                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Main Balance</p>
-                    <h2 id="walletBalance" class="text-4xl font-black text-emerald-400 mt-2">$0.00</h2>
-                </div>
-                <div class="flex gap-4">
-                    <a href="deposit.html" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">Deposit</a>
-                    <a href="withdraw.html" class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">Withdraw</a>
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
+            <div class="flex items-center gap-3">
+                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <nav class="flex items-center gap-3 lg:gap-6 text-xs md:text-sm font-semibold text-slate-300 overflow-x-auto py-2 scrollbar-none">
+                    <a href="dashboard.html" class="hover:text-blue-400 transition-all shrink-0">Home</a>
+                    <a href="tasks.html" class="hover:text-blue-400 transition-all shrink-0">Jobs</a>
+                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Advertisers</a>
+                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Quiz</a>
+                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Paid To Click</a>
+                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Daily Check</a>
+                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Analytics</a>
+                </nav>
+            </div>
+            
+            <div class="flex items-center gap-3 shrink-0">
+                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
+                <div class="hidden sm:block text-left">
+                    <p id="userName" class="text-sm font-bold text-white">Loading...</p>
+                    <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
                 </div>
             </div>
-        </div>
-    </main>
+        </header>
+
+        <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-4 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <p class="text-slate-400 text-sm font-semibold">Main Earned Balance</p>
+                    <h2 class="text-3xl md:text-4xl font-black text-emerald-400">৳ 0.00</h2>
+                    <div class="pt-4 flex gap-3">
+                        <a href="withdraw.html" class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition-all">Withdraw Now</a>
+                    </div>
+                </div>
+
+                <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-4 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <p class="text-slate-400 text-sm font-semibold">Deposit Balance (For Posting Jobs)</p>
+                    <h2 class="text-3xl md:text-4xl font-black text-blue-400">৳ 0.00</h2>
+                    <div class="pt-4 flex gap-3">
+                        <button class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/20 transition-all">Deposit Funds</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-4">
+                <h3 class="text-xl font-bold text-white">Recent Transactions</h3>
+                <div class="text-center py-8 text-slate-500 text-sm">No transaction history found yet.</div>
+            </div>
+        </main>
+
+        <footer class="bg-cardbg border-t border-slate-800/80 py-6 px-8 mt-auto">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+                <p>&copy; 2026 MicroJobPro. All rights reserved.</p>
+                <div class="flex items-center gap-6 font-medium">
+                    <a href="#" class="hover:text-white transition-all">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-all">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-all">Support</a>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script type="module">
-        import { auth, db } from '../firebase/firebase-config.js';
+        import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { db } from '../firebase/firebase-config.js';
         import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        auth.onAuthStateChanged(async (user) => {
+        const menuBtn = document.getElementById('menuBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+
+        menuBtn.addEventListener('click', toggleSidebar);
+        closeSidebar.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        observeAuthState(async (user) => {
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
+
             try {
-                const snap = await getDoc(doc(db, "users", user.uid));
-                if (snap.exists()) {
-                    document.getElementById('walletBalance').innerText = `$${(snap.data().balances?.main || 0).toFixed(2)}`;
+                let fullName = user.displayName || user.email.split('@')[0] || 'Valued User';
+                const email = user.email || 'No email available';
+                const photoURL = user.photoURL || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces';
+
+                const userDocRef = doc(db, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    fullName = userData.fullName || userData.name || userData.displayName || userData.username || fullName;
                 }
+
+                document.getElementById('userName').innerText = fullName;
+                document.getElementById('userEmail').innerText = email;
+                document.getElementById('userAvatar').src = photoURL;
             } catch (error) {
-                console.error("Error fetching balance:", error);
+                console.error("Error loading profile:", error);
             }
         });
 
-        document.getElementById('logoutBtn')?.addEventListener('click', async () => {
-            await signOut(auth);
+        document.getElementById('logoutBtnSidebar').addEventListener('click', async () => {
+            await logoutUser();
             window.location.href = 'login.html';
         });
     </script>
