@@ -20,10 +20,12 @@
         }
     </script>
 </head>
-<body class="bg-darkbg text-slate-100 flex h-screen overflow-hidden">
+<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col">
     
+    <!-- Sidebar Overlay -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
 
+    <!-- Sidebar Menu -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800/80 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 shrink-0 shadow-2xl">
         <div class="p-6">
             <div class="flex items-center justify-between">
@@ -46,10 +48,12 @@
         </div>
     </aside>
 
-    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col min-w-0 w-full">
+        <!-- Header -->
         <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
-            <div class="flex items-center gap-3">
-                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
                 <nav class="flex items-center gap-3 lg:gap-6 text-xs md:text-sm font-semibold text-slate-300 overflow-x-auto py-2 scrollbar-none">
@@ -59,7 +63,6 @@
                     <a href="#" class="hover:text-blue-400 transition-all shrink-0">Quiz</a>
                     <a href="#" class="hover:text-blue-400 transition-all shrink-0">Paid To Click</a>
                     <a href="#" class="hover:text-blue-400 transition-all shrink-0">Daily Check</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Analytics</a>
                 </nav>
             </div>
             
@@ -72,14 +75,98 @@
             </div>
         </header>
 
-        <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto space-y-6">
-            <div class="p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-4 relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                <h3 class="text-2xl font-bold text-white">Welcome back, <span id="welcomeName" class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">User</span>!</h3>
-                <p class="text-slate-400 text-sm">Here is a quick overview of your account activity and earnings.</p>
+        <!-- Main Dashboard Section -->
+        <main class="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto space-y-6">
+            
+            <!-- Welcome Banner -->
+            <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="space-y-2">
+                    <h2 class="text-2xl md:text-3xl font-black text-white">Welcome back, <span id="welcomeName" class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">User</span>!</h2>
+                    <p class="text-slate-400 text-sm">Here is a quick overview of your account activity and earnings.</p>
+                </div>
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <a href="tasks.html" class="flex-1 md:flex-none px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-blue-500/25 text-center">Browse Jobs</a>
+                    <a href="post-task.html" class="flex-1 md:flex-none px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition-all text-center">Post Job</a>
+                </div>
             </div>
+
+            <!-- Stats Balance Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Main Balance -->
+                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold">
+                        <span>Main Balance</span>
+                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 id="mainBalance" class="text-2xl font-black text-white">৳ 0.00</h3>
+                        <p class="text-xs text-slate-500 mt-1">Available for withdraw</p>
+                    </div>
+                </div>
+
+                <!-- Deposit Balance -->
+                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold">
+                        <span>Deposit Balance</span>
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 id="depositBalance" class="text-2xl font-black text-white">৳ 0.00</h3>
+                        <p class="text-xs text-slate-500 mt-1">For posting new jobs</p>
+                    </div>
+                </div>
+
+                <!-- Completed Tasks -->
+                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold">
+                        <span>Completed Tasks</span>
+                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 id="completedTasksCount" class="text-2xl font-black text-white">0</h3>
+                        <p class="text-xs text-slate-500 mt-1">Successfully approved</p>
+                    </div>
+                </div>
+
+                <!-- Pending Tasks -->
+                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold">
+                        <span>Pending Tasks</span>
+                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 id="pendingTasksCount" class="text-2xl font-black text-white">0</h3>
+                        <p class="text-xs text-slate-500 mt-1">Under review</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notice Board / Recent Activities Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Notice Board -->
+                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                        Notice Board
+                    </h3>
+                    <div class="p-4 bg-slate-900/60 border border-slate-800 rounded-xl space-y-2">
+                        <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded font-bold">Update</span>
+                        <p class="text-xs text-slate-300 font-medium">Welcome to MicroJobPro! Complete tasks properly and submit accurate proofs to avoid task rejection.</p>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="lg:col-span-2 p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-white">Recent Activity</h3>
+                    <div id="recentActivityContainer" class="divide-y divide-slate-800/80">
+                        <div class="py-3 text-center text-xs text-slate-500">No recent activity found.</div>
+                    </div>
+                </div>
+            </div>
+
         </main>
 
+        <!-- Footer -->
         <footer class="bg-cardbg border-t border-slate-800/80 py-6 px-8 mt-auto">
             <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
                 <p>&copy; 2026 MicroJobPro. All rights reserved.</p>
@@ -92,6 +179,7 @@
         </footer>
     </div>
 
+    <!-- Scripts -->
     <script type="module">
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
         import { db } from '../firebase/firebase-config.js';
@@ -118,23 +206,32 @@
             }
 
             try {
-                let fullName = user.displayName || user.email.split('@')[0] || 'Valued User';
+                let fullName = user.displayName || user.email.split('@')[0] || 'User';
                 const email = user.email || 'No email available';
                 const photoURL = user.photoURL || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces';
 
+                // Fetch extra user profile data from Firestore database
                 const userDocRef = doc(db, "users", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
+                
                 if (userDocSnap.exists()) {
                     const userData = userDocSnap.data();
                     fullName = userData.fullName || userData.name || userData.displayName || userData.username || fullName;
+                    
+                    // Update stats values if available in user document
+                    document.getElementById('mainBalance').innerText = `৳ ${userData.mainBalance ? Number(userData.mainBalance).toFixed(2) : '0.00'}`;
+                    document.getElementById('depositBalance').innerText = `৳ ${userData.depositBalance ? Number(userData.depositBalance).toFixed(2) : '0.00'}`;
+                    document.getElementById('completedTasksCount').innerText = userData.completedTasks || 0;
+                    document.getElementById('pendingTasksCount').innerText = userData.pendingTasks || 0;
                 }
 
                 document.getElementById('userName').innerText = fullName;
-                document.getElementById('userEmail').innerText = email;
                 document.getElementById('welcomeName').innerText = fullName;
+                document.getElementById('userEmail').innerText = email;
                 document.getElementById('userAvatar').src = photoURL;
+
             } catch (error) {
-                console.error("Error loading user profile:", error);
+                console.error("Error loading dashboard data:", error);
             }
         });
 
@@ -144,4 +241,4 @@
         });
     </script>
 </body>
-    </html>
+</html>
