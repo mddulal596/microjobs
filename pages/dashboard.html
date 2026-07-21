@@ -66,14 +66,25 @@
                 window.location.href = 'login.html';
                 return;
             }
-            const userSnap = await getDoc(doc(db, "users", user.uid));
-            if (userSnap.exists()) {
-                const data = userSnap.data();
-                document.getElementById('userName').innerText = data.displayName;
-                document.getElementById('mainBalance').innerText = `$${(data.balances?.main || 0).toFixed(2)}`;
-                document.getElementById('pendingBalance').innerText = `$${(data.balances?.pending || 0).toFixed(2)}`;
-                document.getElementById('referralBalance').innerText = `$${(data.balances?.referral || 0).toFixed(2)}`;
-                document.getElementById('userLevel').innerText = `Level ${data.level || 1}`;
+            try {
+                const userSnap = await getDoc(doc(db, "users", user.uid));
+                if (userSnap.exists()) {
+                    const data = userSnap.data();
+                    
+                    // ইউজারের নাম বা ফালব্যাক সেট করা যাতে Loading আটকে না থাকে
+                    const displayName = data.displayName || user.displayName || user.email.split('@')[0];
+                    document.getElementById('userName').innerText = displayName;
+
+                    document.getElementById('mainBalance').innerText = `$${(data.balances?.main || 0).toFixed(2)}`;
+                    document.getElementById('pendingBalance').innerText = `$${(data.balances?.pending || 0).toFixed(2)}`;
+                    document.getElementById('referralBalance').innerText = `$${(data.balances?.referral || 0).toFixed(2)}`;
+                    document.getElementById('userLevel').innerText = `Level ${data.level || 1}`;
+                } else {
+                    document.getElementById('userName').innerText = user.displayName || "User";
+                }
+            } catch (error) {
+                console.error("Error loading dashboard data:", error);
+                document.getElementById('userName').innerText = user.displayName || "Account";
             }
         });
 
