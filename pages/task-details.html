@@ -16,13 +16,23 @@
 
             <!-- Task Info Card -->
             <div id="taskCard" class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-4">
-                <h3 id="taskTitle" class="text-xl font-bold text-white">Loading task...</h3>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="text-emerald-400 font-bold" id="taskReward">Reward: $0.00</span>
-                    <span class="text-slate-400" id="taskSlots">Slots: 0</span>
+                <div class="flex justify-between items-start">
+                    <span id="taskCategory" class="px-2.5 py-0.5 bg-blue-500/10 text-blue-400 text-xs font-semibold rounded-md">Category</span>
+                    <span class="text-emerald-400 font-bold text-lg" id="taskReward">$0.00</span>
                 </div>
-                <hr class="border-slate-800">
-                <div>
+                <h3 id="taskTitle" class="text-xl font-bold text-white">Loading task...</h3>
+                
+                <!-- Slots & Time Info Section -->
+                <div class="space-y-2 pt-2 border-t border-slate-800/80">
+                    <div id="taskSlots" class="text-xs text-slate-300 font-medium">
+                        Loading slots info...
+                    </div>
+                    <div>
+                        <span id="taskTimeLimit" class="text-xs text-amber-400 font-semibold">Time Limit: 0 Minutes</span>
+                    </div>
+                </div>
+
+                <div class="pt-2">
                     <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Instructions:</h4>
                     <p id="taskDesc" class="text-sm text-slate-300 whitespace-pre-line">Please wait while loading details...</p>
                 </div>
@@ -67,9 +77,23 @@
                 const taskDoc = await getDoc(doc(db, "tasks", taskId));
                 if (taskDoc.exists()) {
                     const task = taskDoc.data();
+                    
+                    const totalSlots = task.slots || 0;
+                    const remaining = task.remainingSlots ?? totalSlots;
+                    const completedCount = totalSlots - remaining;
+
                     document.getElementById('taskTitle').innerText = task.title;
-                    document.getElementById('taskReward').innerText = `Reward: $${task.reward.toFixed(2)}`;
-                    document.getElementById('taskSlots').innerText = `Remaining Slots: ${task.remainingSlots ?? task.slots}`;
+                    document.getElementById('taskCategory').innerText = task.category || 'General';
+                    document.getElementById('taskReward').innerText = `$${(task.reward || 0).toFixed(2)}`;
+                    
+                    // টোটাল, কমপ্লিট এবং রিমেইনিং স্লট হিসাব দেখানো
+                    document.getElementById('taskSlots').innerHTML = `
+                        Total Slots: <span class="text-white font-bold">${totalSlots}</span> | 
+                        Completed: <span class="text-emerald-400 font-bold">${completedCount >= 0 ? completedCount : 0}</span> | 
+                        Remaining: <span class="text-amber-400 font-bold">${remaining >= 0 ? remaining : 'Unlimited'}</span>
+                    `;
+
+                    document.getElementById('taskTimeLimit').innerText = `Time Limit: ${task.timeLimit || 15} Minutes`;
                     document.getElementById('taskDesc').innerText = task.description;
                 } else {
                     alert('Task not found');
@@ -82,12 +106,10 @@
 
         document.getElementById('proofForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const user = auth.currentUser || JSON.parse(localStorage.getItem('user')); // fallback if needed
             
             try {
                 await submitTaskProof({
                     taskId: taskId,
-                    workerId: auth.currentUser?.uid || "unknown",
                     proof: document.getElementById('proofText').value
                 });
                 alert('Task proof submitted successfully! Waiting for admin review.');
