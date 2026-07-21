@@ -14,6 +14,7 @@
             <nav class="mt-8 space-y-2">
                 <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Dashboard</a>
                 <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-xl font-semibold">Tasks Marketplace</a>
+                <a href="post-task.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Post New Job</a>
                 <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Wallet</a>
                 <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Withdraw</a>
                 <a href="referral.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Referrals</a>
@@ -34,6 +35,16 @@
         </header>
 
         <div class="p-8 max-w-7xl w-full mx-auto space-y-6">
+            <!-- Category Filter Buttons Bar -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="categoryFilterBar">
+                <button onclick="filterCategory('All')" class="cat-btn px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-xl shrink-0 transition-all">All Tasks</button>
+                <button onclick="filterCategory('YouTube Subscribe')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">YouTube Subscribe</button>
+                <button onclick="filterCategory('Website Visit')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Website Visit</button>
+                <button onclick="filterCategory('Facebook Like')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Facebook Like</button>
+                <button onclick="filterCategory('Instagram Follow')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Instagram Follow</button>
+                <button onclick="filterCategory('Telegram Join')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Telegram Join</button>
+            </div>
+
             <!-- Tasks List Container -->
             <div id="tasksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="col-span-full p-8 text-center bg-slate-900 border border-slate-800 rounded-3xl text-slate-400">
@@ -47,6 +58,8 @@
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
         import { getTasks } from '../firebase/firestore.js';
 
+        let allTasks = [];
+
         observeAuthState(async (user) => {
             if (!user) {
                 window.location.href = 'login.html';
@@ -54,34 +67,8 @@
             }
 
             try {
-                const tasks = await getTasks();
-                const container = document.getElementById('tasksContainer');
-                
-                if (!tasks || tasks.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-full p-8 text-center bg-slate-900 border border-slate-800 rounded-3xl">
-                            <p class="text-slate-400">No active tasks available right now. Please check back later!</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                container.innerHTML = tasks.map(task => `
-                    <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-start mb-4">
-                                <h3 class="text-lg font-bold text-white">${task.title || 'Micro Job'}</h3>
-                                <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-bold rounded-full">$${(task.reward || 0).toFixed(2)}</span>
-                            </div>
-                            <p class="text-sm text-slate-400 mb-6">${task.description || 'Complete this simple task to earn reward.'}</p>
-                        </div>
-                        <div class="flex items-center justify-between pt-4 border-t border-slate-800">
-                            <span class="text-xs text-slate-500">Remaining Slots: ${task.remainingSlots ?? task.slots ?? 'Unlimited'}</span>
-                            <a href="task-details.html?id=${task.id}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl transition-all">View Task</a>
-                        </div>
-                    </div>
-                `).join('');
-
+                allTasks = await getTasks();
+                renderTasks(allTasks);
             } catch (error) {
                 console.error("Error loading tasks:", error);
                 document.getElementById('tasksContainer').innerHTML = `
@@ -91,6 +78,54 @@
                 `;
             }
         });
+
+        window.filterCategory = function(category) {
+            // Update active button styles
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if(btn.textContent.trim().toLowerCase() === category.toLowerCase() || (category === 'All' && btn.textContent.includes('All'))) {
+                    btn.className = "cat-btn px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-xl shrink-0 transition-all";
+                } else {
+                    btn.className = "cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all";
+                }
+            });
+
+            if (category === 'All') {
+                renderTasks(allTasks);
+            } else {
+                const filtered = allTasks.filter(t => t.category === category);
+                renderTasks(filtered);
+            }
+        }
+
+        function renderTasks(tasks) {
+            const container = document.getElementById('tasksContainer');
+            
+            if (!tasks || tasks.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full p-8 text-center bg-slate-900 border border-slate-800 rounded-3xl">
+                        <p class="text-slate-400">No active tasks available in this category right now!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = tasks.map(task => `
+                <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="px-2.5 py-0.5 bg-blue-500/10 text-blue-400 text-xs font-semibold rounded-md">${task.category || 'General'}</span>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-bold rounded-full">$${(task.reward || 0).toFixed(2)}</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">${task.title || 'Micro Job'}</h3>
+                        <p class="text-sm text-slate-400 mb-6">${task.description || 'Complete this simple task to earn reward.'}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+                        <span class="text-xs text-slate-500">Remaining Slots: ${task.remainingSlots ?? task.slots ?? 'Unlimited'}</span>
+                        <a href="task-details.html?id=${task.id}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl transition-all">View Task</a>
+                    </div>
+                </div>
+            `).join('');
+        }
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await logoutUser();
