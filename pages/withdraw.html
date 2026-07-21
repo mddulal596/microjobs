@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw - Micro Job Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 flex items-center justify-center min-h-screen p-6">
+    <div class="w-full max-w-md p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl">
+        <h1 class="text-2xl font-black text-white mb-6 text-center">Request Withdrawal</h1>
+        <form id="withdrawForm" class="space-y-5">
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Method</label>
+                <select id="method" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white">
+                    <option value="bKash">bKash</option>
+                    <option value="Nagad">Nagad</option>
+                    <option value="Rocket">Rocket</option>
+                    <option value="Bank">Bank Transfer</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Amount ($)</label>
+                <input type="number" id="amount" required min="5" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white">
+            </div>
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Account Number / Details</label>
+                <input type="text" id="details" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white">
+            </div>
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-lg">Submit Request</button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { requestWithdrawal } from '../firebase/firestore.js';
+        import { auth } from '../firebase/firebase-config.js';
+
+        document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            if (!user) { alert('Please login'); return; }
+
+            try {
+                await requestWithdrawal({
+                    userId: user.uid,
+                    method: document.getElementById('method').value,
+                    amount: parseFloat(document.getElementById('amount').value),
+                    accountDetails: document.getElementById('details').value
+                });
+                alert('Withdrawal request submitted successfully!');
+                window.location.href = 'wallet.html';
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+    </script>
+</body>
+</html>
