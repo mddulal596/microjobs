@@ -5,118 +5,203 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Details - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0B0F19',
+                        cardbg: '#111827',
+                        primary: '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
-    <main class="flex-1 flex flex-col overflow-y-auto p-6 md:p-12">
-        <div class="max-w-2xl w-full mx-auto space-y-6">
-            <div class="flex justify-between items-center">
-                <h2 class="text-xl font-bold text-white">Task Details & Proof</h2>
-                <a href="tasks.html" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition-all">Back to Marketplace</a>
-            </div>
+<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col">
+    
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
 
-            <!-- Task Info Card -->
-            <div id="taskCard" class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-4">
-                <div class="flex justify-between items-start">
-                    <span id="taskCategory" class="px-2.5 py-0.5 bg-blue-500/10 text-blue-400 text-xs font-semibold rounded-md">Category</span>
-                    <span class="text-emerald-400 font-bold text-lg" id="taskReward">$0.00</span>
-                </div>
-                <h3 id="taskTitle" class="text-xl font-bold text-white">Loading task...</h3>
-                
-                <!-- Slots & Time Info Section -->
-                <div class="space-y-2 pt-2 border-t border-slate-800/80">
-                    <div id="taskSlots" class="text-xs text-slate-300 font-medium">
-                        Loading slots info...
-                    </div>
-                    <div>
-                        <span id="taskTimeLimit" class="text-xs text-amber-400 font-semibold">Time Limit: 0 Minutes</span>
-                    </div>
-                </div>
-
-                <div class="pt-2">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Instructions:</h4>
-                    <p id="taskDesc" class="text-sm text-slate-300 whitespace-pre-line">Please wait while loading details...</p>
-                </div>
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800/80 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 shrink-0 shadow-2xl">
+        <div class="p-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">MicroJobPro</h1>
+                <button id="closeSidebar" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
-
-            <!-- Proof Submission Form -->
-            <div class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-4">
-                <h3 class="text-lg font-bold text-white">Submit Your Proof</h3>
-                <form id="proofForm" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Proof Details (Task Proof / Screenshot Link)</label>
-                        <textarea id="proofText" rows="4" required placeholder="Enter details or image link proving you completed the task..." class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500"></textarea>
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-600/30 transition-all">Submit Task Proof</button>
-                </form>
-            </div>
+            <nav class="mt-8 space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Dashboard</a>
+                <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25">Tasks Marketplace</a>
+                <a href="post-task.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Post New Job</a>
+                <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Wallet</a>
+                <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Withdraw</a>
+                <a href="referral.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Referrals</a>
+            </nav>
         </div>
-    </main>
+        <div class="p-6 border-t border-slate-800/80">
+            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm">Logout</button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 w-full">
+        <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
+            <div class="flex items-center gap-3">
+                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <a href="tasks.html" class="text-xs md:text-sm font-semibold text-blue-400 hover:underline">&larr; Back to Tasks</a>
+            </div>
+            
+            <div class="flex items-center gap-3 shrink-0">
+                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
+                <div class="hidden sm:block text-left">
+                    <p id="userName" class="text-sm font-bold text-white">Loading...</p>
+                    <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-4 md:p-8 max-w-4xl w-full mx-auto space-y-6">
+            <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-6">
+                
+                <div id="taskDetailsContainer" class="space-y-4">
+                    <div class="text-center py-10 text-slate-500 text-sm">Loading task information...</div>
+                </div>
+
+                <!-- Proof Submission Form -->
+                <div id="submissionSection" class="pt-6 border-t border-slate-800/80 space-y-4 hidden">
+                    <h3 class="text-lg font-bold text-white">Submit Your Proof</h3>
+                    <form id="proofForm" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-2">Proof Details (Link, Username, or Text Proof)</label>
+                            <textarea id="proofText" rows="3" required placeholder="Write details or provide screenshot link here..." class="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500"></textarea>
+                        </div>
+                        <button type="submit" id="submitProofBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-blue-500/25">Submit Proof for Review</button>
+                    </form>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="bg-cardbg border-t border-slate-800/80 py-6 px-8 mt-auto">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+                <p>&copy; 2026 MicroJobPro. All rights reserved.</p>
+                <div class="flex items-center gap-6 font-medium">
+                    <a href="#" class="hover:text-white transition-all">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-all">Terms of Service</a>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script type="module">
-        import { observeAuthState } from '../firebase/auth.js';
+        import { observeAuthState, logoutUser } from '../firebase/auth.js';
         import { db } from '../firebase/firebase-config.js';
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { submitTaskProof } from '../firebase/firestore.js';
+        import { doc, getDoc, addCollection, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const menuBtn = document.getElementById('menuBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+        menuBtn.addEventListener('click', toggleSidebar);
+        closeSidebar.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
 
         const urlParams = new URLSearchParams(window.location.search);
         const taskId = urlParams.get('id');
+
+        let currentTaskData = null;
+        let loggedInUser = null;
+
+        async function loadTaskDetails() {
+            if (!taskId) {
+                document.getElementById('taskDetailsContainer').innerHTML = `<div class="text-center py-10 text-red-400 text-sm">Invalid Task ID.</div>`;
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "tasks", taskId);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    document.getElementById('taskDetailsContainer').innerHTML = `<div class="text-center py-10 text-slate-400 text-sm">Task not found or expired.</div>`;
+                    return;
+                }
+
+                currentTaskData = docSnap.data();
+                
+                document.getElementById('taskDetailsContainer').innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-semibold rounded-full">${currentTaskData.category || 'General'}</span>
+                        <span class="text-emerald-400 font-bold text-base">Reward: ৳ ${Number(currentTaskData.reward || 0).toFixed(2)}</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mt-2">${currentTaskData.title}</h2>
+                    <div class="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl space-y-2">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase">Task Description / Instructions:</h4>
+                        <p class="text-sm text-slate-200 whitespace-pre-line">${currentTaskData.description}</p>
+                    </div>
+                `;
+                document.getElementById('submissionSection').classList.remove('hidden');
+            } catch (error) {
+                console.error("Error fetching task details:", error);
+            }
+        }
+
+        document.getElementById('proofForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!loggedInUser || !currentTaskData) return;
+
+            const proofText = document.getElementById('proofText').value;
+            const btn = document.getElementById('submitProofBtn');
+            btn.innerText = "Submitting...";
+            btn.disabled = true;
+
+            try {
+                await addDoc(collection(db, "submissions"), {
+                    taskId: taskId,
+                    taskTitle: currentTaskData.title,
+                    reward: currentTaskData.reward,
+                    workerId: loggedInUser.uid,
+                    workerEmail: loggedInUser.email,
+                    proof: proofText,
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+
+                alert("Proof submitted successfully! Awaiting admin review.");
+                window.location.href = 'tasks.html';
+            } catch (error) {
+                console.error("Error submitting proof:", error);
+                alert("Failed to submit proof. Try again.");
+                btn.innerText = "Submit Proof for Review";
+                btn.disabled = false;
+            }
+        });
 
         observeAuthState(async (user) => {
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
+            loggedInUser = user;
+            document.getElementById('userName').innerText = user.displayName || user.email.split('@')[0];
+            document.getElementById('userEmail').innerText = user.email;
+            if(user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
 
-            if (!taskId) {
-                alert('Invalid Task ID');
-                window.location.href = 'tasks.html';
-                return;
-            }
-
-            try {
-                const taskDoc = await getDoc(doc(db, "tasks", taskId));
-                if (taskDoc.exists()) {
-                    const task = taskDoc.data();
-                    
-                    const totalSlots = task.slots || 0;
-                    const remaining = task.remainingSlots ?? totalSlots;
-                    const completedCount = totalSlots - remaining;
-
-                    document.getElementById('taskTitle').innerText = task.title;
-                    document.getElementById('taskCategory').innerText = task.category || 'General';
-                    document.getElementById('taskReward').innerText = `$${(task.reward || 0).toFixed(2)}`;
-                    
-                    // টোটাল, কমপ্লিট এবং রিমেইনিং স্লট হিসাব দেখানো
-                    document.getElementById('taskSlots').innerHTML = `
-                        Total Slots: <span class="text-white font-bold">${totalSlots}</span> | 
-                        Completed: <span class="text-emerald-400 font-bold">${completedCount >= 0 ? completedCount : 0}</span> | 
-                        Remaining: <span class="text-amber-400 font-bold">${remaining >= 0 ? remaining : 'Unlimited'}</span>
-                    `;
-
-                    document.getElementById('taskTimeLimit').innerText = `Time Limit: ${task.timeLimit || 15} Minutes`;
-                    document.getElementById('taskDesc').innerText = task.description;
-                } else {
-                    alert('Task not found');
-                    window.location.href = 'tasks.html';
-                }
-            } catch (err) {
-                console.error(err);
-            }
+            loadTaskDetails();
         });
 
-        document.getElementById('proofForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            try {
-                await submitTaskProof({
-                    taskId: taskId,
-                    proof: document.getElementById('proofText').value
-                });
-                alert('Task proof submitted successfully! Waiting for admin review.');
-                window.location.href = 'tasks.html';
-            } catch (err) {
-                alert('Error submitting proof: ' + err.message);
-            }
+        document.getElementById('logoutBtnSidebar').addEventListener('click', async () => {
+            await logoutUser();
+            window.location.href = 'login.html';
         });
     </script>
 </body>
