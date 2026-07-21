@@ -28,11 +28,11 @@
     <!-- Main Content Area -->
     <main class="flex-1 flex flex-col overflow-y-auto">
         <header class="h-20 bg-slate-900/50 border-b border-slate-800 px-8 flex items-center justify-between">
-            <h2 class="text-xl font-bold text-white">Dashboard</h2>
+            <h2 class="text-xl font-bold text-white">Dashboard Overview</h2>
             
             <!-- User Profile Header Section -->
             <div class="flex items-center gap-3">
-                <img id="userAvatar" src="https://via.placeholder.com/150" alt="Profile" class="w-10 h-10 rounded-full object-cover border border-slate-700">
+                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border border-slate-700">
                 <div class="hidden md:block text-left">
                     <p id="userName" class="text-sm font-bold text-white">Loading...</p>
                     <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
@@ -41,7 +41,7 @@
         </header>
 
         <div class="p-8 max-w-7xl w-full mx-auto space-y-6">
-            <!-- Dashboard Welcome & Stats Cards -->
+            <!-- Welcome Card -->
             <div class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-4">
                 <h3 class="text-2xl font-bold text-white">Welcome back, <span id="welcomeName" class="text-blue-400">User</span>!</h3>
                 <p class="text-slate-400 text-sm">Here is a quick overview of your account activity and earnings.</p>
@@ -51,6 +51,8 @@
 
     <script type="module">
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { db } from '../firebase/firebase-config.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         observeAuthState(async (user) => {
             if (!user) {
@@ -59,15 +61,22 @@
             }
 
             try {
-                // ইউজারের নাম, ইমেইল এবং ছবি ফায়ারবেস থেকে নিয়ে এসে এইচটিএমএসে বসানো হচ্ছে
-                const displayName = user.displayName || user.email.split('@')[0] || 'Valued User';
+                let fullName = user.displayName || user.email.split('@')[0] || 'Valued User';
                 const email = user.email || 'No email available';
-                // যদি ইউজারের ছবি না থাকে তবে ডিফল্ট অ্যাভাটার দেখাবে
                 const photoURL = user.photoURL || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces';
 
-                document.getElementById('userName').innerText = displayName;
+                // Firestore থেকে ইউজারের আসল সম্পূর্ণ নাম ফেচ করা
+                const userDocRef = doc(db, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+                
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    fullName = userData.fullName || userData.name || userData.username || fullName;
+                }
+
+                document.getElementById('userName').innerText = fullName;
                 document.getElementById('userEmail').innerText = email;
-                document.getElementById('welcomeName').innerText = displayName;
+                document.getElementById('welcomeName').innerText = fullName;
                 document.getElementById('userAvatar').src = photoURL;
 
             } catch (error) {
