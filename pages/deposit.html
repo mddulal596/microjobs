@@ -7,25 +7,40 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 flex items-center justify-center min-h-screen p-6">
-    <div class="w-full max-w-md p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl">
-        <h1 class="text-2xl font-black text-white mb-6 text-center">Fund Advertiser Account</h1>
-        <form id="depositForm" class="space-y-5">
+    <div class="w-full max-w-lg p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl space-y-6">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-black text-white">Fund Advertiser Account</h1>
+            <a href="wallet.html" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-xl text-slate-300 font-semibold">Back</a>
+        </div>
+
+        <!-- Payment Instructions Box -->
+        <div class="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl text-xs space-y-1.5 text-slate-300">
+            <p class="font-bold text-emerald-400">ডিপোজিট নির্দেশিকা:</p>
+            <p>১. নিচের মার্চেন্ট/পার্সোনাল নম্বরে Send Money করুন।</p>
+            <p>• বিকাশ: <span class="text-white font-bold">01913932587</span></p>
+            <p>• নগদ: <span class="text-white font-bold">01913932587</span></p>
+            <p>• রকেট: <span class="text-white font-bold">01917044596</span></p>
+            <p>২. টাকা পাঠানোর পর প্রাপ্ত Transaction ID (TrxID) নিচের বক্সে দিন।</p>
+        </div>
+
+        <form id="depositForm" class="space-y-4">
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Gateway</label>
-                <select id="method" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white">
-                    <option value="bKash">bKash Merchant</option>
-                    <option value="Nagad">Nagad Merchant</option>
+                <select id="method" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500">
+                    <option value="bKash">bKash (01913932587)</option>
+                    <option value="Nagad">Nagad (01913932587)</option>
+                    <option value="Rocket">Rocket (01917044596)</option>
                 </select>
             </div>
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Amount ($)</label>
-                <input type="number" id="amount" required min="10" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white">
+                <input type="number" id="amount" required min="1" placeholder="Minimum amount" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500">
             </div>
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Transaction ID</label>
-                <input type="text" id="txId" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Transaction ID (TrxID)</label>
+                <input type="text" id="txId" required placeholder="Enter Transaction ID" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-blue-500">
             </div>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-bold shadow-lg">Confirm Deposit</button>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-blue-600/30 transition-all">Confirm Deposit</button>
         </form>
     </div>
 
