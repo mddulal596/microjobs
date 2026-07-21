@@ -20,10 +20,12 @@
         }
     </script>
 </head>
-<body class="bg-darkbg text-slate-100 flex h-screen overflow-hidden">
+<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col">
     
+    <!-- Sidebar Overlay -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
 
+    <!-- Sidebar Menu -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800/80 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 shrink-0 shadow-2xl">
         <div class="p-6">
             <div class="flex items-center justify-between">
@@ -46,10 +48,12 @@
         </div>
     </aside>
 
-    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col min-w-0 w-full">
+        <!-- Header -->
         <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
-            <div class="flex items-center gap-3">
-                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
                 <nav class="flex items-center gap-3 lg:gap-6 text-xs md:text-sm font-semibold text-slate-300 overflow-x-auto py-2 scrollbar-none">
@@ -59,7 +63,6 @@
                     <a href="#" class="hover:text-blue-400 transition-all shrink-0">Quiz</a>
                     <a href="#" class="hover:text-blue-400 transition-all shrink-0">Paid To Click</a>
                     <a href="#" class="hover:text-blue-400 transition-all shrink-0">Daily Check</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Analytics</a>
                 </nav>
             </div>
             
@@ -72,18 +75,31 @@
             </div>
         </header>
 
-        <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto space-y-6">
-            <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-4">
-                <h2 class="text-2xl font-bold text-white">Available Tasks Marketplace</h2>
-                <p class="text-slate-400 text-sm">Browse through available tasks, complete them, and earn rewards instantly.</p>
+        <!-- Main Marketplace Section -->
+        <main class="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto space-y-6">
+            <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Available Tasks Marketplace</h2>
+                    <p class="text-slate-400 text-sm mt-1">Browse through available tasks, complete them, and earn rewards instantly.</p>
+                </div>
+
+                <!-- Category Filter Buttons Bar -->
+                <div id="categoryFilters" class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                    <button data-category="All" class="category-btn px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl shrink-0 transition-all shadow-md">All Tasks</button>
+                    <button data-category="Social Media" class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl shrink-0 transition-all">Social Media</button>
+                    <button data-category="Website Visit" class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl shrink-0 transition-all">Website Visit</button>
+                    <button data-category="YouTube" class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl shrink-0 transition-all">YouTube</button>
+                    <button data-category="General" class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl shrink-0 transition-all">General</button>
+                </div>
                 
                 <!-- Dynamic Tasks Container -->
-                <div id="tasksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div id="tasksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     <div class="text-center py-10 text-slate-500 text-sm col-span-2">Loading tasks...</div>
                 </div>
             </div>
         </main>
 
+        <!-- Footer -->
         <footer class="bg-cardbg border-t border-slate-800/80 py-6 px-8 mt-auto">
             <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
                 <p>&copy; 2026 MicroJobPro. All rights reserved.</p>
@@ -96,6 +112,7 @@
         </footer>
     </div>
 
+    <!-- Scripts -->
     <script type="module">
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
         import { db } from '../firebase/firebase-config.js';
@@ -115,6 +132,58 @@
         closeSidebar.addEventListener('click', toggleSidebar);
         sidebarOverlay.addEventListener('click', toggleSidebar);
 
+        let allTasksList = [];
+        let currentCategory = 'All';
+
+        // Render Tasks Function based on selected category
+        function renderTasks(category) {
+            const container = document.getElementById('tasksContainer');
+            
+            let filteredTasks = allTasksList;
+            if (category !== 'All') {
+                filteredTasks = allTasksList.filter(task => (task.category || 'General').toLowerCase() === category.toLowerCase());
+            }
+
+            if (filteredTasks.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-slate-500 text-sm col-span-2">No tasks available in this category right now.</div>`;
+                return;
+            }
+
+            let html = '';
+            filteredTasks.forEach((task) => {
+                html += `
+                    <div class="p-5 bg-slate-900/60 border border-slate-800 rounded-2xl flex flex-col justify-between space-y-4 shadow-sm hover:border-slate-700 transition-all">
+                        <div>
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-semibold rounded-full">${task.category || 'General'}</span>
+                            <h3 class="text-lg font-bold text-white mt-2">${task.title || 'Untitled Job'}</h3>
+                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">${task.description || 'No description provided.'}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
+                            <span class="text-emerald-400 font-bold text-sm">৳ ${task.reward ? Number(task.reward).toFixed(2) : '0.00'}</span>
+                            <a href="task-details.html?id=${task.id}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-blue-500/20">View Task</a>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Category Filter Button Event Listeners
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                categoryBtns.forEach(b => {
+                    b.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+                    b.classList.add('bg-slate-800', 'text-slate-300');
+                });
+                e.target.classList.remove('bg-slate-800', 'text-slate-300');
+                e.target.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+                
+                currentCategory = e.target.getAttribute('data-category');
+                renderTasks(currentCategory);
+            });
+        });
+
         // Fetch tasks from Firestore
         async function loadTasks() {
             const container = document.getElementById('tasksContainer');
@@ -125,25 +194,15 @@
                     return;
                 }
 
-                let html = '';
+                allTasksList = [];
                 querySnapshot.forEach((docSnap) => {
-                    const task = docSnap.data();
-                    const taskId = docSnap.id;
-                    html += `
-                        <div class="p-5 bg-slate-900/60 border border-slate-800 rounded-2xl flex flex-col justify-between space-y-4 shadow-sm">
-                            <div>
-                                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-semibold rounded-full">${task.category || 'General'}</span>
-                                <h3 class="text-lg font-bold text-white mt-2">${task.title || 'Untitled Job'}</h3>
-                                <p class="text-xs text-slate-400 mt-1 line-clamp-2">${task.description || 'No description provided.'}</p>
-                            </div>
-                            <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
-                                <span class="text-emerald-400 font-bold text-sm">৳ ${task.reward ? Number(task.reward).toFixed(2) : '0.00'}</span>
-                                <a href="task-details.html?id=${taskId}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all shadow-md shadow-blue-500/20">View Task</a>
-                            </div>
-                        </div>
-                    `;
+                    allTasksList.push({
+                        id: docSnap.id,
+                        ...docSnap.data()
+                    });
                 });
-                container.innerHTML = html;
+
+                renderTasks(currentCategory);
             } catch (error) {
                 console.error("Error loading tasks:", error);
                 container.innerHTML = `<div class="text-center py-10 text-red-400 text-sm col-span-2">Failed to load tasks. Please try again.</div>`;
@@ -172,7 +231,6 @@
                 document.getElementById('userEmail').innerText = email;
                 document.getElementById('userAvatar').src = photoURL;
 
-                // Load tasks once user is verified
                 loadTasks();
             } catch (error) {
                 console.error("Error loading profile:", error);
