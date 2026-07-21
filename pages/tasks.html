@@ -28,16 +28,15 @@
     <main class="flex-1 flex flex-col overflow-y-auto">
         <header class="h-20 bg-slate-900/50 border-b border-slate-800 px-8 flex items-center justify-between">
             <h2 class="text-xl font-bold text-white">Tasks Marketplace</h2>
-            <div class="flex items-center gap-3">
-                <span class="text-sm text-slate-400">Available Jobs</span>
+            <div class="flex items-center gap-4">
+                <a href="post-task.html" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl shadow-lg shadow-blue-600/30 transition-all">+ Post Job</a>
             </div>
         </header>
 
         <div class="p-8 max-w-7xl w-full mx-auto space-y-6">
             <!-- Tasks List Container -->
             <div id="tasksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Dynamic tasks will load here -->
-                <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl text-center text-slate-400">
+                <div class="col-span-full p-8 text-center bg-slate-900 border border-slate-800 rounded-3xl text-slate-400">
                     Loading available tasks...
                 </div>
             </div>
@@ -58,7 +57,7 @@
                 const tasks = await getTasks();
                 const container = document.getElementById('tasksContainer');
                 
-                if (tasks.length === 0) {
+                if (!tasks || tasks.length === 0) {
                     container.innerHTML = `
                         <div class="col-span-full p-8 text-center bg-slate-900 border border-slate-800 rounded-3xl">
                             <p class="text-slate-400">No active tasks available right now. Please check back later!</p>
@@ -72,12 +71,12 @@
                         <div>
                             <div class="flex justify-between items-start mb-4">
                                 <h3 class="text-lg font-bold text-white">${task.title || 'Micro Job'}</h3>
-                                <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-bold rounded-full">$${task.reward || '0.10'}</span>
+                                <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-bold rounded-full">$${(task.reward || 0).toFixed(2)}</span>
                             </div>
                             <p class="text-sm text-slate-400 mb-6">${task.description || 'Complete this simple task to earn reward.'}</p>
                         </div>
                         <div class="flex items-center justify-between pt-4 border-t border-slate-800">
-                            <span class="text-xs text-slate-500">Slots: ${task.remainingSlots || task.slots || 'Unlimited'}</span>
+                            <span class="text-xs text-slate-500">Remaining Slots: ${task.remainingSlots ?? task.slots ?? 'Unlimited'}</span>
                             <a href="task-details.html?id=${task.id}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl transition-all">View Task</a>
                         </div>
                     </div>
@@ -85,6 +84,11 @@
 
             } catch (error) {
                 console.error("Error loading tasks:", error);
+                document.getElementById('tasksContainer').innerHTML = `
+                    <div class="col-span-full p-8 text-center bg-slate-900 border border-slate-800 rounded-3xl text-red-400">
+                        Failed to load tasks. Please check console for details.
+                    </div>
+                `;
             }
         });
 
