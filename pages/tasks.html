@@ -7,42 +7,91 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
-    <main class="flex-1 flex flex-col overflow-y-auto p-8 max-w-7xl mx-auto w-full">
-        <header class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-black text-white">Tasks Marketplace</h1>
-            <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-sm font-semibold">Back to Dashboard</a>
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between hidden md:flex">
+        <div class="p-6">
+            <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">MicroJobPro</h1>
+            <nav class="mt-8 space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Dashboard</a>
+                <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-xl font-semibold">Tasks Marketplace</a>
+                <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Wallet</a>
+                <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Withdraw</a>
+                <a href="referral.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800 rounded-xl font-semibold">Referrals</a>
+            </nav>
+        </div>
+        <div class="p-6 border-t border-slate-800">
+            <button id="logoutBtn" class="w-full bg-red-600/10 text-red-500 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all">Logout</button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col overflow-y-auto">
+        <header class="h-20 bg-slate-900/50 border-b border-slate-800 px-8 flex items-center justify-between">
+            <h2 class="text-xl font-bold text-white">Tasks Marketplace</h2>
+            <div class="flex items-center gap-3">
+                <span class="text-sm text-slate-400">Available Jobs</span>
+            </div>
         </header>
 
-        <div id="taskList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Dynamic Tasks loaded here -->
+        <div class="p-8 max-w-7xl w-full mx-auto space-y-6">
+            <!-- Tasks List Container -->
+            <div id="tasksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Dynamic tasks will load here -->
+                <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl text-center text-slate-400">
+                    Loading available tasks...
+                </div>
+            </div>
         </div>
     </main>
 
     <script type="module">
+        import { observeAuthState, logoutUser } from '../firebase/auth.js';
         import { getTasks } from '../firebase/firestore.js';
 
-        async function loadTasks() {
-            const tasks = await getTasks();
-            const container = document.getElementById('taskList');
-            container.innerHTML = '';
-            
-            tasks.forEach(task => {
-                container.innerHTML += `
+        observeAuthState(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const tasks = await getTasks();
+                const container = document.getElementById('tasksContainer');
+                
+                if (tasks.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-span-full p-8 text-center bg-slate-900 border border-slate-800 rounded-3xl">
+                            <p class="text-slate-400">No active tasks available right now. Please check back later!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = tasks.map(task => `
                     <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between">
                         <div>
-                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold rounded-full uppercase">${task.category}</span>
-                            <h3 class="text-xl font-bold text-white mt-4">${task.title}</h3>
-                            <p class="text-slate-400 text-sm mt-2 line-clamp-2">${task.instructions}</p>
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-lg font-bold text-white">${task.title || 'Micro Job'}</h3>
+                                <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-bold rounded-full">$${task.reward || '0.10'}</span>
+                            </div>
+                            <p class="text-sm text-slate-400 mb-6">${task.description || 'Complete this simple task to earn reward.'}</p>
                         </div>
-                        <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
-                            <span class="text-xl font-black text-emerald-400">$${task.reward}</span>
-                            <a href="task-details.html?id=${task.id}" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-semibold">View Task</a>
+                        <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+                            <span class="text-xs text-slate-500">Slots: ${task.remainingSlots || task.slots || 'Unlimited'}</span>
+                            <a href="task-details.html?id=${task.id}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl transition-all">View Task</a>
                         </div>
                     </div>
-                `;
-            });
-        }
-        loadTasks();
+                `).join('');
+
+            } catch (error) {
+                console.error("Error loading tasks:", error);
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await logoutUser();
+            window.location.href = 'login.html';
+        });
     </script>
 </body>
 </html>
