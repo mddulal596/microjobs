@@ -39,10 +39,15 @@
             <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="categoryFilterBar">
                 <button onclick="filterCategory('All')" class="cat-btn px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-xl shrink-0 transition-all">All Tasks</button>
                 <button onclick="filterCategory('YouTube Subscribe')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">YouTube Subscribe</button>
-                <button onclick="filterCategory('Website Visit')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Website Visit</button>
+                <button onclick="filterCategory('YouTube Watch')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">YouTube Watch</button>
                 <button onclick="filterCategory('Facebook Like')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Facebook Like</button>
+                <button onclick="filterCategory('Facebook Follow')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Facebook Follow</button>
+                <button onclick="filterCategory('TikTok Follow')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">TikTok Follow</button>
+                <button onclick="filterCategory('Twitter Follow')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Twitter Follow</button>
                 <button onclick="filterCategory('Instagram Follow')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Instagram Follow</button>
+                <button onclick="filterCategory('Website Visit')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Website Visit</button>
                 <button onclick="filterCategory('Telegram Join')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Telegram Join</button>
+                <button onclick="filterCategory('Custom Task')" class="cat-btn px-4 py-2 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-xs font-semibold rounded-xl shrink-0 transition-all">Custom Tasks</button>
             </div>
 
             <!-- Tasks List Container -->
@@ -80,7 +85,6 @@
         });
 
         window.filterCategory = function(category) {
-            // Update active button styles
             document.querySelectorAll('.cat-btn').forEach(btn => {
                 if(btn.textContent.trim().toLowerCase() === category.toLowerCase() || (category === 'All' && btn.textContent.includes('All'))) {
                     btn.className = "cat-btn px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-xl shrink-0 transition-all";
