@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Micro Job Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 flex h-screen overflow-hidden">
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between p-6">
+        <div>
+            <h1 class="text-2xl font-black text-red-500">Admin Panel</h1>
+            <nav class="mt-8 space-y-2">
+                <a href="index.html" class="flex items-center gap-3 px-4 py-3 bg-red-600 text-white rounded-xl font-semibold">Overview</a>
+            </nav>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-y-auto p-8">
+        <h1 class="text-3xl font-black text-white mb-8">Platform Administration Control</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl">
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Users</p>
+                <h3 id="totalUsers" class="text-3xl font-black text-white mt-2">--</h3>
+            </div>
+            <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl">
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Tasks</p>
+                <h3 id="totalTasks" class="text-3xl font-black text-white mt-2">--</h3>
+            </div>
+            <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl">
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Pending Withdrawals</p>
+                <h3 id="totalWithdrawals" class="text-3xl font-black text-amber-400 mt-2">--</h3>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { db } from '../firebase/firebase-config.js';
+        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        async function loadStats() {
+            const usersSnap = await getDocs(collection(db, "users"));
+            const tasksSnap = await getDocs(collection(db, "tasks"));
+            const withdrawSnap = await getDocs(collection(db, "withdrawals"));
+
+            document.getElementById('totalUsers').innerText = usersSnap.size;
+            document.getElementById('totalTasks').innerText = tasksSnap.size;
+            document.getElementById('totalWithdrawals').innerText = withdrawSnap.size;
+        }
+        loadStats();
+    </script>
+</body>
+</html>
