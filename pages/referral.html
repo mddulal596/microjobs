@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referrals - Micro Job Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 p-8">
+    <div class="max-w-3xl mx-auto space-y-8">
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-black text-white">Referral Program</h1>
+            <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-sm font-semibold">Back</a>
+        </div>
+        <div class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl space-y-4">
+            <p class="text-sm text-slate-400">Share your exclusive link and earn 5% lifetime commissions on all your referrals' completed jobs.</p>
+            <div class="flex gap-4">
+                <input type="text" id="refLink" readonly class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white font-mono text-sm" value="Loading...">
+                <button id="copyBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-xl font-bold">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth } from '../firebase/firebase-config.js';
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                const link = `${window.location.origin}/pages/register.html?ref=${user.uid}`;
+                document.getElementById('refLink').value = link;
+            }
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const input = document.getElementById('refLink');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            alert('Referral link copied to clipboard!');
+        });
+    </script>
+</body>
+</html>
