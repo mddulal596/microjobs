@@ -5,53 +5,166 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Withdraw - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0B0F19',
+                        cardbg: '#111827',
+                        primary: '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-slate-950 text-slate-100 flex items-center justify-center min-h-screen p-6">
-    <div class="w-full max-w-md p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl">
-        <h1 class="text-2xl font-black text-white mb-6 text-center">Request Withdrawal</h1>
-        <form id="withdrawForm" class="space-y-5">
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Method</label>
-                <select id="method" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white">
-                    <option value="bKash">bKash</option>
-                    <option value="Nagad">Nagad</option>
-                    <option value="Rocket">Rocket</option>
-                    <option value="Bank">Bank Transfer</option>
-                </select>
+<body class="bg-darkbg text-slate-100 flex h-screen overflow-hidden">
+    
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800/80 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 shrink-0 shadow-2xl">
+        <div class="p-6">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">MicroJobPro</h1>
+                <button id="closeSidebar" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Amount ($)</label>
-                <input type="number" id="amount" required min="5" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white">
+            <nav class="mt-8 space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Dashboard</a>
+                <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Tasks Marketplace</a>
+                <a href="post-task.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Post New Job</a>
+                <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Wallet</a>
+                <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25">Withdraw</a>
+                <a href="referral.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Referrals</a>
+            </nav>
+        </div>
+        <div class="p-6 border-t border-slate-800/80">
+            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm">Logout</button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
+            <div class="flex items-center gap-3">
+                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <nav class="flex items-center gap-3 lg:gap-6 text-xs md:text-sm font-semibold text-slate-300 overflow-x-auto py-2 scrollbar-none">
+                    <a href="dashboard.html" class="hover:text-blue-400 transition-all shrink-0">Home</a>
+                    <a href="tasks.html" class="hover:text-blue-400 transition-all shrink-0">Jobs</a>
+                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Advertisers</a>
+                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Quiz</a>
+                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Paid To Click</a>
+                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Daily Check</a>
+                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Analytics</a>
+                </nav>
             </div>
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Account Number / Details</label>
-                <input type="text" id="details" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white">
+            
+            <div class="flex items-center gap-3 shrink-0">
+                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
+                <div class="hidden sm:block text-left">
+                    <p id="userName" class="text-sm font-bold text-white">Loading...</p>
+                    <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
+                </div>
             </div>
-            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-lg">Submit Request</button>
-        </form>
+        </header>
+
+        <main class="flex-1 p-6 md:p-8 max-w-4xl w-full mx-auto space-y-6">
+            <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Request Withdrawal</h2>
+                    <p class="text-slate-400 text-sm mt-1">Withdraw your hard-earned money safely to your preferred payment method.</p>
+                </div>
+
+                <form id="withdrawForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Select Payment Method</label>
+                        <select class="w-full px-4 py-3 bg-slate-900/80 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 transition-all">
+                            <option>Bkash (Personal)</option>
+                            <option>Nagad (Personal)</option>
+                            <option>Rocket (Personal)</option>
+                            <option>Binance (USDT)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Account Number / Wallet Address</label>
+                        <input type="text" placeholder="e.g., 017XXXXXXXX" class="w-full px-4 py-3 bg-slate-900/80 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Withdraw Amount (৳)</label>
+                        <input type="number" placeholder="100.00" class="w-full px-4 py-3 bg-slate-900/80 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 transition-all">
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition-all">Submit Withdrawal</button>
+                </form>
+            </div>
+        </main>
+
+        <footer class="bg-cardbg border-t border-slate-800/80 py-6 px-8 mt-auto">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+                <p>&copy; 2026 MicroJobPro. All rights reserved.</p>
+                <div class="flex items-center gap-6 font-medium">
+                    <a href="#" class="hover:text-white transition-all">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-all">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-all">Support</a>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script type="module">
-        import { requestWithdrawal } from '../firebase/firestore.js';
-        import { auth } from '../firebase/firebase-config.js';
+        import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { db } from '../firebase/firebase-config.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const user = auth.currentUser;
-            if (!user) { alert('Please login'); return; }
+        const menuBtn = document.getElementById('menuBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+
+        menuBtn.addEventListener('click', toggleSidebar);
+        closeSidebar.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        observeAuthState(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
 
             try {
-                await requestWithdrawal({
-                    userId: user.uid,
-                    method: document.getElementById('method').value,
-                    amount: parseFloat(document.getElementById('amount').value),
-                    accountDetails: document.getElementById('details').value
-                });
-                alert('Withdrawal request submitted successfully!');
-                window.location.href = 'wallet.html';
-            } catch (err) {
-                alert(err.message);
+                let fullName = user.displayName || user.email.split('@')[0] || 'Valued User';
+                const email = user.email || 'No email available';
+                const photoURL = user.photoURL || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces';
+
+                const userDocRef = doc(db, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    fullName = userData.fullName || userData.name || userData.displayName || userData.username || fullName;
+                }
+
+                document.getElementById('userName').innerText = fullName;
+                document.getElementById('userEmail').innerText = email;
+                document.getElementById('userAvatar').src = photoURL;
+            } catch (error) {
+                console.error("Error loading profile:", error);
             }
+        });
+
+        document.getElementById('logoutBtnSidebar').addEventListener('click', async () => {
+            await logoutUser();
+            window.location.href = 'login.html';
         });
     </script>
 </body>
