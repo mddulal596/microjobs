@@ -28,48 +28,45 @@
     <main class="flex-1 flex flex-col overflow-y-auto">
         <header class="h-20 bg-slate-900/50 border-b border-slate-800 px-8 flex items-center justify-between">
             <h2 class="text-xl font-bold text-white">My Wallet</h2>
-            <a href="withdraw.html" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl shadow-lg shadow-emerald-600/30 transition-all">Withdraw Funds</a>
+            <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition-all">Back to Dashboard</a>
         </header>
 
-        <div class="p-8 max-w-7xl w-full mx-auto space-y-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl">
-                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Main Balance</p>
-                    <h3 id="walletMainBalance" class="text-3xl font-black text-emerald-400 mt-2">$0.00</h3>
+        <div class="p-8 max-w-4xl w-full mx-auto space-y-8">
+            <div class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl flex flex-col sm:flex-row justify-between items-center gap-6">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Main Balance</p>
+                    <h2 id="walletBalance" class="text-4xl font-black text-emerald-400 mt-2">$0.00</h2>
                 </div>
-                <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl">
-                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Withdrawn</p>
-                    <h3 id="totalWithdrawn" class="text-3xl font-black text-blue-400 mt-2">$0.00</h3>
-                </div>
-                <div class="p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl">
-                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Earned</p>
-                    <h3 id="totalEarned" class="text-3xl font-black text-indigo-400 mt-2">$0.00</h3>
+                <div class="flex gap-4">
+                    <a href="deposit.html" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">Deposit</a>
+                    <a href="withdraw.html" class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">Withdraw</a>
                 </div>
             </div>
         </div>
     </main>
 
     <script type="module">
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
-        import { db } from '../firebase/firebase-config.js';
+        import { auth, db } from '../firebase/firebase-config.js';
         import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        observeAuthState(async (user) => {
+        auth.onAuthStateChanged(async (user) => {
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
-            const userSnap = await getDoc(doc(db, "users", user.uid));
-            if (userSnap.exists()) {
-                const data = userSnap.data();
-                document.getElementById('walletMainBalance').innerText = `$${(data.balances?.main || 0).toFixed(2)}`;
-                document.getElementById('totalWithdrawn').innerText = `$${(data.totalWithdrawn || 0).toFixed(2)}`;
-                document.getElementById('totalEarned').innerText = `$${(data.totalEarned || 0).toFixed(2)}`;
+            try {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    document.getElementById('walletBalance').innerText = `$${(snap.data().balances?.main || 0).toFixed(2)}`;
+                }
+            } catch (error) {
+                console.error("Error fetching balance:", error);
             }
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await logoutUser();
+        document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+            await signOut(auth);
             window.location.href = 'login.html';
         });
     </script>
