@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Details - Micro Job Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 flex items-center justify-center min-h-screen p-6">
+    <div class="w-full max-w-2xl p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl">
+        <h1 id="taskTitle" class="text-2xl font-black text-white mb-2">Loading Task...</h1>
+        <p id="taskCategory" class="text-xs font-bold uppercase text-blue-400 mb-6"></p>
+        
+        <div class="space-y-6">
+            <div>
+                <h3 class="text-sm font-bold uppercase text-slate-400 mb-2">Instructions</h3>
+                <p id="taskInstructions" class="text-slate-200 bg-slate-950 p-4 rounded-xl border border-slate-800"></p>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold uppercase text-slate-400 mb-2">Submit Proof</h3>
+                <textarea id="proofText" placeholder="Paste required text or URL proof here..." class="w-full h-32 px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:border-blue-500 text-white"></textarea>
+            </div>
+            <button id="submitProofBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-emerald-600/30 transition-all">Submit Proof for Review</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { db } from '../firebase/firebase-config.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { submitTaskProof } from '../firebase/firestore.js';
+        import { auth } from '../firebase/firebase-config.js';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const taskId = urlParams.get('id');
+
+        async function loadTask() {
+            const taskDoc = await getDoc(doc(db, "tasks", taskId));
+            if (taskDoc.exists()) {
+                const data = taskDoc.data();
+                document.getElementById('taskTitle').innerText = data.title;
+                document.getElementById('taskCategory').innerText = data.category;
+                document.getElementById('taskInstructions').innerText = data.instructions;
+            }
+        }
+        loadTask();
+
+        document.getElementById('submitProofBtn').addEventListener('click', async () => {
+            const user = auth.currentUser;
+            if (!user) { alert('Please login first'); return; }
+            
+            try {
+                await submitTaskProof({
+                    taskId: taskId,
+                    workerId: user.uid,
+                    proofText: document.getElementById('proofText').value
+                });
+                alert('Proof submitted successfully!');
+                window.location.href = 'tasks.html';
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+    </script>
+</body>
+</html>
