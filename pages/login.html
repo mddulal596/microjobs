@@ -6,57 +6,92 @@
     <title>Login - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen px-4 transform-gpu">
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-8">
-        <h2 class="text-2xl font-extrabold text-indigo-600 text-center mb-6">Welcome Back</h2>
-        <div id="errorMsg" class="hidden mb-4 p-3 bg-red-100 text-red-700 rounded-xl text-sm"></div>
-        <form id="loginForm" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Email Address</label>
-                <input type="email" id="email" required class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" id="password" required class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500">
-            </div>
-            <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 transition">Login</button>
-        </form>
-        <div class="mt-4 text-center">
-            <button id="googleLoginBtn" class="w-full py-3 bg-white border border-gray-300 text-gray-700 font-bold rounded-xl shadow-sm hover:bg-gray-50 transition flex items-center justify-center gap-2">
-                <span>Login with Google</span>
-            </button>
+<body class="bg-gray-100 text-gray-800 antialiased transform-gpu flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-md w-full bg-white shadow-xl rounded-3xl p-6 space-y-6">
+        
+        <!-- Header -->
+        <div class="text-center space-y-1">
+            <h1 class="text-xl font-extrabold text-indigo-600 tracking-wide">Micro Job Pro</h1>
+            <p class="text-xs text-gray-500">Sign in to your account to continue</p>
         </div>
-        <p class="mt-6 text-center text-sm text-gray-600">Don't have an account? <a href="register.html" class="text-indigo-600 font-bold">Register</a></p>
+
+        <!-- Google Login Button -->
+        <button id="googleLoginBtn" class="w-full py-3 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 font-bold text-xs rounded-2xl shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
+            <span class="text-base">🌐</span>
+            <span>Continue with Google</span>
+        </button>
+
+        <div class="flex items-center my-4">
+            <div class="flex-grow border-t border-gray-200"></div>
+            <span class="px-3 text-[11px] text-gray-400 font-medium uppercase">Or with email</span>
+            <div class="flex-grow border-t border-gray-200"></div>
+        </div>
+
+        <!-- Email/Password Form -->
+        <form id="loginForm" class="space-y-4">
+            <div class="space-y-1">
+                <label class="text-xs font-bold text-gray-700">Email Address</label>
+                <input type="email" id="emailInput" required placeholder="name@example.com" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs text-gray-800 focus:outline-none focus:border-indigo-600">
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-xs font-bold text-gray-700">Password</label>
+                <input type="password" id="passwordInput" required placeholder="••••••••" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-xs text-gray-800 focus:outline-none focus:border-indigo-600">
+            </div>
+
+            <button type="submit" id="loginBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-2xl shadow-md transition cursor-pointer">
+                Sign In
+            </button>
+        </form>
+
+        <!-- Footer / Register Link -->
+        <div class="text-center pt-2">
+            <p class="text-xs text-gray-500">
+                Don't have an account? 
+                <a href="register.html" class="text-indigo-600 font-bold hover:underline">Register Now</a>
+            </p>
+        </div>
+
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- Firebase Script & Logic -->
     <script type="module">
         import { loginWithEmail, loginWithGoogle } from '../firebase/auth.js';
-        
+
+        // Email & Password Login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+            const btn = document.getElementById('loginBtn');
+
+            if (!email || !password) {
+                alert('দয়া করে ইমেল এবং পাসওয়ার্ড পূরণ করুন!');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Signing In...";
+
             try {
                 await loginWithEmail(email, password);
                 window.location.href = 'dashboard.html';
-            } catch (err) {
-                const errDiv = document.getElementById('errorMsg');
-                errDiv.innerText = err.message;
-                errDiv.classList.remove('hidden');
+            } catch (error) {
+                console.error("Login error:", error);
+                alert('লগইন ব্যর্থ হয়েছে: ' + error.message);
+                btn.disabled = false;
+                btn.innerText = "Sign In";
             }
         });
 
+        // Google Login
         document.getElementById('googleLoginBtn').addEventListener('click', async () => {
             try {
                 await loginWithGoogle();
                 window.location.href = 'dashboard.html';
-            } catch (err) {
-                const errDiv = document.getElementById('errorMsg');
-                errDiv.innerText = err.message;
-                errDiv.classList.remove('hidden');
+            } catch (error) {
+                console.error("Google login error:", error);
+                alert('গুগল লগইন ব্যর্থ হয়েছে: ' + error.message);
             }
         });
     </script>
