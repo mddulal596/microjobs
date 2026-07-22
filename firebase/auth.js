@@ -1,67 +1,104 @@
-import { auth, db } from './firebase-config.js';
+// firebase/auth.js
 import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  GoogleAuthProvider, 
-  signInWithPopup, 
-  signOut, 
-  sendPasswordResetEmail,
-  onAuthStateChanged 
+    onAuthStateChanged, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    signOut, 
+    updateProfile 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { auth, db } from './firebase-config.js';
 
-export async function registerUser(email, password, name, referralCode) {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  const user = userCredential.user;
-  
-  await setDoc(doc(db, "users", user.uid), {
-    uid: user.uid,
-    email: email,
-    displayName: name,
-    role: "worker",
-    balances: { main: 0, pending: 0, bonus: 0, referral: 0 },
-    level: 1,
-    streak: 1,
-    createdAt: new Date().toISOString()
-  });
-  return user;
+export function observeAuthState(callback) {
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            try {
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    callback({ uid: user.uid, ...docSnap.data() });
+                } else {
+                    const defaultData = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || "User",
+                        photoURL: user.photoURL || "",
+                        balances: {
+                            main: 0,
+                            deposit: 0,
+                            pending: 0,
+                            bonus: 0,
+                            referral: 0
+                        },
+                        createdAt: serverTimestamp()
+                    };
+                    await setDoc(docRef, defaultData);
+                    callback(defaultData);
+                }
+            } catch (error) {
+                console.error("Error fetching user document:", error);
+                callback({ uid: user.uid, email: user.email });
+            }
+        } else {
+            callback(null);
+        }
+    });
 }
 
-export async function loginUser(email, password) {
-  return await signInWithEmailAndPassword(auth, email, password);
+export async function loginWithEmail(email, password) {
+    return await signInWithEmailAndPassword(auth, email, password);
+}
+
+export async function registerWithEmail(email, password, displayName) {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    const user = cred.user;
+    if (displayName) {
+        await updateProfile(user, { displayName });
+    }
+    await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        email: user.email,
+        displayName: displayName || "User",
+        photoURL: "",
+        balances: {
+            main: 0,
+            deposit: 0,
+            pending: 0,
+            bonus: 0,
+            referral: 0
+        },
+        createdAt: serverTimestamp()
+    });
+    return user;
 }
 
 export async function loginWithGoogle() {
-  const provider = new GoogleAuthProvider();
-  const result = await signInWithPopup(auth, provider);
-  const user = result.user;
-  
-  const userRef = doc(db, "users", user.uid);
-  const userSnap = await getDoc(userRef);
-  
-  if (!userSnap.exists()) {
-    await setDoc(userRef, {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      role: "worker",
-      balances: { main: 0, pending: 0, bonus: 0, referral: 0 },
-      level: 1,
-      streak: 1,
-      createdAt: new Date().toISOString()
-    });
-  }
-  return user;
+    const provider = new GoogleAuthProvider();
+    const cred = await signInWithPopup(auth, provider);
+    const user = cred.user;
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+        await setDoc(docRef, {
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName || "User",
+            photoURL: user.photoURL || "",
+            balances: {
+                main: 0,
+                deposit: 0,
+                pending: 0,
+                bonus: 0,
+                referral: 0
+            },
+            createdAt: serverTimestamp()
+        });
+    }
+    return user;
 }
 
 export async function logoutUser() {
-  return await signOut(auth);
-}
-
-export async function resetPassword(email) {
-  return await sendPasswordResetEmail(auth, email);
-}
-
-export function observeAuthState(callback) {
-  onAuthStateChanged(auth, callback);
+    return await signOut(auth);
 }
