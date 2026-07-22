@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Program - Micro Job Pro</title>
+    <title>Profile - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24">
         
-        <!-- Top Header & Balances (Profile Icon & Full Name) -->
+        <!-- Top Header & Balances (Profile Icon, Name & Balances) -->
         <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-base font-extrabold tracking-wide">Referral Program</h1>
+                <h1 class="text-base font-extrabold tracking-wide">My Profile</h1>
                 <div class="flex items-center">
-                    <a href="profile.html" class="flex items-center gap-2 bg-indigo-700/80 hover:bg-indigo-700 border border-indigo-400/40 px-3 py-1.5 rounded-full shadow-inner transition">
+                    <div class="flex items-center gap-2 bg-indigo-700/80 border border-indigo-400/40 px-3 py-1.5 rounded-full shadow-inner">
                         <div id="profileIconBtn" class="w-6 h-6 bg-white text-indigo-600 rounded-full flex items-center justify-center text-xs font-extrabold shadow">
                             U
                         </div>
-                        <span id="userNameDisplay" class="text-xs font-bold tracking-wide truncate max-w-[100px]">Loading...</span>
-                    </a>
+                        <span id="userNameDisplay" class="text-xs font-bold tracking-wide truncate max-w-[120px]">Loading...</span>
+                    </div>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3 mt-2">
@@ -37,36 +37,52 @@
         <!-- Main Content Area -->
         <main class="p-4 flex-grow space-y-4 overflow-y-auto">
             
-            <!-- Invite Banner Info -->
-            <div class="space-y-1">
-                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">INVITE FRIENDS & EARN COMMISSION</h2>
-                <p class="text-[11px] text-gray-500 leading-relaxed">
-                    Share your unique referral code with friends. When they join using your code and complete tasks, you will earn lifetime bonuses!
-                </p>
+            <!-- Referral Code Submit Section -->
+            <div id="referralSection" class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm hidden">
+                <div class="space-y-1">
+                    <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Have a Referral Code?</h2>
+                    <p class="text-[11px] text-gray-500 leading-relaxed">
+                        Enter a friend's 6-digit referral code below to claim your instant ৳10 bonus!
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="submitRefCodeInput" maxlength="6" placeholder="e.g. MJP123" class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-widest text-indigo-600 focus:outline-none focus:border-indigo-600">
+                    <button id="applyRefBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition whitespace-nowrap cursor-pointer">
+                        Apply Code
+                    </button>
+                </div>
             </div>
 
-            <!-- Referral Code Card -->
-            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3 shadow-sm text-center">
-                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">YOUR REFERRAL CODE</p>
-                <div class="py-1">
-                    <input type="text" id="myReferralCode" readonly class="w-full bg-transparent text-center text-2xl font-extrabold text-indigo-600 tracking-widest focus:outline-none" value="Loading...">
+            <!-- Account Details Card -->
+            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm">
+                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Account Details</h2>
+                
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-xs text-gray-500 font-medium">Email Address</span>
+                    <span id="userEmail" class="text-xs font-bold text-gray-800 truncate max-w-[180px]">loading...</span>
                 </div>
-                <button onclick="copyReferralCode()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
-                    <span class="text-base">📋</span>
-                    <span>Copy Code</span>
-                </button>
+
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-xs text-gray-500 font-medium">My Referral Code</span>
+                    <span id="myRefCodeDisplay" class="text-xs font-bold text-indigo-600 tracking-wider">Loading...</span>
+                </div>
+                
+                <div class="flex justify-between items-center py-2">
+                    <span class="text-xs text-gray-500 font-medium">Total Team</span>
+                    <span id="totalTeamDisplay" class="text-xs font-bold text-gray-800">0</span>
+                </div>
             </div>
 
-            <!-- Stats Side-by-Side -->
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRED</p>
-                    <h3 id="totalTeam" class="text-lg font-extrabold text-indigo-600">0</h3>
-                </div>
-                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">REFERRAL EARNINGS</p>
-                    <h3 id="referralEarnings" class="text-lg font-extrabold text-green-600">৳ 0.00</h3>
-                </div>
+            <!-- Quick Navigation Links -->
+            <div class="space-y-2">
+                <a href="referral.html" class="w-full bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex items-center justify-between text-xs font-bold text-gray-700 transition">
+                    <span class="flex items-center gap-2"><span>👥</span> Referral Program</span>
+                    <span>→</span>
+                </a>
+                <a href="deposit.html" class="w-full bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex items-center justify-between text-xs font-bold text-gray-700 transition">
+                    <span class="flex items-center gap-2"><span>👛</span> Deposit & Wallet</span>
+                    <span>→</span>
+                </a>
             </div>
 
             <!-- Logout Button -->
@@ -95,15 +111,17 @@
                 </div>
                 <span class="font-medium mt-0.5">Home</span>
             </a>
-            <a href="referral.html" class="flex flex-col items-center text-indigo-600 text-[10px] -mt-4">
-                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white text-lg">
+            <a href="referral.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
                     👥
                 </div>
-                <span class="font-bold mt-0.5">Team</span>
+                <span class="font-medium mt-0.5">Team</span>
             </a>
-            <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👤</span>
-                <span>Profile</span>
+            <a href="profile.html" class="flex flex-col items-center text-indigo-600 text-[10px] -mt-4">
+                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white text-lg">
+                    👤
+                </div>
+                <span class="font-bold mt-0.5">Profile</span>
             </a>
         </nav>
     </div>
@@ -112,40 +130,99 @@
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { doc, getDocs, collection, query, where, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((userData) => {
+        let currentUserUid = null;
+
+        observeAuthState(async (userData) => {
             if (userData) {
+                currentUserUid = userData.uid;
                 const name = userData.displayName || "User";
-                // Set Profile Icon Letter & Full Name
+                const email = userData.email || "No Email";
+
+                // Set Header Profile Icon & Name
                 document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
                 document.getElementById('userNameDisplay').innerText = name;
+                document.getElementById('userEmail').innerText = email;
 
                 const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
                 const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                const refCode = userData.referralCode || "MJP" + userData.uid.substring(0, 3).toUpperCase();
-                document.getElementById('myReferralCode').value = refCode;
+                const myRefCode = userData.referralCode || "MJP" + userData.uid.substring(0, 3).toUpperCase();
+                document.getElementById('myRefCodeDisplay').innerText = myRefCode;
+                document.getElementById('totalTeamDisplay').innerText = userData.totalTeam || 0;
 
-                if(userData.totalTeam !== undefined) {
-                    document.getElementById('totalTeam').innerText = userData.totalTeam;
-                }
-                if(userData.referralBonus !== undefined) {
-                    document.getElementById('referralEarnings').innerText = `৳ ${Number(userData.referralBonus).toFixed(2)}`;
+                // Show or hide referral code submit section based on whether already used
+                if (!userData.referredBy) {
+                    document.getElementById('referralSection').classList.remove('hidden');
+                } else {
+                    document.getElementById('referralSection').classList.add('hidden');
                 }
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        window.copyReferralCode = function() {
-            const copyText = document.getElementById('myReferralCode');
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(copyText.value);
-            alert('Referral code copied successfully!');
-        }
+        // Apply Referral Code Logic
+        document.getElementById('applyRefBtn').addEventListener('click', async () => {
+            const inputCode = document.getElementById('submitRefCodeInput').value.trim().toUpperCase();
+            if (!inputCode) {
+                alert('দয়া করে একটি রেফার কোড লিখুন!');
+                return;
+            }
+
+            const myCode = document.getElementById('myRefCodeDisplay').innerText;
+            if (inputCode === myCode) {
+                alert('আপনি নিজের রেফার কোড ব্যবহার করতে পারবেন না!');
+                return;
+            }
+
+            const applyBtn = document.getElementById('applyRefBtn');
+            applyBtn.disabled = true;
+            applyBtn.innerText = "Applying...";
+
+            try {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("referralCode", "==", inputCode));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    alert('ভুল রেফার কোড! সঠিক কোড দিয়ে আবার চেষ্টা করুন।');
+                    applyBtn.disabled = false;
+                    applyBtn.innerText = "Apply Code";
+                    return;
+                }
+
+                let validReferrerUid = null;
+                querySnapshot.forEach((docSnap) => {
+                    validReferrerUid = docSnap.id;
+                });
+
+                // Update current user (Add ৳10 bonus and set referredBy)
+                const userDocRef = doc(db, "users", currentUserUid);
+                await updateDoc(userDocRef, {
+                    referredBy: validReferrerUid,
+                    "balances.main": increment(10.00)
+                });
+
+                // Update Referrer (Increment team count)
+                const referrerDocRef = doc(db, "users", validReferrerUid);
+                await updateDoc(referrerDocRef, {
+                    totalTeam: increment(1)
+                });
+
+                alert('অভিনন্দন! সফলভাবে রেফার কোড জমা হয়েছে এবং আপনার একাউন্টে ৳১০ বোনাস যোগ হয়েছে!');
+                window.location.reload();
+
+            } catch (error) {
+                console.error("Referral submit error:", error);
+                alert('ত্রুটি: ' + error.message);
+                applyBtn.disabled = false;
+                applyBtn.innerText = "Apply Code";
+            }
+        });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await logoutUser();
