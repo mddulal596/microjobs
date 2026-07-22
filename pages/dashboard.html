@@ -8,6 +8,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
+        <!-- Top Header & Balances -->
         <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-lg font-bold">Micro Job Pro</h1>
@@ -28,23 +29,25 @@
             </div>
         </header>
 
+        <!-- Main Content Area -->
         <main class="p-4 flex-grow space-y-4">
-            <div class="grid grid-cols-4 gap-2 text-center">
-                <a href="tasks.html" class="p-3 bg-indigo-50 rounded-2xl text-indigo-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm">Tasks</a>
-                <a href="deposit.html" class="p-3 bg-emerald-50 rounded-2xl text-emerald-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm">Deposit</a>
-                <a href="withdraw.html" class="p-3 bg-amber-50 rounded-2xl text-amber-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm">Withdraw</a>
-                <a href="referral.html" class="p-3 bg-purple-50 rounded-2xl text-purple-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm">Referral</a>
-            </div>
             <div class="bg-gray-100 p-4 rounded-2xl">
                 <h3 class="text-sm font-bold text-gray-700 mb-2">Recent Announcements</h3>
                 <p class="text-xs text-gray-500">Welcome to Micro Job Pro! Complete daily tasks and earn real money securely.</p>
             </div>
         </main>
+
+        <!-- Bottom Action Buttons (Moved to Bottom as Requested) -->
+        <nav class="p-4 bg-white border-t border-gray-100 rounded-t-3xl shadow-lg">
+            <div class="grid grid-cols-4 gap-2 text-center">
+                <a href="tasks.html" class="p-3 bg-indigo-50 rounded-2xl text-indigo-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm hover:bg-indigo-100 transition">Tasks</a>
+                <a href="deposit.html" class="p-3 bg-emerald-50 rounded-2xl text-emerald-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm hover:bg-emerald-100 transition">Deposit</a>
+                <a href="withdraw.html" class="p-3 bg-amber-50 rounded-2xl text-amber-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm hover:bg-amber-100 transition">Withdraw</a>
+                <a href="referral.html" class="p-3 bg-purple-50 rounded-2xl text-purple-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm hover:bg-purple-100 transition">Referral</a>
+            </div>
+        </nav>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script type="module">
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
 
