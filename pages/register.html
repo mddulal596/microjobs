@@ -6,46 +6,116 @@
     <title>Register - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen px-4 transform-gpu">
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-8">
-        <h2 class="text-2xl font-extrabold text-indigo-600 text-center mb-6">Create Account</h2>
-        <div id="errorMsg" class="hidden mb-4 p-3 bg-red-100 text-red-700 rounded-xl text-sm"></div>
+<body class="bg-gray-100 text-gray-800 antialiased flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-md w-full bg-white shadow-xl rounded-3xl p-6 space-y-6">
+        
+        <!-- Header -->
+        <div class="text-center space-y-1">
+            <h1 class="text-xl font-extrabold text-indigo-600">Micro Job Pro</h1>
+            <p class="text-xs text-gray-500">Create a new account & get bonus!</p>
+        </div>
+
+        <!-- Registration Form -->
         <form id="registerForm" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                <input type="text" id="name" required class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500">
+            <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-gray-600">Full Name</label>
+                <input type="text" id="fullName" required placeholder="Enter your full name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Email Address</label>
-                <input type="email" id="email" required class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500">
+
+            <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-gray-600">Email Address</label>
+                <input type="email" id="email" required placeholder="Enter your email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" id="password" required class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500">
+
+            <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-gray-600">Password</label>
+                <input type="password" id="password" required placeholder="Enter password (min 6 chars)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
             </div>
-            <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 transition">Register</button>
+
+            <!-- Referral Code Field (Auto-filled from URL if available) -->
+            <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-gray-600">Referral Code (Optional)</label>
+                <input type="text" id="refCode" placeholder="Referral ID if any" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <button type="submit" id="submitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+                Register & Claim ৳10 Bonus
+            </button>
         </form>
-        <p class="mt-6 text-center text-sm text-gray-600">Already have an account? <a href="login.html" class="text-indigo-600 font-bold">Login</a></p>
+
+        <p class="text-center text-xs text-gray-500">
+            Already have an account? <a href="login.html" class="text-indigo-600 font-bold hover:underline">Login here</a>
+        </p>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- Firebase Script & Logic -->
     <script type="module">
-        import { registerWithEmail } from '../firebase/auth.js';
-        
+        import { db } from '../firebase/firebase-config.js';
+        import { createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, setAfter, setDoc, getDoc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { auth } from '../firebase/auth.js'; // Adjust path based on your auth file structure
+
+        // Auto-detect referral code from URL query parameters (e.g., register.html?ref=USER_UID)
+        const urlParams = new URLSearchParams(window.location.search);
+        const refParam = urlParams.get('ref');
+        if (refParam) {
+            document.getElementById('refCode').value = refParam;
+        }
+
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('name').value;
+            const fullName = document.getElementById('fullName').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const referrerUid = document.getElementById('refCode').value.trim();
+            const submitBtn = document.getElementById('submitBtn');
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Creating account...";
+
             try {
-                await registerWithEmail(email, password, name);
+                // 1. Create user in Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 2. Update Auth profile name
+                await updateProfile(user, { displayName: fullName });
+
+                // 3. Determine initial bonus (৳10 if referred, otherwise ৳0)
+                const initialBonus = referrerUid ? 10.00 : 0.00;
+
+                // 4. Save user data to Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    displayName: fullName,
+                    email: email,
+                    balances: {
+                        main: initialBonus,
+                        deposit: 0.00
+                    },
+                    referredBy: referrerUid || null,
+                    createdAt: serverTimestamp()
+                });
+
+                // 5. If referred, update referrer's team count or bonus if needed
+                if (referrerUid) {
+                    const referrerRef = doc(db, "users", referrerUid);
+                    const referrerSnap = await getDoc(referrerRef);
+                    if (referrerSnap.exists()) {
+                        await updateDoc(referrerRef, {
+                            totalTeam: increment(1)
+                        });
+                    }
+                }
+
+                alert('একাউন্ট সফলভাবে তৈরি হয়েছে! আপনি রেফারেল বোনাসসহ লগইন করতে পারবেন।');
                 window.location.href = 'dashboard.html';
-            } catch (err) {
-                const errDiv = document.getElementById('errorMsg');
-                errDiv.innerText = err.message;
-                errDiv.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Registration error:", error);
+                alert('রেজিস্ট্রেশন করতে সমস্যা হয়েছে: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Register & Claim ৳10 Bonus";
             }
         });
     </script>
