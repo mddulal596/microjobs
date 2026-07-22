@@ -145,7 +145,28 @@
                 </div>
             </div>
 
-            <!-- Quick Action Buttons (Added right below stats cards) -->
+            <!-- Notice Board / Recent Activities Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                        Notice Board
+                    </h3>
+                    <div class="p-4 bg-slate-900/60 border border-slate-800 rounded-xl space-y-2">
+                        <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded font-bold">Update</span>
+                        <p class="text-xs text-slate-300 font-medium">Welcome to MicroJobPro! Complete tasks properly and submit accurate proofs to avoid task rejection.</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-white">Recent Activity</h3>
+                    <div id="recentActivityContainer" class="divide-y divide-slate-800/80">
+                        <div class="py-3 text-center text-xs text-slate-500">No recent activity found.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action Buttons (Moved to the bottom area as requested) -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <a href="withdraw.html" class="flex flex-col items-center justify-center p-4 bg-cardbg border border-slate-800/80 rounded-2xl hover:bg-slate-800/80 transition-all text-center group shadow-sm">
                     <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
@@ -174,27 +195,6 @@
                     </div>
                     <span class="text-xs font-bold text-slate-200">Wallet</span>
                 </a>
-            </div>
-
-            <!-- Notice Board / Recent Activities Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm space-y-4">
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
-                        Notice Board
-                    </h3>
-                    <div class="p-4 bg-slate-900/60 border border-slate-800 rounded-xl space-y-2">
-                        <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded font-bold">Update</span>
-                        <p class="text-xs text-slate-300 font-medium">Welcome to MicroJobPro! Complete tasks properly and submit accurate proofs to avoid task rejection.</p>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-2 p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm space-y-4">
-                    <h3 class="text-lg font-bold text-white">Recent Activity</h3>
-                    <div id="recentActivityContainer" class="divide-y divide-slate-800/80">
-                        <div class="py-3 text-center text-xs text-slate-500">No recent activity found.</div>
-                    </div>
-                </div>
             </div>
 
         </main>
