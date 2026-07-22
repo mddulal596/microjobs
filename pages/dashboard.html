@@ -46,19 +46,11 @@
                 </a>
             </div>
 
-            <!-- Leaderboard Section (Top 50) -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl shadow-sm">
-                <h3 class="text-xs font-bold text-gray-700 mb-3 flex items-center justify-between">
-                    <span>🏆 Top 50 Earners Leaderboard</span>
-                    <span class="text-[10px] text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">Live Ranking</span>
-                </h3>
-                <div id="leaderboardList" class="space-y-2 max-h-72 overflow-y-auto pr-1">
-                    <p class="text-center text-gray-400 text-xs">Loading leaderboard...</p>
-                </div>
-            </div>
-
-            <!-- Transaction History Link -->
-            <div class="pt-1">
+            <!-- Leaderboard & Transaction History Links -->
+            <div class="space-y-2">
+                <a href="leaderboard.html" class="w-full block p-3 bg-amber-50 border border-amber-100 rounded-2xl text-center text-xs font-bold text-amber-700 shadow-sm hover:bg-amber-100 transition">
+                    🏆 Top 50 Earners Leaderboard
+                </a>
                 <a href="history.html" class="w-full block p-3 bg-gray-50 border border-gray-200 rounded-2xl text-center text-xs font-bold text-gray-700 shadow-sm hover:bg-gray-100 transition">
                     📜 Transaction History
                 </a>
@@ -79,7 +71,7 @@
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
-        import { doc, getDoc, getDocs, collection, query, orderBy, limit, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         let currentUserId = null;
 
@@ -91,55 +83,10 @@
                 const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
-                
-                loadLeaderboard();
             } else {
                 window.location.href = 'login.html';
             }
         });
-
-        async function loadLeaderboard() {
-            const listEl = document.getElementById('leaderboardList');
-            try {
-                // Fetch top 50 users based on main balance
-                const usersRef = collection(db, "users");
-                const q = query(usersRef, orderBy("balances.main", "desc"), limit(50));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    listEl.innerHTML = `<p class="text-center text-gray-400 text-xs">No earners found yet.</p>`;
-                    return;
-                }
-
-                listEl.innerHTML = "";
-                let rank = 1;
-                querySnapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    const name = data.displayName || data.email?.split('@')[0] || "User";
-                    const balance = data.balances?.main ?? 0;
-
-                    let badgeColor = "bg-gray-100 text-gray-700";
-                    if (rank === 1) badgeColor = "bg-amber-100 text-amber-800 font-extrabold";
-                    else if (rank === 2) badgeColor = "bg-slate-200 text-slate-800 font-bold";
-                    else if (rank === 3) badgeColor = "bg-orange-100 text-orange-800 font-bold";
-
-                    const item = document.createElement('div');
-                    item.className = "flex justify-between items-center bg-white p-2.5 rounded-xl border border-gray-100 text-xs shadow-sm";
-                    item.innerHTML = `
-                        <div class="flex items-center gap-2">
-                            <span class="w-6 h-6 flex items-center justify-center rounded-full text-[10px] ${badgeColor}">#${rank}</span>
-                            <span class="font-semibold text-gray-800 truncate max-w-[140px]">${name}</span>
-                        </div>
-                        <span class="font-extrabold text-indigo-600">৳ ${Number(balance).toFixed(2)}</span>
-                    `;
-                    listEl.appendChild(item);
-                    rank++;
-                });
-            } catch (err) {
-                console.error("Leaderboard load error:", err);
-                listEl.innerHTML = `<p class="text-center text-red-400 text-xs">Failed to load leaderboard.</p>`;
-            }
-        }
 
         window.claimDailyBonus = async function() {
             if (!currentUserId) return;
