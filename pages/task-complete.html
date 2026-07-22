@@ -28,13 +28,17 @@
         </header>
 
         <!-- Main Content Area -->
-        <main class="p-4 flex-grow space-y-3 overflow-y-auto">
+        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
             
-            <div class="space-y-1 mb-2">
-                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Approved & Completed Tasks</h2>
-                <p class="text-[11px] text-gray-500 leading-relaxed">
-                    Here are all the tasks that have been successfully verified and paid to your balance.
-                </p>
+            <!-- Complete Count Banner -->
+            <div class="bg-green-50 border border-green-200 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+                <div class="space-y-0.5">
+                    <h2 class="text-xs font-bold text-green-800 uppercase tracking-wide">Total Completed Tasks</h2>
+                    <p class="text-[11px] text-green-600">Tasks successfully verified and paid.</p>
+                </div>
+                <div class="w-12 h-12 bg-green-500 text-white rounded-2xl flex items-center justify-center text-lg font-extrabold shadow-md">
+                    <span id="completeCount">0</span>
+                </div>
             </div>
 
             <!-- Task Complete List Container -->
@@ -82,7 +86,7 @@
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         observeAuthState(async (userData) => {
             if (userData) {
@@ -90,7 +94,7 @@
                 document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
                 document.getElementById('userNameDisplay').innerText = name;
 
-                // Fetch Completed Tasks from Firestore (Submissions collection where status == 'approved' or 'completed')
+                // Fetch Completed Tasks from Firestore
                 await fetchCompletedTasks(userData.uid);
             } else {
                 window.location.href = 'login.html';
@@ -99,8 +103,10 @@
 
         async function fetchCompletedTasks(uid) {
             const container = document.getElementById('completedTasksList');
+            const countEl = document.getElementById('completeCount');
+
             try {
-                // Adjust collection name/query according to your project structure (e.g., 'submissions' or 'taskSubmissions')
+                // Query submissions where status is 'approved' or 'completed'
                 const q = query(
                     collection(db, "submissions"), 
                     where("userId", "==", uid),
@@ -108,13 +114,14 @@
                 );
                 
                 const querySnapshot = await getDocs(q);
+                countEl.innerText = querySnapshot.size;
 
                 if (querySnapshot.empty) {
                     container.innerHTML = `
                         <div class="bg-gray-50 border border-gray-200 p-6 rounded-2xl text-center space-y-2 shadow-sm">
                             <span class="text-3xl">📭</span>
                             <p class="text-xs font-bold text-gray-600">No Completed Tasks Found</p>
-                            <p class="text-[11px] text-gray-400">You haven't completed any tasks yet or they are still under review.</p>
+                            <p class="text-[11px] text-gray-400">You haven't completed any tasks yet.</p>
                         </div>
                     `;
                     return;
@@ -145,6 +152,7 @@
 
             } catch (error) {
                 console.error("Error fetching completed tasks:", error);
+                countEl.innerText = "0";
                 container.innerHTML = `
                     <div class="bg-red-50 border border-red-200 p-4 rounded-2xl text-center text-xs text-red-600 shadow-sm">
                         Failed to load completed tasks. Please try again later.
