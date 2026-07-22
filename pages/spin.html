@@ -5,23 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucky Spin - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .wheel-segment {
-            position: absolute;
-            width: 50%;
-            height: 100%;
-            top: 0;
-            left: 50%;
-            transform-origin: left center;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 15px;
-            font-size: 11px;
-            font-weight: bold;
-            color: white;
-        }
-    </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
@@ -33,21 +16,35 @@
         <main class="p-6 flex-grow flex flex-col items-center justify-center space-y-6">
             <!-- Pointer Arrow -->
             <div class="relative flex flex-col items-center">
-                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-red-500 z-10 -mb-2"></div>
+                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[18px] border-b-red-500 z-20 -mb-2"></div>
                 
-                <!-- Spin Wheel Container -->
-                <div class="w-72 h-72 rounded-full border-4 border-purple-600 relative overflow-hidden shadow-2xl bg-white" id="spinWheel" style="transition: transform 3s cubic-bezier(0.15, 0.95, 0.25, 1);">
-                    <!-- 10 Segments (1 to 10) -->
-                    <div class="wheel-segment" style="transform: rotate(0deg); background: #f87171;">1৳</div>
-                    <div class="wheel-segment" style="transform: rotate(36deg); background: #fb923c;">2৳</div>
-                    <div class="wheel-segment" style="transform: rotate(72deg); background: #fbbf24;">3৳</div>
-                    <div class="wheel-segment" style="transform: rotate(108deg); background: #a3e635;">4৳</div>
-                    <div class="wheel-segment" style="transform: rotate(144deg); background: #34d399;">5৳</div>
-                    <div class="wheel-segment" style="transform: rotate(180deg); background: #22d3ee;">6৳</div>
-                    <div class="wheel-segment" style="transform: rotate(216deg); background: #38bdf8;">7৳</div>
-                    <div class="wheel-segment" style="transform: rotate(252deg); background: #818cf8;">8৳</div>
-                    <div class="wheel-segment" style="transform: rotate(288deg); background: #c084fc;">9৳</div>
-                    <div class="wheel-segment" style="transform: rotate(324deg); background: #f472b6;">10৳</div>
+                <!-- SVG Spin Wheel (10 Equal Slices) -->
+                <div class="w-72 h-72 rounded-full border-4 border-purple-600 relative overflow-hidden shadow-2xl bg-white flex items-center justify-center">
+                    <svg id="spinWheel" viewBox="0 0 100 100" class="w-full h-full" style="transition: transform 3s cubic-bezier(0.15, 0.95, 0.25, 1);">
+                        <!-- 10 Slices using path (36 degrees each) -->
+                        <path d="M50,50 L50,0 A50,50 0 0,1 79.39,9.55 Z" fill="#f87171" />
+                        <path d="M50,50 L79.39,9.55 A50,50 0 0,1 97.55,34.55 Z" fill="#fb923c" />
+                        <path d="M50,50 L97.55,34.55 A50,50 0 0,1 97.55,65.45 Z" fill="#fbbf24" />
+                        <path d="M50,50 L97.55,65.45 A50,50 0 0,1 79.39,90.45 Z" fill="#a3e635" />
+                        <path d="M50,50 L79.39,90.45 A50,50 0 0,1 50,100 Z" fill="#34d399" />
+                        <path d="M50,50 L50,100 A50,50 0 0,1 20.61,90.45 Z" fill="#22d3ee" />
+                        <path d="M50,50 L20.61,90.45 A50,50 0 0,1 2.45,65.45 Z" fill="#38bdf8" />
+                        <path d="M50,50 L2.45,65.45 A50,50 0 0,1 2.45,34.55 Z" fill="#818cf8" />
+                        <path d="M50,50 L2.45,34.55 A50,50 0 0,1 20.61,9.55 Z" fill="#c084fc" />
+                        <path d="M50,50 L20.61,9.55 A50,50 0 0,1 50,0 Z" fill="#f472b6" />
+
+                        <!-- Text Labels for 1 to 10 -->
+                        <text x="65" y="22" fill="#fff" font-size="5" font-weight="bold" transform="rotate(18, 65, 22)">1৳</text>
+                        <text x="80" y="38" fill="#fff" font-size="5" font-weight="bold" transform="rotate(54, 80, 38)">2৳</text>
+                        <text x="82" y="62" fill="#fff" font-size="5" font-weight="bold" transform="rotate(90, 82, 62)">3৳</text>
+                        <text x="68" y="82" fill="#fff" font-size="5" font-weight="bold" transform="rotate(126, 68, 82)">4৳</text>
+                        <text x="46" y="88" fill="#fff" font-size="5" font-weight="bold" transform="rotate(162, 46, 88)">5৳</text>
+                        <text x="26" y="82" fill="#fff" font-size="5" font-weight="bold" transform="rotate(198, 26, 82)">6৳</text>
+                        <text x="14" y="62" fill="#fff" font-size="5" font-weight="bold" transform="rotate(234, 14, 62)">7৳</text>
+                        <text x="16" y="38" fill="#fff" font-size="5" font-weight="bold" transform="rotate(270, 16, 38)">8৳</text>
+                        <text x="32" y="22" fill="#fff" font-size="5" font-weight="bold" transform="rotate(306, 32, 22)">9৳</text>
+                        <text x="50" y="16" fill="#fff" font-size="5" font-weight="bold" transform="rotate(342, 50, 16)">10৳</text>
+                    </svg>
                 </div>
             </div>
             
@@ -79,13 +76,11 @@
             btn.disabled = true;
             resultEl.innerText = "Spinning...";
 
-            // Random winning number between 1 and 10
-            const wonAmount = Math.floor(Math.random() * 10) + 1;
+            const wonAmount = Math.floor(Math.random() * 10) + 1; // 1 to 10
             
-            // Each segment is 36 degrees (360 / 10). Calculate exact angle to stop at the chosen number.
             const segmentAngle = 36;
-            const targetIndex = wonAmount - 1; // 0 to 9
-            const randomExtraSpins = 360 * 5; // 5 full rotations
+            const targetIndex = wonAmount - 1; 
+            const randomExtraSpins = 360 * 5; 
             const targetDegree = randomExtraSpins + (targetIndex * segmentAngle) + (segmentAngle / 2);
 
             wheel.style.transform = `rotate(-${targetDegree}deg)`;
