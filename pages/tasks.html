@@ -13,6 +13,14 @@
             <a href="dashboard.html" class="text-xs bg-indigo-700 px-3 py-1 rounded-full">Dashboard</a>
         </header>
 
+        <!-- Category Filters -->
+        <div class="px-4 pt-3 flex gap-2 overflow-x-auto pb-2">
+            <button onclick="filterCategory('All')" class="px-3 py-1 bg-indigo-600 text-white text-xs font-bold rounded-full whitespace-nowrap">All</button>
+            <button onclick="filterCategory('YouTube')" class="px-3 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded-full whitespace-nowrap">YouTube</button>
+            <button onclick="filterCategory('Facebook')" class="px-3 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded-full whitespace-nowrap">Facebook</button>
+            <button onclick="filterCategory('Signup')" class="px-3 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded-full whitespace-nowrap">Sign Up</button>
+        </div>
+
         <main class="p-4 flex-grow space-y-4 overflow-y-auto">
             <div id="taskList" class="space-y-3">
                 <p class="text-center text-gray-500 text-sm">Loading tasks...</p>
@@ -27,8 +35,9 @@
         import { uploadTaskProofImage } from '../firebase/storage.js';
 
         let currentUser = null;
+        let allTasks = [];
 
-        observeAuthState(async (user) => {
+        observeAuthState((user) => {
             if (!user) {
                 window.location.href = 'login.html';
                 return;
@@ -41,68 +50,72 @@
             const taskListEl = document.getElementById('taskList');
             try {
                 const querySnapshot = await getDocs(collection(db, "tasks"));
-                if (querySnapshot.empty) {
-                    taskListEl.innerHTML = `<p class="text-center text-gray-500 text-sm">No tasks available right now.</p>`;
-                    return;
-                }
-                
-                taskListEl.innerHTML = "";
+                allTasks = [];
                 querySnapshot.forEach((docSnap) => {
-                    const task = docSnap.data();
-                    const taskId = docSnap.id;
-                    
-                    const card = document.createElement('div');
-                    card.className = "bg-gray-50 border border-gray-200 p-4 rounded-2xl shadow-sm";
-                    card.innerHTML = `
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-gray-800 text-sm">${task.title || "Untitled Task"}</h3>
-                            <span class="text-xs font-extrabold bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg">৳ ${task.reward || 0}</span>
-                        </div>
-                        <p class="text-xs text-gray-600 mb-3">${task.description || ""}</p>
-                        <div class="space-y-2">
-                            <input type="text" id="proof_${taskId}" placeholder="Enter proof text (e.g., your username)" class="w-full text-xs px-3 py-2 border border-gray-300 rounded-xl">
-                            <input type="file" id="file_${taskId}" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                            <button onclick="submitProof('${taskId}')" class="w-full py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow hover:bg-indigo-700 transition">Submit Proof</button>
-                        </div>
-                    `;
-                    taskListEl.appendChild(card);
+                    allTasks.push({ id: docSnap.id, ...docSnap.data() });
                 });
+                renderTasks(allTasks);
             } catch (err) {
                 console.error(err);
                 taskListEl.innerHTML = `<p class="text-center text-red-500 text-sm">Failed to load tasks.</p>`;
             }
         }
 
+        window.filterCategory = function(category) {
+            if (category === 'All') {
+                renderTasks(allTasks);
+            } else {
+                const filtered = allTasks.filter(t => t.category === category);
+                renderTasks(filtered);
+            }
+        };
+
+        function renderTasks(tasks) {
+            const taskListEl = document.getElementById('taskList');
+            if (tasks.length === 0) {
+                taskListEl.innerHTML = `<p class="text-center text-gray-500 text-sm">No tasks available in this category.</p>`;
+                return;
+            }
+            
+            taskListEl.innerHTML = "";
+            tasks.forEach((task) => {
+                const taskId = task.id;
+                const card = document.createElement('div');
+                card.className = "bg-gray-50 border border-gray-200 p-4 rounded-2xl shadow-sm";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-gray-800 text-sm">${task.title || "Untitled"}</h3>
+                        <span class="text-xs font-extrabold bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg">৳ ${task.reward || 0}</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-3">${task.description || ""}</p>
+                    <div class="space-y-2">
+                        <input type="text" id="proof_${taskId}" placeholder="Enter proof text" class="w-full text-xs px-3 py-2 border border-gray-300 rounded-xl">
+                        <input type="file" id="file_${taskId}" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700">
+                        <button onclick="submitProof('${taskId}')" class="w-full py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow hover:bg-indigo-700 transition">Submit Proof</button>
+                    </div>
+                `;
+                taskListEl.appendChild(card);
+            });
+        }
+
         window.submitProof = async function(taskId) {
             const proofText = document.getElementById(`proof_${taskId}`).value;
             const fileInput = document.getElementById(`file_${taskId}`);
-            
-            if (!proofText) {
-                alert("Please enter proof text.");
-                return;
-            }
+            if (!proofText) { alert("Please enter proof text."); return; }
 
             try {
                 let proofImageURL = "";
                 if (fileInput.files.length > 0) {
                     proofImageURL = await uploadTaskProofImage(fileInput.files[0], currentUser.uid);
                 }
-
                 await addDoc(collection(db, "submissions"), {
-                    taskId,
-                    userId: currentUser.uid,
-                    userEmail: currentUser.email,
-                    proofText,
-                    proofImageURL,
-                    status: "pending",
-                    submittedAt: serverTimestamp()
+                    taskId, userId: currentUser.uid, userEmail: currentUser.email,
+                    proofText, proofImageURL, status: "pending", submittedAt: serverTimestamp()
                 });
-
-                alert("Task proof submitted successfully! Pending approval.");
+                alert("Task proof submitted successfully!");
                 document.getElementById(`proof_${taskId}`).value = "";
                 fileInput.value = "";
             } catch (err) {
-                console.error(err);
                 alert("Submission failed: " + err.message);
             }
         };
