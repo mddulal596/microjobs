@@ -66,13 +66,14 @@
                 </nav>
             </div>
             
-            <div class="flex items-center gap-3 shrink-0">
+            <!-- User Profile Avatar (Clickable to open profile modal) -->
+            <button id="userAvatarBtn" class="flex items-center gap-3 shrink-0 focus:outline-none hover:opacity-95 transition-all">
                 <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
                 <div class="hidden sm:block text-left">
                     <p id="userName" class="text-sm font-bold text-white">Loading...</p>
                     <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
                 </div>
-            </div>
+            </button>
         </header>
 
         <!-- Main Dashboard Section -->
@@ -179,11 +180,59 @@
         </footer>
     </div>
 
+    <!-- ==================== PROFILE MODAL / DRAWER ==================== -->
+    <div id="profileModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-slate-800/80 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-6 relative">
+            
+            <!-- Close Button -->
+            <button id="closeProfileModal" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-900/60 border border-slate-800">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <!-- User Info Header -->
+            <div class="flex items-center gap-4 border-b border-slate-800/80 pb-4">
+                <img id="modalUserAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Avatar" class="w-14 h-14 rounded-full object-cover border-2 border-blue-500/50 shadow-md">
+                <div>
+                    <h3 id="modalUserName" class="text-base font-bold text-white">Loading...</h3>
+                    <p id="modalUserEmail" class="text-xs text-slate-400">Loading...</p>
+                    <span id="modalRefCodeDisplay" class="inline-block mt-1 text-[10px] font-black bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-md tracking-wider">Ref: MCJ-----</span>
+                </div>
+            </div>
+
+            <!-- Task & Referral Stats Grid -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-slate-900/60 p-3.5 border border-slate-800 rounded-2xl space-y-1">
+                    <span class="text-[10px] uppercase font-bold text-slate-400">Completed Tasks</span>
+                    <h4 id="modalCompletedTasks" class="text-xl font-black text-emerald-400">0</h4>
+                </div>
+                <div class="bg-slate-900/60 p-3.5 border border-slate-800 rounded-2xl space-y-1">
+                    <span class="text-[10px] uppercase font-bold text-slate-400">Pending Tasks</span>
+                    <h4 id="modalPendingTasks" class="text-xl font-black text-amber-400">0</h4>
+                </div>
+            </div>
+
+            <!-- Referral Code Input Section (If not already referred) -->
+            <div id="referralInputSection" class="bg-slate-900/60 p-4 border border-slate-800 rounded-2xl space-y-3">
+                <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">Have a Referral Code?</label>
+                <div class="flex gap-2">
+                    <input type="text" id="modalRefInput" placeholder="Enter code (e.g. MCJ587)" class="flex-1 px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white uppercase focus:outline-none focus:border-blue-500">
+                    <button id="applyRefBtn" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition-all shadow-md">Apply</button>
+                </div>
+                <p id="refMsg" class="text-[10px] font-medium hidden"></p>
+            </div>
+
+            <!-- Logout Action -->
+            <button id="modalLogoutBtn" class="w-full py-3 bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white rounded-xl font-bold text-xs transition-all shadow-sm">
+                Logout Account
+            </button>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script type="module">
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
         import { db } from '../firebase/firebase-config.js';
-        import { doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc, updateDoc, increment, collection, query, where, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const menuBtn = document.getElementById('menuBtn');
         const closeSidebar = document.getElementById('closeSidebar');
@@ -198,6 +247,23 @@
         menuBtn.addEventListener('click', toggleSidebar);
         closeSidebar.addEventListener('click', toggleSidebar);
         sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Profile Modal Elements & Toggles
+        const userAvatarBtn = document.getElementById('userAvatarBtn');
+        const profileModal = document.getElementById('profileModal');
+        const closeProfileModal = document.getElementById('closeProfileModal');
+
+        if (userAvatarBtn) {
+            userAvatarBtn.addEventListener('click', () => {
+                profileModal.classList.remove('hidden');
+            });
+        }
+
+        if (closeProfileModal) {
+            closeProfileModal.addEventListener('click', () => {
+                profileModal.classList.add('hidden');
+            });
+        }
 
         observeAuthState(async (user) => {
             if (!user) {
@@ -214,18 +280,45 @@
                 const userDocRef = doc(db, "users", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
                 
+                let userData = {};
                 if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
+                    userData = userDocSnap.data();
                     fullName = userData.fullName || userData.name || userData.displayName || userData.username || fullName;
                     
                     document.getElementById('mainBalance').innerText = `৳ ${userData.mainBalance ? Number(userData.mainBalance).toFixed(2) : '0.00'}`;
                     document.getElementById('depositBalance').innerText = `৳ ${userData.depositBalance ? Number(userData.depositBalance).toFixed(2) : '0.00'}`;
+                } else {
+                    // যদি ইউজার ডাটাবেসে না থাকে (যেমন গুগল দিয়ে নতুন সাইন-ইন), তবে ডিফল্ট রেকর্ড তৈরি করে নেওয়া
+                    const myReferralCode = `MCJ${user.uid.substring(0, 5).toUpperCase()}`;
+                    userData = {
+                        uid: user.uid,
+                        fullName: fullName,
+                        email: email,
+                        referralCode: myReferralCode,
+                        referredBy: null,
+                        mainBalance: 0,
+                        depositBalance: 0,
+                        createdAt: new Date().toISOString()
+                    };
+                    await setDoc(userDocRef, userData);
                 }
 
                 document.getElementById('userName').innerText = fullName;
                 document.getElementById('welcomeName').innerText = fullName;
                 document.getElementById('userEmail').innerText = email;
                 document.getElementById('userAvatar').src = photoURL;
+
+                // Update Modal UI with real-time Firestore data
+                document.getElementById('modalUserName').innerText = fullName;
+                document.getElementById('modalUserEmail').innerText = email;
+                document.getElementById('modalUserAvatar').src = photoURL;
+                document.getElementById('modalRefCodeDisplay').innerText = `Ref: ${userData.referralCode || 'MCJ-----'}`;
+
+                // If user already used a referral code, hide the input box
+                const refSection = document.getElementById('referralInputSection');
+                if (userData.referredBy) {
+                    refSection.innerHTML = `<p class="text-xs text-emerald-400 font-bold text-center">✓ Referral code already applied!</p>`;
+                }
 
                 // Fetch Submissions to calculate Pending and Completed Tasks dynamically
                 const submissionsQuery = query(collection(db, "submissions"), where("workerId", "==", user.uid));
@@ -262,13 +355,90 @@
 
                 document.getElementById('pendingTasksCount').innerText = pendingCount;
                 document.getElementById('completedTasksCount').innerText = approvedCount;
+                
+                // Update Modal Task Stats
+                document.getElementById('modalCompletedTasks').innerText = approvedCount;
+                document.getElementById('modalPendingTasks').innerText = pendingCount;
 
             } catch (error) {
                 console.error("Error loading dashboard data:", error);
             }
         });
 
+        // Apply Referral Code Logic inside Modal
+        const applyRefBtn = document.getElementById('applyRefBtn');
+        if (applyRefBtn) {
+            applyRefBtn.addEventListener('click', async () => {
+                const codeInput = document.getElementById('modalRefInput').value.trim().toUpperCase();
+                const refMsg = document.getElementById('refMsg');
+                const currentUser = auth.currentUser;
+
+                if (!codeInput) {
+                    refMsg.innerText = "Please enter a referral code.";
+                    refMsg.className = "text-[10px] font-bold text-red-400 block";
+                    refMsg.classList.remove('hidden');
+                    return;
+                }
+
+                try {
+                    const userDocRef = doc(db, "users", currentUser.uid);
+                    const userSnap = await getDoc(userDocRef);
+                    const myData = userSnap.data();
+
+                    if (myData.referralCode === codeInput) {
+                        refMsg.innerText = "You cannot use your own referral code!";
+                        refMsg.className = "text-[10px] font-bold text-red-400 block";
+                        refMsg.classList.remove('hidden');
+                        return;
+                    }
+
+                    // Search if referral code exists in database
+                    const q = query(collection(db, "users"), where("referralCode", "==", codeInput));
+                    const querySnapshot = await getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        refMsg.innerText = "Invalid referral code!";
+                        refMsg.className = "text-[10px] font-bold text-red-400 block";
+                        refMsg.classList.remove('hidden');
+                        return;
+                    }
+
+                    const referrerDoc = querySnapshot.docs[0];
+                    const referrerUid = referrerDoc.id;
+
+                    // Update current user's referredBy field
+                    await updateDoc(userDocRef, {
+                        referredBy: referrerUid
+                    });
+
+                    // Increment referrer's totalReferred count
+                    await updateDoc(doc(db, "users", referrerUid), {
+                        totalReferred: increment(1)
+                    });
+
+                    refMsg.innerText = "Referral code applied successfully!";
+                    refMsg.className = "text-[10px] font-bold text-emerald-400 block";
+                    refMsg.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+
+                } catch (error) {
+                    console.error(error);
+                    refMsg.innerText = "Something went wrong. Try again.";
+                    refMsg.className = "text-[10px] font-bold text-red-400 block";
+                    refMsg.classList.remove('hidden');
+                }
+            });
+        }
+
         document.getElementById('logoutBtnSidebar').addEventListener('click', async () => {
+            await logoutUser();
+            window.location.href = 'login.html';
+        });
+
+        document.getElementById('modalLogoutBtn').addEventListener('click', async () => {
             await logoutUser();
             window.location.href = 'login.html';
         });
