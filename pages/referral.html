@@ -7,15 +7,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-16">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24">
         
-        <!-- Top Header & Balances -->
+        <!-- Top Header & Balances (Profile Icon & Full Name) -->
         <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-base font-extrabold tracking-wide">Referral Program</h1>
-                <div class="flex items-center gap-2">
-                    <span id="userName" class="text-xs bg-indigo-700/80 px-3 py-1.5 rounded-xl font-medium tracking-wide shadow-inner">Loading...</span>
-                    <button id="logoutBtn" class="text-xs bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-semibold shadow-sm transition">Logout</button>
+                <div class="flex items-center">
+                    <a href="profile.html" class="flex items-center gap-2 bg-indigo-700/80 hover:bg-indigo-700 border border-indigo-400/40 px-3 py-1.5 rounded-full shadow-inner transition">
+                        <div id="profileIconBtn" class="w-6 h-6 bg-white text-indigo-600 rounded-full flex items-center justify-center text-xs font-extrabold shadow">
+                            U
+                        </div>
+                        <span id="userNameDisplay" class="text-xs font-bold tracking-wide truncate max-w-[100px]">Loading...</span>
+                    </a>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3 mt-2">
@@ -35,13 +39,13 @@
             
             <!-- Invite Banner Info -->
             <div class="space-y-1">
-                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Invite Friends & Earn Commission</h2>
+                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">INVITE FRIENDS & EARN COMMISSION</h2>
                 <p class="text-[11px] text-gray-500 leading-relaxed">
                     Share your unique referral code with friends. When they join using your code and complete tasks, you will earn lifetime bonuses!
                 </p>
             </div>
 
-            <!-- Referral Code Card (6 Digits Code) -->
+            <!-- Referral Code Card -->
             <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3 shadow-sm text-center">
                 <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">YOUR REFERRAL CODE</p>
                 <div class="py-1">
@@ -53,7 +57,7 @@
                 </button>
             </div>
 
-            <!-- Stats Side-by-Side (Total Referred & Earnings) -->
+            <!-- Stats Side-by-Side -->
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
                     <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRED</p>
@@ -63,6 +67,14 @@
                     <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">REFERRAL EARNINGS</p>
                     <h3 id="referralEarnings" class="text-lg font-extrabold text-green-600">৳ 0.00</h3>
                 </div>
+            </div>
+
+            <!-- Logout Button -->
+            <div class="pt-2">
+                <button id="logoutBtn" class="w-full py-3.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs rounded-2xl border border-red-200 shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
+                    <span>🚪</span>
+                    <span>Logout Account</span>
+                </button>
             </div>
 
         </main>
@@ -104,14 +116,15 @@
         observeAuthState((userData) => {
             if (userData) {
                 const name = userData.displayName || "User";
-                document.getElementById('userName').innerText = name;
+                // Set Profile Icon Letter & Full Name
+                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
+                document.getElementById('userNameDisplay').innerText = name;
 
                 const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
                 const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                // Generate strictly 6-character referral code (e.g. MJP7A2)
                 const refCode = userData.referralCode || "MJP" + userData.uid.substring(0, 3).toUpperCase();
                 document.getElementById('myReferralCode').value = refCode;
 
