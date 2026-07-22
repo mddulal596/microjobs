@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="transform-gpu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Micro Job Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
+        <header class="p-4 bg-red-600 text-white rounded-b-3xl shadow-md flex justify-between items-center">
+            <h1 class="text-lg font-bold">Admin Panel</h1>
+            <a href="dashboard.html" class="text-xs bg-red-700 px-3 py-1 rounded-full">Dashboard</a>
+        </header>
+
+        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
+            <h2 class="text-sm font-bold text-gray-700">Pending Withdrawals</h2>
+            <div id="adminWithdrawals" class="space-y-3">
+                <p class="text-center text-gray-500 text-sm">Loading requests...</p>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { db } from '../firebase/firebase-config.js';
+        import { observeAuthState } from '../firebase/auth.js';
+        import { collection, getDocs, doc, updateModel, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        observeAuthState((user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            // নিরাপত্তা বা ইমেল চেক করতে পারেন চাইলে
+            loadAdminWithdrawals();
+        });
+
+        async function loadAdminWithdrawals() {
+            const container = document.getElementById('adminWithdrawals');
+            try {
+                const querySnapshot = await getDocs(collection(db, "withdrawals"));
+                if (querySnapshot.empty) {
+                    container.innerHTML = `<p class="text-center text-gray-500 text-sm">No withdrawal requests.</p>`;
+                    return;
+                }
+
+                container.innerHTML = "";
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+
+                    const card = document.createElement('div');
+                    card.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl space-y-2 shadow-sm";
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-gray-800">${data.userEmail}</span>
+                            <span class="text-xs font-extrabold text-indigo-600">৳ ${data.amount}</span>
+                        </div>
+                        <p class="text-xs text-gray-600">Method: <b>${data.method}</b> | A/C: <b>${data.accountNo}</b></p>
+                        <div class="flex justify-between items-center pt-1">
+                            <span class="text-[10px] uppercase font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded">${data.status}</span>
+                            ${data.status === 'pending' ? `<button onclick="markAsPaid('${id}')" class="px-3 py-1 bg-emerald-600 text-white text-xs font-bold rounded-lg shadow hover:bg-emerald-700 transition">Mark Paid</button>` : ''}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<p class="text-center text-red-500 text-sm">Failed to load data.</p>`;
+            }
+        }
+
+        window.markAsPaid = async function(id) {
+            try {
+                const docRef = doc(db, "withdrawals", id);
+                await updateDoc(docRef, { status: "paid" });
+                alert("Withdrawal marked as paid!");
+                loadAdminWithdrawals();
+            } catch (err) {
+                console.error(err);
+                alert("Error updating status: " + err.message);
+            }
+        };
+    </script>
+</body>
+</html>
