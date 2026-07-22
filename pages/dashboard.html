@@ -87,15 +87,15 @@
                 <p class="text-[11px] text-gray-600 mb-3 leading-relaxed">
                     ইনকাম শুরু করতে এবং সকল প্রিমিয়াম সুবিধা পেতে এখনই আপনার একাউন্টটি কাস্টমার সাপোর্ট বা নির্দিষ্ট ফি দিয়ে অ্যাক্টিভ করুন।
                 </p>
-                <a href="#" class="inline-block w-full py-2.5 bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold text-xs rounded-full shadow-md hover:opacity-90 transition">
+                <button onclick="toggleActivationModal(true)" class="w-full py-2.5 bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold text-xs rounded-full shadow-md hover:opacity-90 transition cursor-pointer">
                     Active Now &rarr;
-                </a>
+                </button>
             </div>
         </main>
 
         <!-- Bottom Navigation Bar -->
         <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-2 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center">
-            <a href="#" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+            <a href="https://t.me/microjobspro" target="_blank" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
                 <span class="text-lg">🎧</span>
                 <span>Help</span>
             </a>
@@ -120,7 +120,28 @@
         </nav>
     </div>
 
-    <!-- Firebase Script for Auth & Balances -->
+    <!-- Account Activation Modal -->
+    <div id="activationModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-center space-y-4">
+            <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
+                ⚠️
+            </div>
+            <h3 class="text-base font-bold text-gray-800">Account Activation</h3>
+            <p class="text-xs text-gray-600 leading-relaxed">
+                আপনার একাউন্টটি সক্রিয় করতে নির্দিষ্ট একটি অ্যাক্টিভেশন ফি প্রদান করতে হবে অথবা আমাদের অফিসিয়াল কাস্টমার সাপোর্ট টেলিগ্রাম চ্যানেলে যোগাযোগ করুন।
+            </p>
+            <div class="space-y-2 pt-2">
+                <a href="https://t.me/microjobspro" target="_blank" class="block w-full py-2.5 bg-blue-600 text-white font-bold text-xs rounded-xl shadow-md hover:bg-blue-700 transition">
+                    Contact Support (Telegram)
+                </a>
+                <button onclick="toggleActivationModal(false)" class="block w-full py-2.5 bg-gray-100 text-gray-700 font-bold text-xs rounded-xl hover:bg-gray-200 transition">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Script & Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
@@ -142,5 +163,17 @@
             window.location.href = 'login.html';
         });
     </script>
+
+    <script>
+        window.toggleActivationModal = function(show) {
+            const modal = document.getElementById('activationModal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 </html>
+
