@@ -14,7 +14,7 @@
         </header>
 
         <main class="p-4 flex-grow space-y-4 overflow-y-auto">
-            <h2 class="text-sm font-bold text-gray-700">Withdrawal Requests</h2>
+            <h2 class="text-sm font-bold text-gray-700">Withdrawal Records</h2>
             <div id="historyList" class="space-y-3">
                 <p class="text-center text-gray-500 text-sm">Loading history...</p>
             </div>
@@ -41,7 +41,7 @@
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
-                    historyListEl.innerHTML = `<p class="text-center text-gray-500 text-sm">No transactions found.</p>`;
+                    historyListEl.innerHTML = `<p class="text-center text-gray-500 text-sm">No transaction records found.</p>`;
                     return;
                 }
 
