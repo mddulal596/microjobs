@@ -35,10 +35,10 @@
             <!-- Referral Code Field -->
             <div class="space-y-1">
                 <label class="text-[11px] font-semibold text-gray-600">Referral Code (Optional)</label>
-                <input type="text" id="refCode" placeholder="e.g., MCJFVIPB" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-widest text-indigo-600 focus:outline-none focus:border-indigo-500">
+                <input type="text" id="refCode" placeholder="e.g., MCJVIP..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-widest text-indigo-600 focus:outline-none focus:border-indigo-500">
             </div>
 
-            <button type="submit" id="submitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+            <button type="submit" id="submitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition cursor-pointer">
                 Register & Claim ৳10 Bonus
             </button>
         </form>
@@ -57,9 +57,9 @@
 
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
             const inputRefCode = document.getElementById('refCode').value.trim().toUpperCase();
             const submitBtn = document.getElementById('submitBtn');
 
@@ -72,8 +72,8 @@
                 const user = userCredential.user;
                 await updateProfile(user, { displayName: fullName });
 
-                // 2. Generate short referral code for this new user
-                const myShortRef = "MCJB" + user.uid.substring(0, 5).toUpperCase();
+                // 2. Generate referral code starting with MCJVIP
+                const myShortRef = "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
                 
                 let initialBonus = 0.00;
                 let validReferrerUid = null;
@@ -94,17 +94,16 @@
                     }
                 }
 
-                // 4. Save user data to Firestore
+                // 4. Save user data to Firestore matching mainBalance & depositBalance structure
                 await setDoc(doc(db, "users", user.uid), {
                     uid: user.uid,
-                    displayName: fullName,
+                    fullName: fullName,
                     email: email,
                     referralCode: myShortRef,
-                    balances: {
-                        main: initialBonus,
-                        deposit: 0.00
-                    },
+                    mainBalance: initialBonus,
+                    depositBalance: 0.00,
                     referredBy: validReferrerUid || null,
+                    totalReferred: 0,
                     createdAt: serverTimestamp()
                 });
 
@@ -112,7 +111,7 @@
                 if (validReferrerUid) {
                     const referrerRef = doc(db, "users", validReferrerUid);
                     await updateDoc(referrerRef, {
-                        totalTeam: increment(1)
+                        totalReferred: increment(1)
                     });
                 }
 
