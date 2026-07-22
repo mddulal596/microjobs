@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" class="transform-gpu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Micro Job Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
+        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md flex justify-between items-center">
+            <h1 class="text-lg font-bold">Top 50 Earners</h1>
+            <a href="dashboard.html" class="text-xs bg-indigo-700 px-3 py-1 rounded-full">Dashboard</a>
+        </header>
+
+        <main class="p-4 flex-grow space-y-3 overflow-y-auto">
+            <div id="leaderboardList" class="space-y-2">
+                <p class="text-center text-gray-400 text-xs py-4">Loading leaderboard...</p>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { db } from '../firebase/firebase-config.js';
+        import { observeAuthState } from '../firebase/auth.js';
+        import { getDocs, collection, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        observeAuthState((user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loadLeaderboard();
+        });
+
+        async function loadLeaderboard() {
+            const listEl = document.getElementById('leaderboardList');
+            try {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, orderBy("balances.main", "desc"), limit(50));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    listEl.innerHTML = `<p class="text-center text-gray-400 text-xs">No earners found yet.</p>`;
+                    return;
+                }
+
+                listEl.innerHTML = "";
+                let rank = 1;
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const name = data.displayName || data.email?.split('@')[0] || "User";
+                    const balance = data.balances?.main ?? 0;
+
+                    let badgeColor = "bg-gray-100 text-gray-700";
+                    if (rank === 1) badgeColor = "bg-amber-100 text-amber-800 font-extrabold";
+                    else if (rank === 2) badgeColor = "bg-slate-200 text-slate-800 font-bold";
+                    else if (rank === 3) badgeColor = "bg-orange-100 text-orange-800 font-bold";
+
+                    const item = document.createElement('div');
+                    item.className = "flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-200 text-xs shadow-sm";
+                    item.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 flex items-center justify-center rounded-full text-[10px] ${badgeColor}">#${rank}</span>
+                            <span class="font-bold text-gray-800">${name}</span>
+                        </div>
+                        <span class="font-extrabold text-indigo-600">৳ ${Number(balance).toFixed(2)}</span>
+                    `;
+                    listEl.appendChild(item);
+                    rank++;
+                });
+            } catch (err) {
+                console.error("Leaderboard load error:", err);
+                listEl.innerHTML = `<p class="text-center text-red-400 text-xs">Failed to load leaderboard.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
