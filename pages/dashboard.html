@@ -43,8 +43,15 @@
                 <a href="referral.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Referrals</a>
             </nav>
         </div>
-        <div class="p-6 border-t border-slate-800/80">
-            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm">Logout</button>
+        
+        <!-- Sidebar Bottom Footer Links & Logout -->
+        <div class="p-6 border-t border-slate-800/80 space-y-4">
+            <div class="flex flex-col gap-2 text-xs font-medium text-slate-400">
+                <a href="#" class="hover:text-white transition-all">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-all">Terms of Service</a>
+                <a href="#" class="hover:text-white transition-all">Support</a>
+            </div>
+            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm text-xs">Logout</button>
         </div>
     </aside>
 
@@ -160,18 +167,6 @@
             </div>
 
         </main>
-
-        <!-- Footer -->
-        <footer class="bg-cardbg border-t border-slate-800/80 py-6 px-8 mt-auto">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-                <p>&copy; 2026 MicroJobPro. All rights reserved.</p>
-                <div class="flex items-center gap-6 font-medium">
-                    <a href="#" class="hover:text-white transition-all">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-all">Terms of Service</a>
-                    <a href="#" class="hover:text-white transition-all">Support</a>
-                </div>
-            </div>
-        </footer>
     </div>
 
     <!-- PROFILE MODAL -->
@@ -252,7 +247,7 @@
             });
         }
 
-        let activeUser = null; // গ্লোবালি ইউজার স্টোর করার জন্য
+        let activeUser = null;
 
         observeAuthState(async (user) => {
             if (!user) {
@@ -260,7 +255,7 @@
                 return;
             }
 
-            activeUser = user; // ইউজার অ্যাসাইন করা হলো
+            activeUser = user;
 
             try {
                 let fullName = user.displayName || user.email.split('@')[0] || 'User';
@@ -349,7 +344,6 @@
             }
         });
 
-        // Apply Referral Code Logic inside Modal
         const applyRefBtn = document.getElementById('applyRefBtn');
         if (applyRefBtn) {
             applyRefBtn.addEventListener('click', async () => {
@@ -431,4 +425,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
