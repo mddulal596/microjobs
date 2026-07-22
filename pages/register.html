@@ -3,141 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Program - Micro Job Pro</title>
+    <title>Register - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-16">
+<body class="bg-gray-100 text-gray-800 antialiased flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-md w-full bg-white shadow-xl rounded-3xl p-6 space-y-6">
         
-        <!-- Top Header & Balances -->
-        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-base font-extrabold tracking-wide">Referral Program</h1>
-                <div class="flex items-center gap-2">
-                    <span id="userName" class="text-xs bg-indigo-700/80 px-3 py-1.5 rounded-xl font-medium tracking-wide shadow-inner">Loading...</span>
-                    <button id="logoutBtn" class="text-xs bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-semibold shadow-sm transition">Logout</button>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-3 mt-2">
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
-                    <h2 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
-                </div>
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
-                    <h2 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
-                </div>
-            </div>
-        </header>
+        <!-- Header -->
+        <div class="text-center space-y-1">
+            <h1 class="text-xl font-extrabold text-indigo-600">Micro Job Pro</h1>
+            <p class="text-xs text-gray-500">Create an account & claim ৳10 bonus with a referral code!</p>
+        </div>
 
-        <!-- Main Content Area -->
-        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
-            
-            <!-- Invite Banner Info -->
+        <!-- Registration Form -->
+        <form id="registerForm" class="space-y-4">
             <div class="space-y-1">
-                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Invite Friends & Earn Commission</h2>
-                <p class="text-[11px] text-gray-500 leading-relaxed">
-                    Share your unique referral code with friends. When they join using your code and complete tasks, you will earn lifetime bonuses!
-                </p>
+                <label class="text-[11px] font-semibold text-gray-600">Full Name</label>
+                <input type="text" id="fullName" required placeholder="Enter your full name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
             </div>
 
-            <!-- Referral Code Card (Only Code, No Link) -->
-            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3 shadow-sm text-center">
-                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">YOUR REFERRAL CODE</p>
-                <div class="py-1">
-                    <input type="text" id="myReferralCode" readonly class="w-full bg-transparent text-center text-2xl font-extrabold text-indigo-600 tracking-widest focus:outline-none" value="Loading...">
-                </div>
-                <button onclick="copyReferralCode()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
-                    <span class="text-base">📋</span>
-                    <span>Copy Code</span>
-                </button>
+            <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-gray-600">Email Address</label>
+                <input type="email" id="email" required placeholder="Enter your email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
             </div>
 
-            <!-- Total Referred Users Card -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRED USERS</p>
-                <h3 id="totalTeam" class="text-xl font-extrabold text-indigo-600">0</h3>
+            <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-gray-600">Password</label>
+                <input type="password" id="password" required placeholder="Enter password (min 6 chars)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
             </div>
 
-            <!-- Total Referral Earnings Card -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRAL EARNINGS</p>
-                <h3 id="referralEarnings" class="text-xl font-extrabold text-green-600">৳ 0.00</h3>
+            <!-- Referral Code Field -->
+            <div class="space-y-1">
+                <label class="text-[11px] font-semibold text-gray-600">Referral Code (Optional)</label>
+                <input type="text" id="refCode" placeholder="e.g., MCJFVIPB" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-widest text-indigo-600 focus:outline-none focus:border-indigo-500">
             </div>
 
-        </main>
+            <button type="submit" id="submitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+                Register & Claim ৳10 Bonus
+            </button>
+        </form>
 
-        <!-- Bottom Navigation Bar -->
-        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-2 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center">
-            <a href="https://t.me/microjobspro" target="_blank" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">🎧</span>
-                <span>Help</span>
-            </a>
-            <a href="deposit.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👛</span>
-                <span>Wallet</span>
-            </a>
-            <a href="dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
-                    🏠
-                </div>
-                <span class="font-medium mt-0.5">Home</span>
-            </a>
-            <a href="referral.html" class="flex flex-col items-center text-indigo-600 text-[10px] -mt-4">
-                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white text-lg">
-                    👥
-                </div>
-                <span class="font-bold mt-0.5">Team</span>
-            </a>
-            <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👤</span>
-                <span>Profile</span>
-            </a>
-        </nav>
+        <p class="text-center text-xs text-gray-500">
+            Already have an account? <a href="login.html" class="text-indigo-600 font-bold hover:underline">Login here</a>
+        </p>
     </div>
 
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, setDoc, getDocs, collection, query, where, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { auth } from '../firebase/auth.js';
 
-        observeAuthState((userData) => {
-            if (userData) {
-                const name = userData.displayName || "User";
-                document.getElementById('userName').innerText = name;
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const inputRefCode = document.getElementById('refCode').value.trim().toUpperCase();
+            const submitBtn = document.getElementById('submitBtn');
 
-                const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
-                const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Creating account...";
 
-                // Generate short referral code (e.g., MCJB12345)
-                const refCode = userData.referralCode || "MCJB" + userData.uid.substring(0, 5).toUpperCase();
-                document.getElementById('myReferralCode').value = refCode;
+            try {
+                // 1. Create user in Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                await updateProfile(user, { displayName: fullName });
 
-                if(userData.totalTeam !== undefined) {
-                    document.getElementById('totalTeam').innerText = userData.totalTeam;
+                // 2. Generate short referral code for this new user
+                const myShortRef = "MCJB" + user.uid.substring(0, 5).toUpperCase();
+                
+                let initialBonus = 0.00;
+                let validReferrerUid = null;
+
+                // 3. Verify Referral Code in Firestore
+                if (inputRefCode) {
+                    const usersRef = collection(db, "users");
+                    const q = query(usersRef, where("referralCode", "==", inputRefCode));
+                    const querySnapshot = await getDocs(q);
+
+                    if (!querySnapshot.empty) {
+                        querySnapshot.forEach((docSnap) => {
+                            validReferrerUid = docSnap.id;
+                        });
+                        initialBonus = 10.00; // New user gets ৳10 bonus if valid referral code is entered
+                    } else {
+                        alert('সতর্কতা: ভুল রেফার কোড দেওয়া হয়েছে! কোনো বোনাস যোগ হবে না, তবে একাউন্ট তৈরি হবে।');
+                    }
                 }
-                if(userData.referralBonus !== undefined) {
-                    document.getElementById('referralEarnings').innerText = `৳ ${Number(userData.referralBonus).toFixed(2)}`;
+
+                // 4. Save user data to Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    displayName: fullName,
+                    email: email,
+                    referralCode: myShortRef,
+                    balances: {
+                        main: initialBonus,
+                        deposit: 0.00
+                    },
+                    referredBy: validReferrerUid || null,
+                    createdAt: serverTimestamp()
+                });
+
+                // 5. Update Referrer's Team Count if valid
+                if (validReferrerUid) {
+                    const referrerRef = doc(db, "users", validReferrerUid);
+                    await updateDoc(referrerRef, {
+                        totalTeam: increment(1)
+                    });
                 }
-            } else {
-                window.location.href = 'login.html';
+
+                alert('একাউন্ট সফলভাবে তৈরি হয়েছে!');
+                window.location.href = 'dashboard.html';
+
+            } catch (error) {
+                console.error("Registration error:", error);
+                alert('রেজিস্ট্রেশন ত্রুটি: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Register & Claim ৳10 Bonus";
             }
-        });
-
-        // Copy Referral Code Function
-        window.copyReferralCode = function() {
-            const copyText = document.getElementById('myReferralCode');
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(copyText.value);
-            alert('Referral code copied successfully!');
-        }
-
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
         });
     </script>
 </body>
