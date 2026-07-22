@@ -47,42 +47,15 @@
 
             <!-- Operator Tabs -->
             <div class="grid grid-cols-4 gap-2">
-                <button onclick="filterOperator('GP')" class="operator-tab py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow transition">GP</button>
-                <button onclick="filterOperator('ROBI')" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition">Robi</button>
-                <button onclick="filterOperator('BL')" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition">Banglalink</button>
-                <button onclick="filterOperator('AIRTEL')" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition">Airtel</button>
+                <button onclick="filterOperator('GP', this)" class="operator-tab py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow transition">GP</button>
+                <button onclick="filterOperator('ROBI', this)" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition">Robi</button>
+                <button onclick="filterOperator('BL', this)" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition">Banglalink</button>
+                <button onclick="filterOperator('AIRTEL', this)" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition">Airtel</button>
             </div>
 
             <!-- Offers List Container -->
             <div id="offersList" class="space-y-3">
-                <!-- Example Offer Card -->
-                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-md">GP - 30 Days</span>
-                        <h3 class="text-sm font-extrabold text-gray-800">40 GB + 500 Min</h3>
-                        <p class="text-[11px] text-gray-500 line-through">Regular Price: ৳ 699</p>
-                    </div>
-                    <div class="text-right space-y-2">
-                        <span class="block text-sm font-extrabold text-green-600">৳ 499</span>
-                        <button onclick="buyOffer('40 GB + 500 Min', '499')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition">
-                            Buy Now
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl flex items-center justify-between shadow-sm">
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-md">GP - 7 Days</span>
-                        <h3 class="text-sm font-extrabold text-gray-800">15 GB Internet</h3>
-                        <p class="text-[11px] text-gray-500 line-through">Regular Price: ৳ 249</p>
-                    </div>
-                    <div class="text-right space-y-2">
-                        <span class="block text-sm font-extrabold text-green-600">৳ 179</span>
-                        <button onclick="buyOffer('15 GB Internet', '179')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition">
-                            Buy Now
-                        </button>
-                    </div>
-                </div>
+                <!-- Offers will be loaded dynamically here -->
             </div>
 
         </main>
@@ -135,13 +108,70 @@
             }
         });
 
-        window.filterOperator = function(operator) {
-            alert(operator + " offers will be loaded here.");
+        // Sample Offers Data
+        const allOffers = {
+            'GP': [
+                { title: '40 GB + 500 Min', validity: 'GP - 30 Days', regularPrice: 699, offerPrice: 499 },
+                { title: '15 GB Internet', validity: 'GP - 7 Days', regularPrice: 249, offerPrice: 179 }
+            ],
+            'ROBI': [
+                { title: '30 GB + 400 Min', validity: 'Robi - 30 Days', regularPrice: 598, offerPrice: 429 },
+                { title: '10 GB Internet', validity: 'Robi - 7 Days', regularPrice: 199, offerPrice: 139 }
+            ],
+            'BL': [
+                { title: '50 GB Internet', validity: 'Banglalink - 30 Days', regularPrice: 799, offerPrice: 549 },
+                { title: '20 GB + 200 Min', validity: 'Banglalink - 15 Days', regularPrice: 399, offerPrice: 289 }
+            ],
+            'AIRTEL': [
+                { title: '25 GB + 300 Min', validity: 'Airtel - 30 Days', regularPrice: 549, offerPrice: 399 },
+                { title: '12 GB Internet', validity: 'Airtel - 7 Days', regularPrice: 219, offerPrice: 159 }
+            ]
+        };
+
+        window.filterOperator = function(operator, btnElement) {
+            // Update active button styles
+            document.querySelectorAll('.operator-tab').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+            });
+            btnElement.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+            btnElement.classList.add('bg-indigo-600', 'text-white', 'shadow');
+
+            // Render offers for selected operator
+            const container = document.getElementById('offersList');
+            const offers = allOffers[operator] || [];
+
+            if (offers.length === 0) {
+                container.innerHTML = `<p class="text-center text-xs text-gray-400 py-6">No offers available for this operator right now.</p>`;
+                return;
+            }
+
+            container.innerHTML = offers.map(offer => `
+                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-md">${offer.validity}</span>
+                        <h3 class="text-sm font-extrabold text-gray-800">${offer.title}</h3>
+                        <p class="text-[11px] text-gray-500 line-through">Regular Price: ৳ ${offer.regularPrice}</p>
+                    </div>
+                    <div class="text-right space-y-2">
+                        <span class="block text-sm font-extrabold text-green-600">৳ ${offer.offerPrice}</span>
+                        <button onclick="buyOffer('${offer.title}', '${offer.offerPrice}')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer">
+                            Buy Now
+                        </button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         window.buyOffer = function(packageName, price) {
             alert(`You selected: ${packageName} for ৳${price}. Please confirm purchase.`);
         }
+
+        // Load default GP offers on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const defaultBtn = document.querySelector('.operator-tab');
+            if(defaultBtn) filterOperator('GP', defaultBtn);
+        });
     </script>
 </body>
 </html>
