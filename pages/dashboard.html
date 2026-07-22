@@ -31,10 +31,65 @@
         </header>
 
         <!-- Main Content Area -->
-        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
-            <!-- এখানে আপনার অন্যান্য সেকশন বা গ্রিড মেনুগুলো বসাতে পারেন -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl text-center text-xs text-gray-500">
-                Dashboard Content Area
+        <main class="p-3 flex-grow space-y-4 overflow-y-auto">
+            
+            <!-- Service Grid (4 Columns) -->
+            <div class="grid grid-cols-4 gap-2.5">
+                <!-- 1. Daily Job -->
+                <a href="tasks.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">💼</span>
+                    <span class="text-[10px] font-bold text-gray-700">Daily Job</span>
+                </a>
+                <!-- 2. Recharge -->
+                <a href="#" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">📱</span>
+                    <span class="text-[10px] font-bold text-gray-700">Recharge</span>
+                </a>
+                <!-- 3. Withdraw -->
+                <a href="withdraw.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">💳</span>
+                    <span class="text-[10px] font-bold text-gray-700">Withdraw</span>
+                </a>
+                <!-- 4. Drive Offer -->
+                <a href="#" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">🎁</span>
+                    <span class="text-[10px] font-bold text-gray-700">Drive Offer</span>
+                </a>
+
+                <!-- 5. Add Money -->
+                <a href="deposit.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">👛</span>
+                    <span class="text-[10px] font-bold text-gray-700">Add Money</span>
+                </a>
+                <!-- 6. Withdraw History -->
+                <a href="history.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">🕒</span>
+                    <span class="text-[10px] font-bold text-gray-700">History</span>
+                </a>
+                <!-- 7. Leaderboard -->
+                <a href="leaderboard.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">🏆</span>
+                    <span class="text-[10px] font-bold text-gray-700">Leaderboard</span>
+                </a>
+                <!-- 8. Microjobs -->
+                <a href="tasks.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">📋</span>
+                    <span class="text-[10px] font-bold text-gray-700">Microjobs</span>
+                </a>
+            </div>
+
+            <!-- Account Activation Warning Banner -->
+            <div class="bg-red-50 border border-red-100 p-4 rounded-3xl text-center shadow-sm">
+                <div class="flex items-center justify-center gap-1.5 text-red-600 font-bold text-xs mb-1">
+                    <span>⚠️</span>
+                    <span>আপনার একাউন্টটি একটিভ নেই</span>
+                </div>
+                <p class="text-[11px] text-gray-600 mb-3 leading-relaxed">
+                    ইনকাম শুরু করতে এবং সকল প্রিমিয়াম সুবিধা পেতে এখনই আপনার একাউন্টটি কাস্টমার সাপোর্ট বা নির্দিষ্ট ফি দিয়ে অ্যাক্টিভ করুন।
+                </p>
+                <a href="#" class="inline-block w-full py-2.5 bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold text-xs rounded-full shadow-md hover:opacity-90 transition">
+                    Active Now &rarr;
+                </a>
             </div>
         </main>
 
@@ -65,6 +120,7 @@
         </nav>
     </div>
 
+    <!-- Firebase Script for Auth & Balances -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
