@@ -30,7 +30,7 @@
         <div class="p-6">
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">MicroJobPro</h1>
-                <button id="closeSidebar" class="text-slate-400 hover:text-white transition-colors">
+                <button id="closeSidebar" class="text-slate-400 hover:text-white transition-colors p-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -44,7 +44,7 @@
             </nav>
         </div>
         <div class="p-6 border-t border-slate-800/80">
-            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm">Logout</button>
+            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm cursor-pointer">Logout</button>
         </div>
     </aside>
 
@@ -53,8 +53,8 @@
         <!-- Header -->
         <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
             <div class="flex items-center gap-3 overflow-hidden">
-                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm shrink-0 cursor-pointer">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                <button id="menuBtn" type="button" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm shrink-0 cursor-pointer">
+                    <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
                 <nav class="flex items-center gap-3 lg:gap-6 text-xs md:text-sm font-semibold text-slate-300 overflow-x-auto py-2 scrollbar-none">
                     <a href="dashboard.html" class="text-blue-400 transition-all shrink-0">Home</a>
@@ -66,10 +66,10 @@
                 </nav>
             </div>
             
-            <!-- User Profile Avatar (Clickable to open profile modal) -->
-            <button id="userAvatarBtn" class="flex items-center gap-3 shrink-0 focus:outline-none hover:opacity-95 transition-all cursor-pointer">
-                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
-                <div class="hidden sm:block text-left">
+            <!-- User Profile Avatar -->
+            <button id="userAvatarBtn" type="button" class="flex items-center gap-3 shrink-0 focus:outline-none hover:opacity-95 transition-all cursor-pointer">
+                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md pointer-events-none">
+                <div class="hidden sm:block text-left pointer-events-none">
                     <p id="userName" class="text-sm font-bold text-white">Loading...</p>
                     <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
                 </div>
@@ -185,8 +185,8 @@
         <div class="bg-cardbg border border-slate-800/80 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-5 relative">
             
             <!-- Close Button -->
-            <button id="closeProfileModal" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-900/60 border border-slate-850 cursor-pointer">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <button id="closeProfileModal" type="button" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-900/60 border border-slate-800 cursor-pointer">
+                <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
             <!-- User Info Header -->
@@ -223,18 +223,18 @@
                 </div>
             </div>
 
-            <!-- Referral Code Input Section (If not already referred) -->
+            <!-- Referral Code Input Section -->
             <div id="referralInputSection" class="bg-slate-900/60 p-4 border border-slate-800 rounded-2xl space-y-3">
                 <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">Have a Referral Code?</label>
                 <div class="flex gap-2">
                     <input type="text" id="modalRefInput" placeholder="Enter code (e.g. MCJ587)" class="flex-1 px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white uppercase focus:outline-none focus:border-blue-500">
-                    <button id="applyRefBtn" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition-all shadow-md cursor-pointer">Apply</button>
+                    <button id="applyRefBtn" type="button" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition-all shadow-md cursor-pointer">Apply</button>
                 </div>
                 <p id="refMsg" class="text-[10px] font-medium hidden"></p>
             </div>
 
             <!-- Logout Action -->
-            <button id="modalLogoutBtn" class="w-full py-3 bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white rounded-xl font-bold text-xs transition-all shadow-sm cursor-pointer">
+            <button id="modalLogoutBtn" type="button" class="w-full py-3 bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white rounded-xl font-bold text-xs transition-all shadow-sm cursor-pointer">
                 Logout Account
             </button>
         </div>
@@ -246,46 +246,47 @@
         import { db } from '../firebase/firebase-config.js';
         import { doc, getDoc, updateDoc, increment, collection, query, where, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Sidebar Elements & Event Listeners
-        const menuBtn = document.getElementById('menuBtn');
-        const closeSidebar = document.getElementById('closeSidebar');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        // Immediate UI Event Listeners Setup (Independent of Firebase loading speed)
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuBtn = document.getElementById('menuBtn');
+            const closeSidebar = document.getElementById('closeSidebar');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('-translate-x-full');
-            sidebarOverlay.classList.toggle('hidden');
-        }
+            function toggleSidebar() {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebarOverlay.classList.toggle('hidden');
+            }
 
-        if (menuBtn) menuBtn.addEventListener('click', toggleSidebar);
-        if (closeSidebar) closeSidebar.addEventListener('click', toggleSidebar);
-        if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
+            if (menuBtn) menuBtn.addEventListener('click', toggleSidebar);
+            if (closeSidebar) closeSidebar.addEventListener('click', toggleSidebar);
+            if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
 
-        // Profile Modal Elements & Event Listeners
-        const userAvatarBtn = document.getElementById('userAvatarBtn');
-        const profileModal = document.getElementById('profileModal');
-        const closeProfileModal = document.getElementById('closeProfileModal');
+            // Profile Modal Elements & Event Listeners
+            const userAvatarBtn = document.getElementById('userAvatarBtn');
+            const profileModal = document.getElementById('profileModal');
+            const closeProfileModal = document.getElementById('closeProfileModal');
 
-        if (userAvatarBtn) {
-            userAvatarBtn.addEventListener('click', () => {
-                profileModal.classList.remove('hidden');
-            });
-        }
+            if (userAvatarBtn) {
+                userAvatarBtn.addEventListener('click', () => {
+                    profileModal.classList.remove('hidden');
+                });
+            }
 
-        if (closeProfileModal) {
-            closeProfileModal.addEventListener('click', () => {
-                profileModal.classList.add('hidden');
-            });
-        }
-
-        // Close modal when clicking outside content area
-        if (profileModal) {
-            profileModal.addEventListener('click', (e) => {
-                if (e.target === profileModal) {
+            if (closeProfileModal) {
+                closeProfileModal.addEventListener('click', () => {
                     profileModal.classList.add('hidden');
-                }
-            });
-        }
+                });
+            }
+
+            if (profileModal) {
+                profileModal.addEventListener('click', (e) => {
+                    if (e.target === profileModal) {
+                        profileModal.classList.add('hidden');
+                    }
+                });
+            }
+        });
 
         observeAuthState(async (user) => {
             if (!user) {
@@ -298,7 +299,6 @@
                 const email = user.email || 'No email available';
                 const photoURL = user.photoURL || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces';
 
-                // Fetch extra user profile data from Firestore database
                 const userDocRef = doc(db, "users", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
                 
@@ -313,7 +313,6 @@
                     document.getElementById('mainBalance').innerText = `৳ ${mainBal}`;
                     document.getElementById('depositBalance').innerText = `৳ ${depositBal}`;
                     
-                    // Update Modal Balances
                     document.getElementById('modalMainBalance').innerText = `৳ ${mainBal}`;
                     document.getElementById('modalDepositBalance').innerText = `৳ ${depositBal}`;
                 } else {
@@ -336,19 +335,16 @@
                 document.getElementById('userEmail').innerText = email;
                 document.getElementById('userAvatar').src = photoURL;
 
-                // Update Modal UI with real-time Firestore data
                 document.getElementById('modalUserName').innerText = fullName;
                 document.getElementById('modalUserEmail').innerText = email;
                 document.getElementById('modalUserAvatar').src = photoURL;
                 document.getElementById('modalRefCodeDisplay').innerText = `Ref: ${userData.referralCode || 'MCJ-----'}`;
 
-                // If user already used a referral code, hide the input box
                 const refSection = document.getElementById('referralInputSection');
                 if (userData.referredBy) {
                     refSection.innerHTML = `<p class="text-xs text-emerald-400 font-bold text-center">✓ Referral code already applied!</p>`;
                 }
 
-                // Fetch Submissions to calculate Pending and Completed Tasks dynamically
                 const submissionsQuery = query(collection(db, "submissions"), where("workerId", "==", user.uid));
                 const submissionsSnapshot = await getDocs(submissionsQuery);
 
@@ -367,7 +363,6 @@
                             approvedCount++;
                         }
 
-                        // Render Recent Activity Item
                         const item = document.createElement('div');
                         item.className = "py-3 flex items-center justify-between text-xs";
                         item.innerHTML = `
@@ -384,7 +379,6 @@
                 document.getElementById('pendingTasksCount').innerText = pendingCount;
                 document.getElementById('completedTasksCount').innerText = approvedCount;
                 
-                // Update Modal Task Stats
                 document.getElementById('modalCompletedTasks').innerText = approvedCount;
                 document.getElementById('modalPendingTasks').innerText = pendingCount;
 
@@ -427,7 +421,6 @@
                         return;
                     }
 
-                    // Search if referral code exists in database
                     const q = query(collection(db, "users"), where("referralCode", "==", codeInput));
                     const querySnapshot = await getDocs(q);
 
@@ -441,12 +434,10 @@
                     const referrerDoc = querySnapshot.docs[0];
                     const referrerUid = referrerDoc.id;
 
-                    // Update current user's referredBy field
                     await updateDoc(userDocRef, {
                         referredBy: referrerUid
                     });
 
-                    // Increment referrer's totalReferred count
                     await updateDoc(doc(db, "users", referrerUid), {
                         totalReferred: increment(1)
                     });
