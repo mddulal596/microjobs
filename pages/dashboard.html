@@ -1,456 +1,66 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="transform-gpu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#0B0F19',
-                        cardbg: '#111827',
-                        primary: '#3B82F6',
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col">
-    
-    <!-- Sidebar Overlay -->
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
-
-    <!-- Sidebar Menu -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800/80 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 shrink-0 shadow-2xl">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">MicroJobPro</h1>
-                <button id="closeSidebar" class="text-slate-400 hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            <nav class="mt-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25">Dashboard</a>
-                <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Tasks Marketplace</a>
-                <a href="post-task.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Post New Job</a>
-                <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Wallet</a>
-                <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Withdraw</a>
-                <a href="referral.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Referrals</a>
-            </nav>
-        </div>
-        
-        <!-- Sidebar Bottom Footer Links & Logout -->
-        <div class="p-6 border-t border-slate-800/80 space-y-4">
-            <div class="flex flex-col gap-2">
-                <a href="#" class="w-full py-2 px-3 bg-slate-800/60 hover:bg-slate-800 text-slate-300 hover:text-white rounded-xl font-medium transition-all text-center text-xs">Privacy Policy</a>
-                <a href="#" class="w-full py-2 px-3 bg-slate-800/60 hover:bg-slate-800 text-slate-300 hover:text-white rounded-xl font-medium transition-all text-center text-xs">Terms of Service</a>
-                <a href="#" class="w-full py-2 px-3 bg-slate-800/60 hover:bg-slate-800 text-slate-300 hover:text-white rounded-xl font-medium transition-all text-center text-xs">Support</a>
-            </div>
-            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm text-xs">Logout</button>
-        </div>
-    </aside>
-
-    <!-- Main Content Wrapper -->
-    <div class="flex-1 flex flex-col min-w-0 w-full">
-        <!-- Header -->
-        <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
-            <div class="flex items-center gap-3 overflow-hidden">
-                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-                <nav class="flex items-center gap-3 lg:gap-6 text-xs md:text-sm font-semibold text-slate-300 overflow-x-auto py-2 scrollbar-none">
-                    <a href="dashboard.html" class="text-blue-400 transition-all shrink-0">Home</a>
-                    <a href="tasks.html" class="hover:text-blue-400 transition-all shrink-0">Jobs</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Advertisers</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Quiz</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Paid To Click</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Daily Check</a>
-                </nav>
-            </div>
-            
-            <!-- User Profile Avatar -->
-            <button id="userAvatarBtn" class="flex items-center gap-3 shrink-0 focus:outline-none hover:opacity-95 transition-all">
-                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
-                <div class="hidden sm:block text-left">
-                    <p id="userName" class="text-sm font-bold text-white">Loading...</p>
-                    <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
+<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
+        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-lg font-bold">Micro Job Pro</h1>
+                <div class="flex items-center gap-2">
+                    <span id="userName" class="text-sm bg-indigo-700 px-3 py-1 rounded-full">Loading...</span>
+                    <button id="logoutBtn" class="text-xs bg-red-500 px-2 py-1 rounded-lg">Logout</button>
                 </div>
-            </button>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-2">
+                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm">
+                    <p class="text-xs text-indigo-200">Main Balance</p>
+                    <h2 id="mainBalance" class="text-xl font-extrabold mt-1">৳ 0.00</h2>
+                </div>
+                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm">
+                    <p class="text-xs text-indigo-200">Deposit Balance</p>
+                    <h2 id="depositBalance" class="text-xl font-extrabold mt-1">৳ 0.00</h2>
+                </div>
+            </div>
         </header>
 
-        <!-- Main Dashboard Section -->
-        <main class="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto space-y-6">
-            
-            <!-- Welcome Banner -->
-            <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div class="space-y-2">
-                    <h2 class="text-2xl md:text-3xl font-black text-white">Welcome back, <span id="welcomeName" class="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">User</span>!</h2>
-                    <p class="text-slate-400 text-sm">Here is a quick overview of your account activity and earnings.</p>
-                </div>
-                <div class="flex items-center gap-3 w-full md:w-auto">
-                    <a href="tasks.html" class="flex-1 md:flex-none px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-all shadow-lg shadow-blue-500/25 text-center">Browse Jobs</a>
-                    <a href="post-task.html" class="flex-1 md:flex-none px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition-all text-center">Post Job</a>
-                </div>
+        <main class="p-4 flex-grow space-y-4">
+            <div class="grid grid-cols-4 gap-2 text-center">
+                <a href="tasks.html" class="p-3 bg-indigo-50 rounded-2xl text-indigo-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm">Tasks</a>
+                <a href="deposit.html" class="p-3 bg-emerald-50 rounded-2xl text-emerald-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm">Deposit</a>
+                <a href="withdraw.html" class="p-3 bg-amber-50 rounded-2xl text-amber-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm">Withdraw</a>
+                <a href="referral.html" class="p-3 bg-purple-50 rounded-2xl text-purple-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm">Referral</a>
             </div>
-
-            <!-- Stats Balance Cards Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
-                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold">
-                        <span>Main Balance</span>
-                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <h3 id="mainBalance" class="text-2xl font-black text-white">৳ 0.00</h3>
-                        <p class="text-xs text-slate-500 mt-1">Available for withdraw</p>
-                    </div>
-                </div>
-
-                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
-                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold">
-                        <span>Deposit Balance</span>
-                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    </div>
-                    <div>
-                        <h3 id="depositBalance" class="text-2xl font-black text-white">৳ 0.00</h3>
-                        <p class="text-xs text-slate-500 mt-1">For posting new jobs</p>
-                    </div>
-                </div>
-
-                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
-                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold">
-                        <span>Completed Tasks</span>
-                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <h3 id="completedTasksCount" class="text-2xl font-black text-white">0</h3>
-                        <p class="text-xs text-slate-500 mt-1">Successfully approved</p>
-                    </div>
-                </div>
-
-                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
-                    <div class="flex items-center justify-between text-slate-400 text-xs font-semibold">
-                        <span>Pending Tasks</span>
-                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <h3 id="pendingTasksCount" class="text-2xl font-black text-white">0</h3>
-                        <p class="text-xs text-slate-500 mt-1">Under review</p>
-                    </div>
-                </div>
+            <div class="bg-gray-100 p-4 rounded-2xl">
+                <h3 class="text-sm font-bold text-gray-700 mb-2">Recent Announcements</h3>
+                <p class="text-xs text-gray-500">Welcome to Micro Job Pro! Complete daily tasks and earn real money securely.</p>
             </div>
-
-            <!-- Quick Action Buttons (4 Buttons Side-by-Side on all screens) -->
-            <div class="grid grid-cols-4 gap-2 md:gap-4">
-                <a href="withdraw.html" class="flex flex-col items-center justify-center p-3 md:p-4 bg-cardbg border border-slate-800/80 rounded-2xl hover:bg-slate-800/80 transition-all text-center group shadow-sm">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mb-1.5 md:mb-2 group-hover:scale-110 transition-transform">
-                        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <span class="text-[10px] md:text-xs font-bold text-slate-200">Withdraw</span>
-                </a>
-
-                <a href="deposit.html" class="flex flex-col items-center justify-center p-3 md:p-4 bg-cardbg border border-slate-800/80 rounded-2xl hover:bg-slate-800/80 transition-all text-center group shadow-sm">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-1.5 md:mb-2 group-hover:scale-110 transition-transform">
-                        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <span class="text-[10px] md:text-xs font-bold text-slate-200">Deposit</span>
-                </a>
-
-                <a href="referral.html" class="flex flex-col items-center justify-center p-3 md:p-4 bg-cardbg border border-slate-800/80 rounded-2xl hover:bg-slate-800/80 transition-all text-center group shadow-sm">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-1.5 md:mb-2 group-hover:scale-110 transition-transform">
-                        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    </div>
-                    <span class="text-[10px] md:text-xs font-bold text-slate-200">Referral</span>
-                </a>
-
-                <a href="wallet.html" class="flex flex-col items-center justify-center p-3 md:p-4 bg-cardbg border border-slate-800/80 rounded-2xl hover:bg-slate-800/80 transition-all text-center group shadow-sm">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-1.5 md:mb-2 group-hover:scale-110 transition-transform">
-                        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-                    </div>
-                    <span class="text-[10px] md:text-xs font-bold text-slate-200">Wallet</span>
-                </a>
-            </div>
-
-            <!-- Notice Board / Recent Activities Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm space-y-4">
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
-                        Notice Board
-                    </h3>
-                    <div class="p-4 bg-slate-900/60 border border-slate-800 rounded-xl space-y-2">
-                        <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded font-bold">Update</span>
-                        <p class="text-xs text-slate-300 font-medium">Welcome to MicroJobPro! Complete tasks properly and submit accurate proofs to avoid task rejection.</p>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-2 p-6 bg-cardbg border border-slate-800/80 rounded-2xl shadow-sm space-y-4">
-                    <h3 class="text-lg font-bold text-white">Recent Activity</h3>
-                    <div id="recentActivityContainer" class="divide-y divide-slate-800/80">
-                        <div class="py-3 text-center text-xs text-slate-500">No recent activity found.</div>
-                    </div>
-                </div>
-            </div>
-
         </main>
     </div>
 
-    <!-- PROFILE MODAL -->
-    <div id="profileModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardbg border border-slate-800/80 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-6 relative">
-            <button id="closeProfileModal" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-900/60 border border-slate-800">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-
-            <div class="flex items-center gap-4 border-b border-slate-800/80 pb-4">
-                <img id="modalUserAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Avatar" class="w-14 h-14 rounded-full object-cover border-2 border-blue-500/50 shadow-md">
-                <div>
-                    <h3 id="modalUserName" class="text-base font-bold text-white">Loading...</h3>
-                    <p id="modalUserEmail" class="text-xs text-slate-400">Loading...</p>
-                    <span id="modalRefCodeDisplay" class="inline-block mt-1 text-[10px] font-black bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-md tracking-wider">Ref: MCJ-----</span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-slate-900/60 p-3.5 border border-slate-800 rounded-2xl space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-slate-400">Completed Tasks</span>
-                    <h4 id="modalCompletedTasks" class="text-xl font-black text-emerald-400">0</h4>
-                </div>
-                <div class="bg-slate-900/60 p-3.5 border border-slate-800 rounded-2xl space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-slate-400">Pending Tasks</span>
-                    <h4 id="modalPendingTasks" class="text-xl font-black text-amber-400">0</h4>
-                </div>
-            </div>
-
-            <div id="referralInputSection" class="bg-slate-900/60 p-4 border border-slate-800 rounded-2xl space-y-3">
-                <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">Have a Referral Code?</label>
-                <div class="flex gap-2">
-                    <input type="text" id="modalRefInput" placeholder="Enter code (e.g. MCJ587)" class="flex-1 px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white uppercase focus:outline-none focus:border-blue-500">
-                    <button id="applyRefBtn" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition-all shadow-md">Apply</button>
-                </div>
-                <p id="refMsg" class="text-[10px] font-medium hidden"></p>
-            </div>
-
-            <button id="modalLogoutBtn" class="w-full py-3 bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white rounded-xl font-bold text-xs transition-all shadow-sm">
-                Logout Account
-            </button>
-        </div>
-    </div>
-
-    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script type="module">
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
-        import { db } from '../firebase/firebase-config.js';
-        import { doc, getDoc, updateDoc, increment, collection, query, where, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const menuBtn = document.getElementById('menuBtn');
-        const closeSidebar = document.getElementById('closeSidebar');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-        function toggleSidebar() {
-            sidebar.classList.toggle('-translate-x-full');
-            sidebarOverlay.classList.toggle('hidden');
-        }
-
-        menuBtn.addEventListener('click', toggleSidebar);
-        closeSidebar.addEventListener('click', toggleSidebar);
-        sidebarOverlay.addEventListener('click', toggleSidebar);
-
-        const userAvatarBtn = document.getElementById('userAvatarBtn');
-        const profileModal = document.getElementById('profileModal');
-        const closeProfileModal = document.getElementById('closeProfileModal');
-
-        if (userAvatarBtn) {
-            userAvatarBtn.addEventListener('click', () => {
-                profileModal.classList.remove('hidden');
-            });
-        }
-
-        if (closeProfileModal) {
-            closeProfileModal.addEventListener('click', () => {
-                profileModal.classList.add('hidden');
-            });
-        }
-
-        let activeUser = null;
-
-        observeAuthState(async (user) => {
-            if (!user) {
+        observeAuthState((userData) => {
+            if (userData) {
+                document.getElementById('userName').innerText = userData.displayName || "User";
+                const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
+                const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
+                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
+                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+            } else {
                 window.location.href = 'login.html';
-                return;
-            }
-
-            activeUser = user;
-
-            try {
-                let fullName = user.displayName || user.email.split('@')[0] || 'User';
-                const email = user.email || 'No email available';
-                const photoURL = user.photoURL || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces';
-
-                const userDocRef = doc(db, "users", user.uid);
-                const userDocSnap = await getDoc(userDocRef);
-                
-                let userData = {};
-                if (userDocSnap.exists()) {
-                    userData = userDocSnap.data();
-                    fullName = userData.fullName || userData.name || userData.displayName || userData.username || fullName;
-                    
-                    document.getElementById('mainBalance').innerText = `৳ ${userData.mainBalance ? Number(userData.mainBalance).toFixed(2) : '0.00'}`;
-                    document.getElementById('depositBalance').innerText = `৳ ${userData.depositBalance ? Number(userData.depositBalance).toFixed(2) : '0.00'}`;
-                } else {
-                    const myReferralCode = `MCJ${user.uid.substring(0, 5).toUpperCase()}`;
-                    userData = {
-                        uid: user.uid,
-                        fullName: fullName,
-                        email: email,
-                        referralCode: myReferralCode,
-                        referredBy: null,
-                        mainBalance: 0,
-                        depositBalance: 0,
-                        createdAt: new Date().toISOString()
-                    };
-                    await setDoc(userDocRef, userData);
-                }
-
-                document.getElementById('userName').innerText = fullName;
-                document.getElementById('welcomeName').innerText = fullName;
-                document.getElementById('userEmail').innerText = email;
-                document.getElementById('userAvatar').src = photoURL;
-
-                document.getElementById('modalUserName').innerText = fullName;
-                document.getElementById('modalUserEmail').innerText = email;
-                document.getElementById('modalUserAvatar').src = photoURL;
-                document.getElementById('modalRefCodeDisplay').innerText = `Ref: ${userData.referralCode || 'MCJ-----'}`;
-
-                const refSection = document.getElementById('referralInputSection');
-                if (userData.referredBy) {
-                    refSection.innerHTML = `<p class="text-xs text-emerald-400 font-bold text-center">✓ Referral code already applied!</p>`;
-                }
-
-                const submissionsQuery = query(collection(db, "submissions"), where("workerId", "==", user.uid));
-                const submissionsSnapshot = await getDocs(submissionsQuery);
-
-                let pendingCount = 0;
-                let approvedCount = 0;
-                const activityContainer = document.getElementById('recentActivityContainer');
-
-                if (!submissionsSnapshot.empty) {
-                    activityContainer.innerHTML = "";
-                    submissionsSnapshot.forEach((docSnap) => {
-                        const subData = docSnap.data();
-                        
-                        if (subData.status === 'pending') {
-                            pendingCount++;
-                        } else if (subData.status === 'approved') {
-                            approvedCount++;
-                        }
-
-                        const item = document.createElement('div');
-                        item.className = "py-3 flex items-center justify-between text-xs";
-                        item.innerHTML = `
-                            <div>
-                                <p class="font-bold text-white">${subData.taskTitle || 'Task Submission'}</p>
-                                <p class="text-slate-500 text-[10px]">Reward: ৳ ${Number(subData.reward || 0).toFixed(2)}</p>
-                            </div>
-                            <span class="px-2.5 py-1 text-[10px] font-bold rounded-full ${subData.status === 'approved' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'}">${subData.status.toUpperCase()}</span>
-                        `;
-                        activityContainer.appendChild(item);
-                    });
-                }
-
-                document.getElementById('pendingTasksCount').innerText = pendingCount;
-                document.getElementById('completedTasksCount').innerText = approvedCount;
-                
-                document.getElementById('modalCompletedTasks').innerText = approvedCount;
-                document.getElementById('modalPendingTasks').innerText = pendingCount;
-
-            } catch (error) {
-                console.error("Error loading dashboard data:", error);
             }
         });
 
-        const applyRefBtn = document.getElementById('applyRefBtn');
-        if (applyRefBtn) {
-            applyRefBtn.addEventListener('click', async () => {
-                const codeInput = document.getElementById('modalRefInput').value.trim().toUpperCase();
-                const refMsg = document.getElementById('refMsg');
-
-                if (!activeUser) {
-                    refMsg.innerText = "User not logged in properly.";
-                    refMsg.className = "text-[10px] font-bold text-red-400 block";
-                    refMsg.classList.remove('hidden');
-                    return;
-                }
-
-                if (!codeInput) {
-                    refMsg.innerText = "Please enter a referral code.";
-                    refMsg.className = "text-[10px] font-bold text-red-400 block";
-                    refMsg.classList.remove('hidden');
-                    return;
-                }
-
-                try {
-                    const userDocRef = doc(db, "users", activeUser.uid);
-                    const userSnap = await getDoc(userDocRef);
-                    const myData = userSnap.data();
-
-                    if (myData.referralCode === codeInput) {
-                        refMsg.innerText = "You cannot use your own referral code!";
-                        refMsg.className = "text-[10px] font-bold text-red-400 block";
-                        refMsg.classList.remove('hidden');
-                        return;
-                    }
-
-                    const q = query(collection(db, "users"), where("referralCode", "==", codeInput));
-                    const querySnapshot = await getDocs(q);
-
-                    if (querySnapshot.empty) {
-                        refMsg.innerText = "Invalid referral code!";
-                        refMsg.className = "text-[10px] font-bold text-red-400 block";
-                        refMsg.classList.remove('hidden');
-                        return;
-                    }
-
-                    const referrerDoc = querySnapshot.docs[0];
-                    const referrerUid = referrerDoc.id;
-
-                    await updateDoc(userDocRef, {
-                        referredBy: referrerUid
-                    });
-
-                    await updateDoc(doc(db, "users", referrerUid), {
-                        totalReferred: increment(1)
-                    });
-
-                    refMsg.innerText = "Referral code applied successfully!";
-                    refMsg.className = "text-[10px] font-bold text-emerald-400 block";
-                    refMsg.classList.remove('hidden');
-
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1500);
-
-                } catch (error) {
-                    console.error(error);
-                    refMsg.innerText = "Something went wrong. Try again.";
-                    refMsg.className = "text-[10px] font-bold text-red-400 block";
-                    refMsg.classList.remove('hidden');
-                }
-            });
-        }
-
-        document.getElementById('logoutBtnSidebar').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
-        });
-
-        document.getElementById('modalLogoutBtn').addEventListener('click', async () => {
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
             await logoutUser();
             window.location.href = 'login.html';
         });
