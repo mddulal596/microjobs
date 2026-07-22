@@ -1,193 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="transform-gpu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - Micro Job Pro</title>
+    <title>Register - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#0B0F19',
-                        cardbg: '#111827',
-                        primary: '#3B82F6',
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="bg-darkbg text-slate-100 min-h-screen flex items-center justify-center p-4">
-
-    <div class="w-full max-w-md bg-cardbg border border-slate-800/80 p-8 rounded-3xl shadow-2xl space-y-6">
-        
-        <!-- Header Text -->
-        <div class="text-center space-y-2">
-            <h1 class="text-3xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">Create Account</h1>
-            <p class="text-slate-400 text-xs sm:text-sm">Join MicroJobPro and start earning today</p>
-        </div>
-
-        <!-- Error/Success Message Box -->
-        <div id="messageBox" class="hidden p-3 rounded-xl text-xs font-semibold text-center"></div>
-
-        <!-- Signup Form -->
-        <form id="signupForm" class="space-y-4">
-            
-            <!-- Full Name -->
-            <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Full Name</label>
-                <input type="text" id="fullName" required placeholder="Enter your full name" class="w-full px-4 py-3 bg-slate-900/80 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 transition-all">
+<body class="bg-gray-50 flex items-center justify-center min-h-screen px-4 transform-gpu">
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-8">
+        <h2 class="text-2xl font-extrabold text-indigo-600 text-center mb-6">Create Account</h2>
+        <div id="errorMsg" class="hidden mb-4 p-3 bg-red-100 text-red-700 rounded-xl text-sm"></div>
+        <form id="registerForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                <input type="text" id="name" required class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500">
             </div>
-
-            <!-- Email Address -->
-            <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Email Address</label>
-                <input type="email" id="email" required placeholder="Enter your email" class="w-full px-4 py-3 bg-slate-900/80 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 transition-all">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Email Address</label>
+                <input type="email" id="email" required class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500">
             </div>
-
-            <!-- Password -->
-            <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Password</label>
-                <input type="password" id="password" required placeholder="Create a strong password" class="w-full px-4 py-3 bg-slate-900/80 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 transition-all">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" required class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-indigo-500 focus:border-indigo-500">
             </div>
-
-            <!-- Referral Code (Optional) -->
-            <div class="space-y-1">
-                <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Referral Code <span class="text-slate-500 font-normal">(Optional)</span></label>
-                <input type="text" id="referralCodeInput" placeholder="e.g. MCJ587" class="w-full px-4 py-3 bg-slate-900/80 border border-slate-800 rounded-xl text-sm text-white uppercase focus:outline-none focus:border-blue-500 transition-all">
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" id="submitBtn" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-blue-500/25">
-                Sign Up
-            </button>
+            <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 transition">Register</button>
         </form>
-
-        <!-- Divider -->
-        <div class="relative flex py-2 items-center">
-            <div class="flex-grow border-t border-slate-800"></div>
-            <span class="flex-shrink mx-4 text-slate-500 text-xs">Or</span>
-            <div class="flex-grow border-t border-slate-800"></div>
-        </div>
-
-        <!-- Google Login Option -->
-        <button id="googleLoginBtn" class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-3">
-            <svg class="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.14C3.15 21.36 7.22 24 12 24z"/>
-                <path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.62H1.18C.43 8.14 0 9.87 0 12s.43 3.86 1.18 5.38l4.09-3.14z"/>
-                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.64 1.18 6.62l4.09 3.14c.95-2.85 3.6-4.96 6.73-4.96z"/>
-            </svg>
-            Continue with Google
-        </button>
-
-        <!-- Redirect to Login -->
-        <p class="text-center text-xs text-slate-400">
-            Already have an account? <a href="login.html" class="text-blue-400 font-bold hover:underline">Sign In</a>
-        </p>
-
+        <p class="mt-6 text-center text-sm text-gray-600">Already have an account? <a href="login.html" class="text-indigo-600 font-bold">Login</a></p>
     </div>
 
-    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script type="module">
-        import { db } from '../firebase/firebase-config.js';
-        import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { auth } from '../firebase/auth.js'; // আপনার অথেন্টিকেশন ফাইল পাথ চেক করে নেবেন
-        import { doc, setDoc, getDocs, collection, query, where, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const messageBox = document.getElementById('messageBox');
-
-        function showMessage(text, isError = true) {
-            messageBox.innerText = text;
-            messageBox.className = `p-3 rounded-xl text-xs font-semibold text-center ${isError ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}`;
-            messageBox.classList.remove('hidden');
-        }
-
-        // Handle Email/Password Registration
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        import { registerWithEmail } from '../firebase/auth.js';
+        
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const fullName = document.getElementById('fullName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const refCodeInput = document.getElementById('referralCodeInput').value.trim().toUpperCase();
-
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = "Creating Account...";
-            submitBtn.disabled = true;
-
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
             try {
-                // 1. Create User in Firebase Auth
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                let referredByUid = "";
-                // 2. Validate Referral Code if provided
-                if (refCodeInput) {
-                    const q = query(collection(db, "users"), where("referralCode", "==", refCodeInput));
-                    const querySnapshot = await getDocs(q);
-                    
-                    if (!querySnapshot.empty) {
-                        const referrerDoc = querySnapshot.docs[0];
-                        referredByUid = referrerDoc.id;
-
-                        // Increment referrer's totalReferred count
-                        await updateDoc(doc(db, "users", referredByUid), {
-                            totalReferred: increment(1)
-                        });
-                    }
-                }
-
-                // 3. Generate Own Unique Referral Code
-                const myReferralCode = `MCJ${user.uid.substring(0, 5).toUpperCase()}`;
-
-                // 4. Save User Profile in Firestore
-                await setDoc(doc(db, "users", user.uid), {
-                    uid: user.uid,
-                    fullName: fullName,
-                    email: email,
-                    referralCode: myReferralCode,
-                    referredBy: referredByUid || null,
-                    mainBalance: 0,
-                    depositBalance: 0,
-                    completedTasks: 0,
-                    pendingTasks: 0,
-                    totalReferred: 0,
-                    referralEarnings: 0,
-                    createdAt: new Date().toISOString()
-                });
-
-                showMessage("Account created successfully! Redirecting...", false);
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-
-            } catch (error) {
-                console.error(error);
-                showMessage(error.message);
-                submitBtn.innerText = "Sign Up";
-                submitBtn.disabled = false;
-            }
-        });
-
-        // Handle Google Sign-in Registration (Optional support)
-        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
-            const provider = new GoogleAuthProvider();
-            try {
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-
-                // Check if user already exists in Firestore
-                const userDocRef = doc(db, "users", user.uid);
-                // (যদি নতুন হয় তবে ডিফল트 ডাটা সেভ করতে পারেন)
-                
+                await registerWithEmail(email, password, name);
                 window.location.href = 'dashboard.html';
-            } catch (error) {
-                showMessage(error.message);
+            } catch (err) {
+                const errDiv = document.getElementById('errorMsg');
+                errDiv.innerText = err.message;
+                errDiv.classList.remove('hidden');
             }
         });
     </script>
 </body>
-    </html>
+</html>
