@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" class="transform-gpu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - Micro Job Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
+        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md flex justify-between items-center">
+            <h1 class="text-lg font-bold">Transaction History</h1>
+            <a href="dashboard.html" class="text-xs bg-indigo-700 px-3 py-1 rounded-full">Dashboard</a>
+        </header>
+
+        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
+            <h2 class="text-sm font-bold text-gray-700">Withdrawal Requests</h2>
+            <div id="historyList" class="space-y-3">
+                <p class="text-center text-gray-500 text-sm">Loading history...</p>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { db } from '../firebase/firebase-config.js';
+        import { observeAuthState } from '../firebase/auth.js';
+        import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        observeAuthState(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loadHistory(user.uid);
+        });
+
+        async function loadHistory(userId) {
+            const historyListEl = document.getElementById('historyList');
+            try {
+                const q = query(collection(db, "withdrawals"), where("userId", "==", userId));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    historyListEl.innerHTML = `<p class="text-center text-gray-500 text-sm">No transactions found.</p>`;
+                    return;
+                }
+
+                historyListEl.innerHTML = "";
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const statusColor = data.status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700';
+
+                    const card = document.createElement('div');
+                    card.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl flex justify-between items-center shadow-sm";
+                    card.innerHTML = `
+                        <div>
+                            <p class="font-bold text-xs text-gray-800">${data.method} - ${data.accountNo}</p>
+                            <p class="text-[10px] text-gray-500">Amount: ৳ ${data.amount}</p>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-1 rounded-lg uppercase ${statusColor}">${data.status}</span>
+                    `;
+                    historyListEl.appendChild(card);
+                });
+            } catch (err) {
+                console.error(err);
+                historyListEl.innerHTML = `<p class="text-center text-red-500 text-sm">Failed to load history.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
