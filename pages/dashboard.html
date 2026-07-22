@@ -33,11 +33,21 @@
         <main class="p-4 flex-grow space-y-4">
             <div class="bg-gray-100 p-4 rounded-2xl">
                 <h3 class="text-sm font-bold text-gray-700 mb-2">Recent Announcements</h3>
-                <p class="text-xs text-gray-500">Welcome to Micro Job Pro! Complete daily tasks and earn real money securely.</p>
+                <p class="text-xs text-gray-500">Welcome to Micro Job Pro! Complete daily tasks, spin & earn rewards safely.</p>
             </div>
 
-            <!-- Transaction History Link Only (Admin Panel Removed) -->
-            <div class="pt-2">
+            <!-- Interactive Quick Features (Daily Check-in & Lucky Spin) -->
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="claimDailyBonus()" class="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl text-center text-xs font-bold text-emerald-700 shadow-sm hover:bg-emerald-100 transition">
+                    🎁 Daily Check-in (+৳5)
+                </button>
+                <a href="spin.html" class="p-3 bg-purple-50 border border-purple-100 rounded-2xl text-center text-xs font-bold text-purple-700 shadow-sm hover:bg-purple-100 transition">
+                    🎡 Lucky Spin Win
+                </a>
+            </div>
+
+            <!-- Transaction History Link -->
+            <div class="pt-1">
                 <a href="history.html" class="w-full block p-3 bg-gray-50 border border-gray-200 rounded-2xl text-center text-xs font-bold text-gray-700 shadow-sm hover:bg-gray-100 transition">
                     📜 Transaction History
                 </a>
@@ -56,10 +66,15 @@
     </div>
 
     <script type="module">
+        import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { doc, getDoc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentUserId = null;
 
         observeAuthState((userData) => {
             if (userData) {
+                currentUserId = userData.uid;
                 document.getElementById('userName').innerText = userData.displayName || "User";
                 const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
                 const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
@@ -69,6 +84,33 @@
                 window.location.href = 'login.html';
             }
         });
+
+        window.claimDailyBonus = async function() {
+            if (!currentUserId) return;
+            const today = new Date().toISOString().slice(0, 10);
+            const userRef = doc(db, "users", currentUserId);
+            
+            try {
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    const data = userSnap.data();
+                    if (data.lastCheckIn === today) {
+                        alert("You have already claimed your daily bonus today! Come back tomorrow.");
+                        return;
+                    }
+                }
+
+                await updateDoc(userRef, {
+                    "balances.main": increment(5),
+                    lastCheckIn: today
+                });
+                alert("Successfully claimed ৳ 5 Daily Bonus!");
+                location.reload();
+            } catch (err) {
+                console.error(err);
+                alert("Failed to claim bonus: " + err.message);
+            }
+        };
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await logoutUser();
