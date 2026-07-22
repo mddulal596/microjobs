@@ -242,7 +242,7 @@
 
     <!-- Scripts -->
     <script type="module">
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { auth, observeAuthState, logoutUser } from '../firebase/auth.js';
         import { db } from '../firebase/firebase-config.js';
         import { doc, getDoc, updateDoc, increment, collection, query, where, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -390,6 +390,13 @@
                 const codeInput = document.getElementById('modalRefInput').value.trim().toUpperCase();
                 const refMsg = document.getElementById('refMsg');
                 const currentUser = auth.currentUser;
+
+                if (!currentUser) {
+                    refMsg.innerText = "Please log in again.";
+                    refMsg.className = "text-[10px] font-bold text-red-400 block";
+                    refMsg.classList.remove('hidden');
+                    return;
+                }
 
                 if (!codeInput) {
                     refMsg.innerText = "Please enter a referral code.";
