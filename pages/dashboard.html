@@ -67,9 +67,9 @@
             </div>
             
             <!-- User Profile Avatar (Clickable to open profile modal) -->
-            <button id="userAvatarBtn" class="flex items-center gap-3 shrink-0 focus:outline-none hover:opacity-95 transition-all">
-                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
-                <div class="hidden sm:block text-left">
+            <button id="userAvatarBtn" class="flex items-center gap-3 shrink-0 focus:outline-none hover:opacity-95 transition-all cursor-pointer pointer-events-auto">
+                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md pointer-events-none">
+                <div class="hidden sm:block text-left pointer-events-none">
                     <p id="userName" class="text-sm font-bold text-white">Loading...</p>
                     <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
                 </div>
@@ -242,7 +242,7 @@
 
     <!-- Scripts -->
     <script type="module">
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { auth, observeAuthState, logoutUser } from '../firebase/auth.js';
         import { db } from '../firebase/firebase-config.js';
         import { doc, getDoc, updateDoc, increment, collection, query, where, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -260,13 +260,14 @@
         closeSidebar.addEventListener('click', toggleSidebar);
         sidebarOverlay.addEventListener('click', toggleSidebar);
 
-        // Profile Modal Elements & Toggles
+        // Profile Modal Elements & Toggles (Robust Event Handler)
         const userAvatarBtn = document.getElementById('userAvatarBtn');
         const profileModal = document.getElementById('profileModal');
         const closeProfileModal = document.getElementById('closeProfileModal');
 
         if (userAvatarBtn) {
-            userAvatarBtn.addEventListener('click', () => {
+            userAvatarBtn.addEventListener('click', (e) => {
+                e.preventDefault();
                 profileModal.classList.remove('hidden');
             });
         }
@@ -391,6 +392,13 @@
                 const refMsg = document.getElementById('refMsg');
                 const currentUser = auth.currentUser;
 
+                if (!currentUser) {
+                    refMsg.innerText = "Please log in again.";
+                    refMsg.className = "text-[10px] font-bold text-red-400 block";
+                    refMsg.classList.remove('hidden');
+                    return;
+                }
+
                 if (!codeInput) {
                     refMsg.innerText = "Please enter a referral code.";
                     refMsg.className = "text-[10px] font-bold text-red-400 block";
@@ -431,7 +439,7 @@
 
                     // Increment referrer's totalReferred count
                     await updateDoc(doc(db, "users", referrerUid), {
-                        totalReferred: increment(1)
+                        totalRefCount: increment(1)
                     });
 
                     refMsg.innerText = "Referral code applied successfully!";
