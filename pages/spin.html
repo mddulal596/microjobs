@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" class="transform-gpu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Spin - Micro Job Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
+        <header class="p-4 bg-purple-600 text-white rounded-b-3xl shadow-md flex justify-between items-center">
+            <h1 class="text-lg font-bold">Lucky Spin Bonus</h1>
+            <a href="dashboard.html" class="text-xs bg-purple-700 px-3 py-1 rounded-full">Dashboard</a>
+        </header>
+
+        <main class="p-6 flex-grow flex flex-col items-center justify-center space-y-6">
+            <div class="w-64 h-64 rounded-full border-8 border-purple-500 flex items-center justify-center bg-purple-50 shadow-inner relative overflow-hidden" id="spinWheel">
+                <div id="wheelText" class="text-center font-extrabold text-purple-700 text-xl">SPIN ME!</div>
+            </div>
+            
+            <p id="spinResult" class="text-sm font-bold text-gray-600 text-center h-6"></p>
+
+            <button id="spinBtn" onclick="startSpin()" class="w-full py-3 bg-purple-600 text-white font-bold rounded-2xl shadow-lg hover:bg-purple-700 transition">Spin Now</button>
+        </main>
+    </div>
+
+    <script type="module">
+        import { db } from '../firebase/firebase-config.js';
+        import { observeAuthState } from '../firebase/auth.js';
+        import { doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentUser = null;
+        observeAuthState((user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = user;
+        });
+
+        window.startSpin = async function() {
+            const btn = document.getElementById('spinBtn');
+            const resultEl = document.getElementById('spinResult');
+            const wheel = document.getElementById('spinWheel');
+            
+            btn.disabled = true;
+            resultEl.innerText = "Spinning...";
+            wheel.style.transition = "transform 3s cubic-bezier(0.15, 0.95, 0.25, 1)";
+            const randomDegree = Math.floor(1440 + Math.random() * 1080);
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
+
+            setTimeout(async () => {
+                const rewards = [2, 5, 10, 0, 1, 20];
+                const won = rewards[Math.floor(Math.random() * rewards.length)];
+                
+                resultEl.innerText = won > 0 ? `Congratulations! You won ৳ ${won}` : `Better luck next time!`;
+                
+                if (won > 0) {
+                    try {
+                        const userRef = doc(db, "users", currentUser.uid);
+                        await updateDoc(userRef, {
+                            "balances.main": increment(won)
+                        });
+                    } catch (err) {
+                        console.error("Error updating balance:", err);
+                    }
+                }
+                btn.disabled = false;
+            }, 3000);
+        };
+    </script>
+</body>
+</html>
