@@ -41,7 +41,7 @@
                 </p>
             </div>
 
-            <!-- Referral Code Card (Only Code, No Link) -->
+            <!-- Referral Code Card (6 Digits Code) -->
             <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3 shadow-sm text-center">
                 <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">YOUR REFERRAL CODE</p>
                 <div class="py-1">
@@ -53,16 +53,16 @@
                 </button>
             </div>
 
-            <!-- Total Referred Users Card -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRED USERS</p>
-                <h3 id="totalTeam" class="text-xl font-extrabold text-indigo-600">0</h3>
-            </div>
-
-            <!-- Total Referral Earnings Card -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRAL EARNINGS</p>
-                <h3 id="referralEarnings" class="text-xl font-extrabold text-green-600">৳ 0.00</h3>
+            <!-- Stats Side-by-Side (Total Referred & Earnings) -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
+                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRED</p>
+                    <h3 id="totalTeam" class="text-lg font-extrabold text-indigo-600">0</h3>
+                </div>
+                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
+                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">REFERRAL EARNINGS</p>
+                    <h3 id="referralEarnings" class="text-lg font-extrabold text-green-600">৳ 0.00</h3>
+                </div>
             </div>
 
         </main>
@@ -111,8 +111,8 @@
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                // Generate short referral code (e.g., MCJB12345)
-                const refCode = userData.referralCode || "MCJB" + userData.uid.substring(0, 5).toUpperCase();
+                // Generate strictly 6-character referral code (e.g. MJP7A2)
+                const refCode = userData.referralCode || "MJP" + userData.uid.substring(0, 3).toUpperCase();
                 document.getElementById('myReferralCode').value = refCode;
 
                 if(userData.totalTeam !== undefined) {
@@ -126,7 +126,6 @@
             }
         });
 
-        // Copy Referral Code Function
         window.copyReferralCode = function() {
             const copyText = document.getElementById('myReferralCode');
             copyText.select();
