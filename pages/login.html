@@ -1,4 +1,4 @@
-Continue with Google<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="transform-gpu">
 <head>
     <meta charset="UTF-8">
@@ -13,18 +13,6 @@ Continue with Google<!DOCTYPE html>
         <div class="text-center space-y-1">
             <h1 class="text-xl font-extrabold text-indigo-600 tracking-wide">Micro Job Pro</h1>
             <p class="text-xs text-gray-500">Sign in to your account to continue</p>
-        </div>
-
-        <!-- Google Login Button -->
-        <button id="googleLoginBtn" class="w-full py-3 bg-white hover:bg-gray-50 border border-gray-300 text-gray-700 font-bold text-xs rounded-2xl shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
-            <span class="text-base">🌐</span>
-            <span>Continue with Google</span>
-        </button>
-
-        <div class="flex items-center my-4">
-            <div class="flex-grow border-t border-gray-200"></div>
-            <span class="px-3 text-[11px] text-gray-400 font-medium uppercase">Or with email</span>
-            <div class="flex-grow border-t border-gray-200"></div>
         </div>
 
         <!-- Email/Password Form -->
@@ -56,7 +44,7 @@ Continue with Google<!DOCTYPE html>
 
     <!-- Firebase Script & Logic -->
     <script type="module">
-        import { loginWithEmail, loginWithGoogle } from '../firebase/auth.js';
+        import { loginWithEmail } from '../firebase/auth.js';
 
         // Email & Password Login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -81,17 +69,6 @@ Continue with Google<!DOCTYPE html>
                 alert('লগইন ব্যর্থ হয়েছে: ' + error.message);
                 btn.disabled = false;
                 btn.innerText = "Sign In";
-            }
-        });
-
-        // Google Login
-        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
-            try {
-                await loginWithGoogle();
-                window.location.href = 'dashboard.html';
-            } catch (error) {
-                console.error("Google login error:", error);
-                alert('গুগল লগইন ব্যর্থ হয়েছে: ' + error.message);
             }
         });
     </script>
