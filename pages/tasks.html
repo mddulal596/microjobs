@@ -89,7 +89,7 @@
                     </div>
                     <p class="text-xs text-gray-600 mb-3">${task.description || ""}</p>
                     <div class="space-y-2">
-                        <input type="text" id="proof_${taskId}" placeholder="Enter proof text" class="w-full text-xs px-3 py-2 border border-gray-300 rounded-xl">
+                        <input type="text" id="proof_${taskId}" placeholder="Enter proof text (e.g., your username)" class="w-full text-xs px-3 py-2 border border-gray-300 rounded-xl">
                         <input type="file" id="file_${taskId}" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700">
                         <button onclick="submitProof('${taskId}')" class="w-full py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow hover:bg-indigo-700 transition">Submit Proof</button>
                     </div>
