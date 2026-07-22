@@ -6,119 +6,97 @@
     <title>Dashboard - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
-        <!-- Top Header & Balances -->
-        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-lg font-bold">Micro Job Pro</h1>
-                <div class="flex items-center gap-2">
-                    <span id="userName" class="text-sm bg-indigo-700 px-3 py-1 rounded-full">Loading...</span>
-                    <button id="logoutBtn" class="text-xs bg-red-500 px-2 py-1 rounded-lg">Logout</button>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4 mt-2">
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm">
-                    <p class="text-xs text-indigo-200">Main Balance</p>
-                    <h2 id="mainBalance" class="text-xl font-extrabold mt-1">৳ 0.00</h2>
-                </div>
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm">
-                    <p class="text-xs text-indigo-200">Deposit Balance</p>
-                    <h2 id="depositBalance" class="text-xl font-extrabold mt-1">৳ 0.00</h2>
-                </div>
-            </div>
-        </header>
-
+<body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-16">
+        
         <!-- Main Content Area -->
-        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
-            <div class="bg-gray-100 p-4 rounded-2xl">
-                <h3 class="text-sm font-bold text-gray-700 mb-2">Recent Announcements</h3>
-                <p class="text-xs text-gray-500">Welcome to Micro Job Pro! Complete daily tasks, spin & earn rewards safely.</p>
-            </div>
+        <main class="p-3 flex-grow space-y-4 overflow-y-auto">
+            
+            <!-- Service Grid (4 Columns) -->
+            <div class="grid grid-cols-4 gap-2.5">
+                <!-- 1. Daily Job -->
+                <a href="tasks.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">💼</span>
+                    <span class="text-[10px] font-bold text-gray-700">Daily Job</span>
+                </a>
+                <!-- 2. Recharge -->
+                <a href="#" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">📱</span>
+                    <span class="text-[10px] font-bold text-gray-700">Recharge</span>
+                </a>
+                <!-- 3. Withdraw -->
+                <a href="withdraw.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">💳</span>
+                    <span class="text-[10px] font-bold text-gray-700">Withdraw</span>
+                </a>
+                <!-- 4. Drive Offer -->
+                <a href="#" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">🎁</span>
+                    <span class="text-[10px] font-bold text-gray-700">Drive Offer</span>
+                </a>
 
-            <!-- Interactive Quick Features (Daily Check-in & Lucky Spin) -->
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="claimDailyBonus()" class="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl text-center text-xs font-bold text-emerald-700 shadow-sm hover:bg-emerald-100 transition">
-                    🎁 Daily Check-in (+৳5)
-                </button>
-                <a href="spin.html" class="p-3 bg-purple-50 border border-purple-100 rounded-2xl text-center text-xs font-bold text-purple-700 shadow-sm hover:bg-purple-100 transition">
-                    🎡 Lucky Spin Win
+                <!-- 5. Add Money -->
+                <a href="deposit.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">👛</span>
+                    <span class="text-[10px] font-bold text-gray-700">Add Money</span>
+                </a>
+                <!-- 6. Withdraw History -->
+                <a href="history.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">🕒</span>
+                    <span class="text-[10px] font-bold text-gray-700">History</span>
+                </a>
+                <!-- 7. Leaderboard -->
+                <a href="leaderboard.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">🏆</span>
+                    <span class="text-[10px] font-bold text-gray-700">Leaderboard</span>
+                </a>
+                <!-- 8. Microjobs -->
+                <a href="tasks.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
+                    <span class="text-xl mb-1">📋</span>
+                    <span class="text-[10px] font-bold text-gray-700">Microjobs</span>
                 </a>
             </div>
 
-            <!-- Leaderboard & Transaction History Links -->
-            <div class="space-y-2">
-                <a href="leaderboard.html" class="w-full block p-3 bg-amber-50 border border-amber-100 rounded-2xl text-center text-xs font-bold text-amber-700 shadow-sm hover:bg-amber-100 transition">
-                    🏆 Top 50 Earners Leaderboard
-                </a>
-                <a href="history.html" class="w-full block p-3 bg-gray-50 border border-gray-200 rounded-2xl text-center text-xs font-bold text-gray-700 shadow-sm hover:bg-gray-100 transition">
-                    📜 Transaction History
+            <!-- Account Activation Warning Banner -->
+            <div class="bg-red-50 border border-red-100 p-4 rounded-3xl text-center shadow-sm">
+                <div class="flex items-center justify-center gap-1.5 text-red-600 font-bold text-xs mb-1">
+                    <span>⚠️</span>
+                    <span>আপনার একাউন্টটি একটিভ নেই</span>
+                </div>
+                <p class="text-[11px] text-gray-600 mb-3 leading-relaxed">
+                    ইনকাম শুরু করতে এবং সকল প্রিমিয়াম সুবিধা পেতে এখনই আপনার একাউন্টটি কাস্টমার সাপোর্ট বা নির্দিষ্ট ফি দিয়ে অ্যাক্টিভ করুন।
+                </p>
+                <a href="#" class="inline-block w-full py-2.5 bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold text-xs rounded-full shadow-md hover:opacity-90 transition">
+                    Active Now &rarr;
                 </a>
             </div>
         </main>
 
-        <!-- Bottom Action Buttons (Tasks, Deposit, Withdraw, Referral) -->
-        <nav class="p-4 bg-white border-t border-gray-100 rounded-t-3xl shadow-lg">
-            <div class="grid grid-cols-4 gap-2 text-center">
-                <a href="tasks.html" class="p-3 bg-indigo-50 rounded-2xl text-indigo-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm hover:bg-indigo-100 transition">Tasks</a>
-                <a href="deposit.html" class="p-3 bg-emerald-50 rounded-2xl text-emerald-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm hover:bg-emerald-100 transition">Deposit</a>
-                <a href="withdraw.html" class="p-3 bg-amber-50 rounded-2xl text-amber-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm hover:bg-amber-100 transition">Withdraw</a>
-                <a href="referral.html" class="p-3 bg-purple-50 rounded-2xl text-purple-600 font-semibold text-xs flex flex-col items-center justify-center shadow-sm hover:bg-purple-100 transition">Referral</a>
-            </div>
+        <!-- Bottom Navigation Bar -->
+        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-2 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center">
+            <a href="#" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+                <span class="text-lg">🎧</span>
+                <span>Help</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+                <span class="text-lg">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-indigo-600 text-[10px] -mt-4">
+                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white">
+                    🏠
+                </div>
+                <span class="font-bold mt-0.5">Home</span>
+            </a>
+            <a href="referral.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+                <span class="text-lg">👥</span>
+                <span>Team</span>
+            </a>
+            <a href="#" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+                <span class="text-lg">👤</span>
+                <span>Profile</span>
+            </a>
         </nav>
     </div>
-
-    <script type="module">
-        import { db } from '../firebase/firebase-config.js';
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
-        import { doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        let currentUserId = null;
-
-        observeAuthState((userData) => {
-            if (userData) {
-                currentUserId = userData.uid;
-                document.getElementById('userName').innerText = userData.displayName || "User";
-                const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
-                const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-
-        window.claimDailyBonus = async function() {
-            if (!currentUserId) return;
-            const today = new Date().toISOString().slice(0, 10);
-            const userRef = doc(db, "users", currentUserId);
-            
-            try {
-                const userSnap = await getDoc(userRef);
-                if (userSnap.exists()) {
-                    const data = userSnap.data();
-                    if (data.lastCheckIn === today) {
-                        alert("You have already claimed your daily bonus today! Come back tomorrow.");
-                        return;
-                    }
-                }
-
-                await updateDoc(userRef, {
-                    "balances.main": increment(5),
-                    lastCheckIn: today
-                });
-                alert("Successfully claimed ৳ 5 Daily Bonus!");
-                location.reload();
-            } catch (err) {
-                console.error(err);
-                alert("Failed to claim bonus: " + err.message);
-            }
-        };
-
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
-        });
-    </script>
 </body>
 </html>
