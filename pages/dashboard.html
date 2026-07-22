@@ -7,90 +7,77 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-16">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24">
         
-        <!-- Top Header & Balances -->
-        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
-            <div class="flex justify-between items-center mb-4">
+        <!-- Top Header with Balances -->
+        <header class="p-5 bg-indigo-600 text-white rounded-b-3xl shadow-md space-y-4">
+            <div class="flex items-center justify-between">
                 <h1 class="text-base font-extrabold tracking-wide">Micro Job Pro</h1>
                 <div class="flex items-center gap-2">
-                    <span id="userName" class="text-xs bg-indigo-700/80 px-3 py-1.5 rounded-xl font-medium tracking-wide shadow-inner">Loading...</span>
-                    <button id="logoutBtn" class="text-xs bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-semibold shadow-sm transition">Logout</button>
+                    <span id="userNameDisplay" class="text-xs font-bold bg-indigo-700 px-3 py-1 rounded-full">User</span>
+                    <button id="logoutBtn" class="text-xs bg-red-500 hover:bg-red-600 px-3 py-1 rounded-full font-bold transition">Logout</button>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-3 mt-2">
+
+            <!-- Balances Grid -->
+            <div class="grid grid-cols-2 gap-3">
                 <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
                     <p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
-                    <h2 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
+                    <h3 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h3>
                 </div>
                 <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
                     <p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
-                    <h2 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
+                    <h3 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h3>
                 </div>
             </div>
         </header>
 
         <!-- Main Content Area -->
-        <main class="p-3 flex-grow space-y-4 overflow-y-auto">
+        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
             
-            <!-- Service Grid (4 Columns) -->
-            <div class="grid grid-cols-4 gap-2.5">
-                <!-- 1. Daily Job -->
-                <a href="tasks.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
-                    <span class="text-xl mb-1">💼</span>
-                    <span class="text-[10px] font-bold text-gray-700">Daily Job</span>
+            <!-- Quick Menu Grid -->
+            <div class="grid grid-cols-4 gap-2 text-center">
+                <a href="daily-job.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
+                    <span class="text-xl">💼</span>
+                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Daily Job</span>
                 </a>
-                <!-- 2. Recharge -->
-                <a href="#" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
-                    <span class="text-xl mb-1">📱</span>
-                    <span class="text-[10px] font-bold text-gray-700">Recharge</span>
+                <a href="recharge.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
+                    <span class="text-xl">📱</span>
+                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Recharge</span>
                 </a>
-                <!-- 3. Withdraw -->
-                <a href="withdraw.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
-                    <span class="text-xl mb-1">💳</span>
-                    <span class="text-[10px] font-bold text-gray-700">Withdraw</span>
+                <a href="withdraw.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
+                    <span class="text-xl">💳</span>
+                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Withdraw</span>
                 </a>
-                <!-- 4. Drive Offer -->
-                <a href="#" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
-                    <span class="text-xl mb-1">🎁</span>
-                    <span class="text-[10px] font-bold text-gray-700">Drive Offer</span>
+                <a href="drive-offer.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
+                    <span class="text-xl">🎁</span>
+                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Drive Offer</span>
                 </a>
-
-                <!-- 5. Add Money -->
-                <a href="deposit.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
-                    <span class="text-xl mb-1">👛</span>
-                    <span class="text-[10px] font-bold text-gray-700">Add Money</span>
+                <a href="deposit.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
+                    <span class="text-xl">👛</span>
+                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Add Money</span>
                 </a>
-                <!-- 6. Withdraw History -->
-                <a href="history.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
-                    <span class="text-xl mb-1">🕒</span>
-                    <span class="text-[10px] font-bold text-gray-700">History</span>
+                <a href="history.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
+                    <span class="text-xl">⏰</span>
+                    <span class="block text-[10px] font-bold text-gray-700 mt-1">History</span>
                 </a>
-                <!-- 7. Leaderboard -->
-                <a href="leaderboard.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
-                    <span class="text-xl mb-1">🏆</span>
-                    <span class="text-[10px] font-bold text-gray-700">Leaderboard</span>
+                <a href="leaderboard.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
+                    <span class="text-xl">🏆</span>
+                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Leaderboard</span>
                 </a>
-                <!-- 8. Microjobs -->
-                <a href="tasks.html" class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:bg-gray-50 transition">
-                    <span class="text-xl mb-1">📋</span>
-                    <span class="text-[10px] font-bold text-gray-700">Microjobs</span>
+                <a href="microjobs.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
+                    <span class="text-xl">📋</span>
+                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Microjobs</span>
                 </a>
             </div>
 
-            <!-- Account Activation Warning Banner -->
-            <div class="bg-red-50 border border-red-100 p-4 rounded-3xl text-center shadow-sm">
-                <div class="flex items-center justify-center gap-1.5 text-red-600 font-bold text-xs mb-1">
-                    <span>⚠️</span>
-                    <span>আপনার একাউন্টটি একটিভ নেই</span>
-                </div>
-                <p class="text-[11px] text-gray-600 mb-3 leading-relaxed">
-                    ইনকাম শুরু করতে এবং সকল প্রিমিয়াম সুবিধা পেতে এখনই আপনার একাউন্টটি কাস্টমার সাপোর্ট বা নির্দিষ্ট ফি দিয়ে অ্যাক্টিভ করুন।
-                </p>
-                <button onclick="toggleActivationModal(true)" class="w-full py-2.5 bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold text-xs rounded-full shadow-md hover:opacity-90 transition cursor-pointer">
-                    Active Now &rarr;
-                </button>
+            <!-- Account Inactive Warning Box (If needed) -->
+            <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl text-center space-y-2 shadow-sm">
+                <p class="text-xs font-bold text-amber-800">⚠️ আপনার একাউন্টটি একটিভ নেই</p>
+                <p class="text-[11px] text-amber-600">ইনকাম শুরু করতে এবং সকল প্রিমিয়াম সুবিধা পেতে এখনি আপনার একাউন্টটি নির্দিষ্ট ফি দিয়ে একটিভ করুন।</p>
+                <button class="mt-2 w-full py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold text-xs rounded-xl shadow transition">Active Now →</button>
             </div>
+
         </main>
 
         <!-- Bottom Navigation Bar -->
@@ -103,54 +90,40 @@
                 <span class="text-lg">👛</span>
                 <span>Wallet</span>
             </a>
-            <a href="dashboard.html" class="flex flex-col items-center text-indigo-600 text-[10px] -mt-4">
-                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white text-lg">
+            <a href="dashboard.html" class="flex flex-col items-center text-indigo-600 text-[10px]">
+                <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white text-base shadow-md">
                     🏠
                 </div>
                 <span class="font-bold mt-0.5">Home</span>
             </a>
             <a href="referral.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👥</span>
-                <span>Team</span>
+                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
+                    👥
+                </div>
+                <span class="font-medium mt-0.5">Team</span>
             </a>
-            <a href="#" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👤</span>
-                <span>Profile</span>
+            <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
+                    👤
+                </div>
+                <span class="font-medium mt-0.5">Profile</span>
             </a>
         </nav>
     </div>
 
-    <!-- Account Activation Modal -->
-    <div id="activationModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl text-center space-y-4">
-            <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
-                ⚠️
-            </div>
-            <h3 class="text-base font-bold text-gray-800">Account Activation</h3>
-            <p class="text-xs text-gray-600 leading-relaxed">
-                আপনার একাউন্টটি সক্রিয় করতে নির্দিষ্ট একটি অ্যাক্টিভেশন ফি প্রদান করতে হবে অথবা আমাদের অফিসিয়াল কাস্টমার সাপোর্ট টেলিগ্রাম চ্যানেলে যোগাযোগ করুন।
-            </p>
-            <div class="space-y-2 pt-2">
-                <a href="https://t.me/microjobspro" target="_blank" class="block w-full py-2.5 bg-blue-600 text-white font-bold text-xs rounded-xl shadow-md hover:bg-blue-700 transition">
-                    Contact Support (Telegram)
-                </a>
-                <button onclick="toggleActivationModal(false)" class="block w-full py-2.5 bg-gray-100 text-gray-700 font-bold text-xs rounded-xl hover:bg-gray-200 transition">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Firebase Script & Logic -->
     <script type="module">
-        import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
 
         observeAuthState((userData) => {
             if (userData) {
-                document.getElementById('userName').innerText = userData.displayName || "User";
-                const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
-                const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
+                const name = userData.fullName || userData.displayName || "User";
+                document.getElementById('userNameDisplay').innerText = name;
+
+                // Load Balances correctly from Firestore fields
+                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
+                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
+
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
             } else {
@@ -163,17 +136,5 @@
             window.location.href = 'login.html';
         });
     </script>
-
-    <script>
-        window.toggleActivationModal = function(show) {
-            const modal = document.getElementById('activationModal');
-            if (show) {
-                modal.classList.remove('hidden');
-            } else {
-                modal.classList.add('hidden');
-            }
-        }
-    </script>
 </body>
 </html>
-
