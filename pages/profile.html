@@ -7,71 +7,75 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-16">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-20">
         
-        <!-- Top Header & Balances -->
-        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-base font-extrabold tracking-wide">My Profile</h1>
-                <div class="flex items-center gap-2">
-                    <span id="userName" class="text-xs bg-indigo-700/80 px-3 py-1.5 rounded-xl font-medium tracking-wide shadow-inner">Loading...</span>
-                    <button id="logoutBtn" class="text-xs bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-semibold shadow-sm transition">Logout</button>
-                </div>
+        <!-- Top Header Profile Info -->
+        <header class="p-6 bg-indigo-600 text-white rounded-b-3xl shadow-md text-center space-y-2">
+            <div class="w-16 h-16 bg-white/20 border-2 border-white/50 rounded-full mx-auto flex items-center justify-center text-2xl font-bold shadow-inner" id="userInitial">
+                U
             </div>
-            <div class="grid grid-cols-2 gap-3 mt-2">
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
-                    <h2 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
-                </div>
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
-                    <h2 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
-                </div>
+            <div>
+                <h1 id="userName" class="text-base font-extrabold tracking-wide">Loading...</h1>
+                <p id="userEmail" class="text-xs text-indigo-200">loading@email.com</p>
             </div>
         </header>
 
         <!-- Main Content Area -->
         <main class="p-4 flex-grow space-y-4 overflow-y-auto">
-            <!-- Profile Info Card -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xl font-bold shadow-inner">
-                        👤
-                    </div>
-                    <div>
-                        <h3 id="profileName" class="text-sm font-bold text-gray-800">Loading...</h3>
-                        <p id="profileEmail" class="text-xs text-gray-500">Loading...</p>
-                    </div>
+            
+            <!-- Referral Code Submit Section -->
+            <div id="referralSection" class="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl space-y-3 shadow-sm hidden">
+                <div class="space-y-1">
+                    <h2 class="text-xs font-bold text-indigo-900 uppercase tracking-wide">Have a Referral Code?</h2>
+                    <p class="text-[11px] text-indigo-700 leading-relaxed">
+                        Enter a friend's 6-digit referral code below to claim your instant ৳10 bonus! (Can only be used once).
+                    </p>
                 </div>
-                <div class="pt-2 border-t border-gray-200 text-xs space-y-2">
-                    <div class="flex justify-between">
-                        <span class="text-gray-500">Account Status:</span>
-                        <span class="font-bold text-amber-600">Standard User</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-500">Member Since:</span>
-                        <span id="joinDate" class="font-medium text-gray-700">Recent</span>
-                    </div>
+                <div class="flex gap-2">
+                    <input type="text" id="submitRefCodeInput" maxlength="6" placeholder="e.g. MJP123" class="w-full bg-white border border-indigo-300 rounded-xl px-3 py-2 text-xs font-bold uppercase tracking-widest text-indigo-600 focus:outline-none focus:border-indigo-600">
+                    <button id="applyRefBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow transition whitespace-nowrap cursor-pointer">
+                        Apply Code
+                    </button>
                 </div>
             </div>
 
-            <!-- Support & Info Links -->
+            <!-- Profile Details Card -->
+            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm">
+                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Account Details</h2>
+                
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-xs text-gray-500 font-medium">My Referral Code</span>
+                    <span id="myRefCodeDisplay" class="text-xs font-bold text-indigo-600 tracking-wider">Loading...</span>
+                </div>
+                
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-xs text-gray-500 font-medium">Total Team</span>
+                    <span id="totalTeamDisplay" class="text-xs font-bold text-gray-800">0</span>
+                </div>
+
+                <div class="flex justify-between items-center py-2">
+                    <span class="text-xs text-gray-500 font-medium">Account Status</span>
+                    <span class="text-xs font-bold text-green-600 bg-green-50 px-2.5 py-1 rounded-full border border-green-200">Active</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
             <div class="space-y-2">
-                <a href="https://t.me/microjobspro" target="_blank" class="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-2xl text-xs font-semibold text-gray-700 transition shadow-sm">
-                    <div class="flex items-center gap-2.5">
-                        <span class="text-base">🎧</span>
-                        <span>Customer Support (Telegram)</span>
-                    </div>
-                    <span>&rarr;</span>
+                <a href="referral.html" class="w-full bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex items-center justify-between text-xs font-bold text-gray-700 transition">
+                    <span class="flex items-center gap-2"><span>👥</span> Referral Program</span>
+                    <span>→</span>
                 </a>
-                <a href="history.html" class="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-2xl text-xs font-semibold text-gray-700 transition shadow-sm">
-                    <div class="flex items-center gap-2.5">
-                        <span class="text-base">🕒</span>
-                        <span>Transaction History</span>
-                    </div>
-                    <span>&rarr;</span>
+                <a href="deposit.html" class="w-full bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex items-center justify-between text-xs font-bold text-gray-700 transition">
+                    <span class="flex items-center gap-2"><span>👛</span> Deposit & Wallet</span>
+                    <span>→</span>
                 </a>
             </div>
+
+            <!-- Logout Button -->
+            <button id="logoutBtn" class="w-full py-3 bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs rounded-xl border border-red-200 transition cursor-pointer">
+                Logout Account
+            </button>
+
         </main>
 
         <!-- Bottom Navigation Bar -->
@@ -91,8 +95,10 @@
                 <span class="font-medium mt-0.5">Home</span>
             </a>
             <a href="referral.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👥</span>
-                <span>Team</span>
+                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
+                    👥
+                </div>
+                <span class="font-medium mt-0.5">Team</span>
             </a>
             <a href="profile.html" class="flex flex-col items-center text-indigo-600 text-[10px] -mt-4">
                 <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white text-lg">
@@ -107,22 +113,93 @@
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { doc, getDoc, getDocs, collection, query, where, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((userData) => {
+        let currentUserUid = null;
+
+        observeAuthState(async (userData) => {
             if (userData) {
+                currentUserUid = userData.uid;
                 const name = userData.displayName || "User";
-                const email = userData.email || "No email provided";
-                
-                document.getElementById('userName').innerText = name;
-                document.getElementById('profileName').innerText = name;
-                document.getElementById('profileEmail').innerText = email;
+                const email = userData.email || "No Email";
 
-                const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
-                const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+                document.getElementById('userName').innerText = name;
+                document.getElementById('userEmail').innerText = email;
+                document.getElementById('userInitial').innerText = name.charAt(0).toUpperCase();
+
+                const myRefCode = userData.referralCode || "MJP" + userData.uid.substring(0, 3).toUpperCase();
+                document.getElementById('myRefCodeDisplay').innerText = myRefCode;
+                document.getElementById('totalTeamDisplay').innerText = userData.totalTeam || 0;
+
+                // Check if user already used a referral code
+                if (!userData.referredBy) {
+                    document.getElementById('referralSection').classList.remove('hidden');
+                } else {
+                    document.getElementById('referralSection').classList.add('hidden');
+                }
             } else {
                 window.location.href = 'login.html';
+            }
+        });
+
+        // Apply Referral Code Logic
+        document.getElementById('applyRefBtn').addEventListener('click', async () => {
+            const inputCode = document.getElementById('submitRefCodeInput').value.trim().toUpperCase();
+            if (!inputCode) {
+                alert('দয়া করে একটি রেফার কোড লিখুন!');
+                return;
+            }
+
+            // Prevent user from using their own code
+            const myCode = document.getElementById('myRefCodeDisplay').innerText;
+            if (inputCode === myCode) {
+                alert('আপনি নিজের রেফার কোড ব্যবহার করতে পারবেন না!');
+                return;
+            }
+
+            const applyBtn = document.getElementById('applyRefBtn');
+            applyBtn.disabled = true;
+            applyBtn.innerText = "Applying...";
+
+            try {
+                // Find referrer in Firestore
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("referralCode", "==", inputCode));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    alert('ভুল রেফার কোড! সঠিক কোড দিয়ে আবার চেষ্টা করুন।');
+                    applyBtn.disabled = false;
+                    applyBtn.innerText = "Apply Code";
+                    return;
+                }
+
+                let validReferrerUid = null;
+                querySnapshot.forEach((docSnap) => {
+                    validReferrerUid = docSnap.id;
+                });
+
+                // Update current user (Add ৳10 bonus and set referredBy)
+                const userDocRef = doc(db, "users", currentUserUid);
+                await updateDoc(userDocRef, {
+                    referredBy: validReferrerUid,
+                    "balances.main": increment(10.00)
+                });
+
+                // Update Referrer (Increment team count)
+                const referrerDocRef = doc(db, "users", validReferrerUid);
+                await updateDoc(referrerDocRef, {
+                    totalTeam: increment(1)
+                });
+
+                alert('অভিনন্দন! সফলভাবে রেফার কোড জমা হয়েছে এবং আপনার একাউন্টে ৳১০ বোনাস যোগ হয়েছে!');
+                window.location.reload();
+
+            } catch (error) {
+                console.error("Referral submit error:", error);
+                alert('ত্রুটি: ' + error.message);
+                applyBtn.disabled = false;
+                applyBtn.innerText = "Apply Code";
             }
         });
 
