@@ -182,7 +182,7 @@
 
     <!-- ==================== PROFILE MODAL / DRAWER ==================== -->
     <div id="profileModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardbg border border-slate-800/80 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-6 relative">
+        <div class="bg-cardbg border border-slate-800/80 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-5 relative">
             
             <!-- Close Button -->
             <button id="closeProfileModal" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-900/60 border border-slate-800">
@@ -199,11 +199,23 @@
                 </div>
             </div>
 
-            <!-- Task & Referral Stats Grid -->
+            <!-- Balance Cards Grid Inside Modal -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-slate-900/60 p-3.5 border border-slate-800 rounded-2xl space-y-1">
+                    <span class="text-[10px] uppercase font-bold text-slate-400">Main Balance</span>
+                    <h4 id="modalMainBalance" class="text-lg font-black text-emerald-400">৳ 0.00</h4>
+                </div>
+                <div class="bg-slate-900/60 p-3.5 border border-slate-800 rounded-2xl space-y-1">
+                    <span class="text-[10px] uppercase font-bold text-slate-400">Deposit Balance</span>
+                    <h4 id="modalDepositBalance" class="text-lg font-black text-blue-400">৳ 0.00</h4>
+                </div>
+            </div>
+
+            <!-- Task Stats Grid -->
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-slate-900/60 p-3.5 border border-slate-800 rounded-2xl space-y-1">
                     <span class="text-[10px] uppercase font-bold text-slate-400">Completed Tasks</span>
-                    <h4 id="modalCompletedTasks" class="text-xl font-black text-emerald-400">0</h4>
+                    <h4 id="modalCompletedTasks" class="text-xl font-black text-purple-400">0</h4>
                 </div>
                 <div class="bg-slate-900/60 p-3.5 border border-slate-800 rounded-2xl space-y-1">
                     <span class="text-[10px] uppercase font-bold text-slate-400">Pending Tasks</span>
@@ -285,10 +297,16 @@
                     userData = userDocSnap.data();
                     fullName = userData.fullName || userData.name || userData.displayName || userData.username || fullName;
                     
-                    document.getElementById('mainBalance').innerText = `৳ ${userData.mainBalance ? Number(userData.mainBalance).toFixed(2) : '0.00'}`;
-                    document.getElementById('depositBalance').innerText = `৳ ${userData.depositBalance ? Number(userData.depositBalance).toFixed(2) : '0.00'}`;
+                    const mainBal = userData.mainBalance ? Number(userData.mainBalance).toFixed(2) : '0.00';
+                    const depositBal = userData.depositBalance ? Number(userData.depositBalance).toFixed(2) : '0.00';
+
+                    document.getElementById('mainBalance').innerText = `৳ ${mainBal}`;
+                    document.getElementById('depositBalance').innerText = `৳ ${depositBal}`;
+                    
+                    // Update Modal Balances
+                    document.getElementById('modalMainBalance').innerText = `৳ ${mainBal}`;
+                    document.getElementById('modalDepositBalance').innerText = `৳ ${depositBal}`;
                 } else {
-                    // যদি ইউজার ডাটাবেসে না থাকে (যেমন গুগল দিয়ে নতুন সাইন-ইন), তবে ডিফল্ট রেকর্ড তৈরি করে নেওয়া
                     const myReferralCode = `MCJ${user.uid.substring(0, 5).toUpperCase()}`;
                     userData = {
                         uid: user.uid,
