@@ -58,21 +58,6 @@
                 </div>
             </div>
 
-            <!-- Account Details Card -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm">
-                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Account Details</h2>
-                
-                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                    <span class="text-xs text-gray-500 font-medium">My Referral Code</span>
-                    <span id="myRefCodeDisplay" class="text-xs font-bold text-indigo-600 tracking-wider">Loading...</span>
-                </div>
-                
-                <div class="flex justify-between items-center py-2">
-                    <span class="text-xs text-gray-500 font-medium">Total Team</span>
-                    <span id="totalTeamDisplay" class="text-xs font-bold text-gray-800">0</span>
-                </div>
-            </div>
-
             <!-- Quick Navigation Links (Side-by-Side / Grid Layout) -->
             <div class="grid grid-cols-2 gap-2">
                 <a href="referral.html" class="bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex flex-col items-center text-center gap-1 text-xs font-bold text-gray-700 transition shadow-sm">
@@ -141,6 +126,7 @@
         import { doc, getDocs, collection, query, where, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         let currentUserUid = null;
+        let myGeneratedCode = "";
 
         observeAuthState(async (userData) => {
             if (userData) {
@@ -158,9 +144,7 @@
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                const myRefCode = userData.referralCode || "MJP" + userData.uid.substring(0, 3).toUpperCase();
-                document.getElementById('myRefCodeDisplay').innerText = myRefCode;
-                document.getElementById('totalTeamDisplay').innerText = userData.totalTeam || 0;
+                myGeneratedCode = userData.referralCode || "MJP" + userData.uid.substring(0, 3).toUpperCase();
 
                 // Show or hide referral code submit section based on whether already used
                 if (!userData.referredBy) {
@@ -181,8 +165,7 @@
                 return;
             }
 
-            const myCode = document.getElementById('myRefCodeDisplay').innerText;
-            if (inputCode === myCode) {
+            if (inputCode === myGeneratedCode) {
                 alert('আপনি নিজের রেফার কোড ব্যবহার করতে পারবেন না!');
                 return;
             }
