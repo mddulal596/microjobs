@@ -47,10 +47,10 @@
 
             <!-- Operator Tabs -->
             <div class="grid grid-cols-4 gap-2">
-                <button onclick="filterOperator('GP', this)" class="operator-tab py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow transition">GP</button>
-                <button onclick="filterOperator('ROBI', this)" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition">Robi</button>
-                <button onclick="filterOperator('BL', this)" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition">Banglalink</button>
-                <button onclick="filterOperator('AIRTEL', this)" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition">Airtel</button>
+                <button onclick="filterOperator('GP', this)" class="operator-tab py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer">GP</button>
+                <button onclick="filterOperator('ROBI', this)" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition cursor-pointer">Robi</button>
+                <button onclick="filterOperator('BL', this)" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition cursor-pointer">Banglalink</button>
+                <button onclick="filterOperator('AIRTEL', this)" class="operator-tab py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold text-xs rounded-xl transition cursor-pointer">Airtel</button>
             </div>
 
             <!-- Offers List Container -->
@@ -108,7 +108,7 @@
             }
         });
 
-        // Sample Offers Data
+        // Offers Data for GP, Robi, Banglalink, and Airtel
         const allOffers = {
             'GP': [
                 { title: '40 GB + 500 Min', validity: 'GP - 30 Days', regularPrice: 699, offerPrice: 499 },
