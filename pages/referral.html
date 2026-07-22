@@ -124,7 +124,7 @@
     <script type="module">
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
         import { db } from '../firebase/firebase-config.js';
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const menuBtn = document.getElementById('menuBtn');
         const closeSidebar = document.getElementById('closeSidebar');
@@ -136,9 +136,9 @@
             sidebarOverlay.classList.toggle('hidden');
         }
 
-        menuBtn.addEventListener('click', toggleSidebar);
-        closeSidebar.addEventListener('click', toggleSidebar);
-        sidebarOverlay.addEventListener('click', toggleSidebar);
+        if (menuBtn) menuBtn.addEventListener('click', toggleSidebar);
+        if (closeSidebar) closeSidebar.addEventListener('click', toggleSidebar);
+        if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
 
         let currentRefCode = "";
 
@@ -153,7 +153,6 @@
                 const email = user.email || 'No email available';
                 const photoURL = user.photoURL || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces';
 
-                // Fetch User Data from Firestore to get/generate custom referral code
                 const userDocRef = doc(db, "users", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
                 
@@ -161,13 +160,22 @@
                     const userData = userDocSnap.data();
                     fullName = userData.fullName || userData.name || userData.displayName || userData.username || fullName;
                     
-                    // If referralCode exists in DB, use it; otherwise generate one based on UID
                     currentRefCode = userData.referralCode || `MCJ${user.uid.substring(0, 5).toUpperCase()}`;
                     
                     document.getElementById('totalReferred').innerText = userData.totalReferred || 0;
                     document.getElementById('referralEarnings').innerText = `৳ ${userData.referralEarnings ? Number(userData.referralEarnings).toFixed(2) : '0.00'}`;
                 } else {
                     currentRefCode = `MCJ${user.uid.substring(0, 5).toUpperCase()}`;
+                    // যদি ডেটাবেসে ইউজার ডকুমেন্ট না থাকে, তবে একটি বেসিক ডকুমেন্ট তৈরি করে নেওয়া ভালো
+                    await setDoc(userDocRef, {
+                        uid: user.uid,
+                        fullName: fullName,
+                        email: email,
+                        referralCode: currentRefCode,
+                        totalReferred: 0,
+                        referralEarnings: 0,
+                        createdAt: new Date().toISOString()
+                    }, { merge: true });
                 }
 
                 document.getElementById('userName').innerText = fullName;
@@ -181,21 +189,29 @@
         });
 
         // Copy Code Functionality
-        document.getElementById('copyCodeBtn').addEventListener('click', () => {
-            if (!currentRefCode) return;
-            navigator.clipboard.writeText(currentRefCode);
-            
-            const btnText = document.getElementById('copyBtnText');
-            btnText.innerText = "Copied!";
-            setTimeout(() => {
-                btnText.innerText = "Copy Code";
-            }, 2000);
-        });
+        const copyCodeBtn = document.getElementById('copyCodeBtn');
+        if (copyCodeBtn) {
+            copyCodeBtn.addEventListener('click', () => {
+                if (!currentRefCode) return;
+                navigator.clipboard.writeText(currentRefCode);
+                
+                const btnText = document.getElementById('copyBtnText');
+                if (btnText) {
+                    btnText.innerText = "Copied!";
+                    setTimeout(() => {
+                        btnText.innerText = "Copy Code";
+                    }, 2000);
+                }
+            });
+        }
 
-        document.getElementById('logoutBtnSidebar').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
-        });
+        const logoutBtnSidebar = document.getElementById('logoutBtnSidebar');
+        if (logoutBtnSidebar) {
+            logoutBtnSidebar.addEventListener('click', async () => {
+                await logoutUser();
+                window.location.href = 'login.html';
+            });
+        }
     </script>
 </body>
 </html>
