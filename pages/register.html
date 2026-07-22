@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Team - Micro Job Pro</title>
+    <title>Referral Program - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-16">
         
+        <!-- Top Header & Balances -->
         <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-base font-extrabold tracking-wide">My Team & Referral</h1>
+                <h1 class="text-base font-extrabold tracking-wide">Referral Program</h1>
                 <div class="flex items-center gap-2">
                     <span id="userName" class="text-xs bg-indigo-700/80 px-3 py-1.5 rounded-xl font-medium tracking-wide shadow-inner">Loading...</span>
                     <button id="logoutBtn" class="text-xs bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-semibold shadow-sm transition">Logout</button>
@@ -29,88 +30,108 @@
             </div>
         </header>
 
+        <!-- Main Content Area -->
         <main class="p-4 flex-grow space-y-4 overflow-y-auto">
             
-            <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-2xl text-center shadow-sm">
-                <p class="text-xs font-bold text-indigo-700">
-                    🎁 নতুন ইউজার রেফার কোড ব্যবহার করলে ইনস্ট্যান্ট <span class="text-pink-600">৳১০ বোনাস</span> পাবে!
+            <!-- Invite Banner Info -->
+            <div class="space-y-1">
+                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Invite Friends & Earn Commission</h2>
+                <p class="text-[11px] text-gray-500 leading-relaxed">
+                    Share your unique referral code with friends. When they join using your code and complete tasks, you will earn lifetime bonuses!
                 </p>
             </div>
 
             <!-- Referral Code Card -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm">
-                <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Your Referral Code</h3>
-                <div class="flex gap-2">
-                    <input type="text" id="myReferralCode" readonly class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-indigo-600 text-center tracking-widest focus:outline-none" value="MCJBMC...">
-                    <button onclick="copyReferralCode()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition shrink-0">
-                        Copy Code
-                    </button>
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3 shadow-sm text-center">
+                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">YOUR REFERRAL CODE</p>
+                <div class="py-1">
+                    <input type="text" id="myReferralCode" readonly class="w-full bg-transparent text-center text-xl font-extrabold text-indigo-600 tracking-widest focus:outline-none" value="MCJFVIPB">
                 </div>
+                <button onclick="copyReferralCode()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                    <span class="text-base">📋</span>
+                    <span>Copy Code</span>
+                </button>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 border border-gray-200 p-3.5 rounded-2xl text-center shadow-sm">
-                    <span class="text-xl">👥</span>
-                    <p class="text-[11px] text-gray-500 mt-1">Total Team</p>
-                    <h3 id="totalTeam" class="text-sm font-extrabold text-indigo-600 mt-0.5">0</h3>
-                </div>
-                <div class="bg-gray-50 border border-gray-200 p-3.5 rounded-2xl text-center shadow-sm">
-                    <span class="text-xl">💰</span>
-                    <p class="text-[11px] text-gray-500 mt-1">5% Commission</p>
-                    <h3 id="referralBonus" class="text-sm font-extrabold text-green-600 mt-0.5">৳ 0.00</h3>
-                </div>
+            <!-- Total Referred Users Card -->
+            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
+                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRED USERS</p>
+                <h3 id="totalTeam" class="text-xl font-extrabold text-indigo-600">0</h3>
             </div>
+
+            <!-- Total Referral Earnings Card -->
+            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
+                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRAL EARNINGS</p>
+                <h3 id="referralEarnings" class="text-xl font-extrabold text-green-600">৳ 0.00</h3>
+            </div>
+
         </main>
 
+        <!-- Bottom Navigation Bar -->
         <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-2 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center">
             <a href="https://t.me/microjobspro" target="_blank" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">🎧</span><span>Help</span>
+                <span class="text-lg">🎧</span>
+                <span>Help</span>
             </a>
             <a href="deposit.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👛</span><span>Wallet</span>
+                <span class="text-lg">👛</span>
+                <span>Wallet</span>
             </a>
             <a href="dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">🏠</div>
+                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
+                    🏠
+                </div>
                 <span class="font-medium mt-0.5">Home</span>
             </a>
             <a href="referral.html" class="flex flex-col items-center text-indigo-600 text-[10px] -mt-4">
-                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white text-lg">👥</div>
+                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white text-lg">
+                    👥
+                </div>
                 <span class="font-bold mt-0.5">Team</span>
             </a>
             <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👤</span><span>Profile</span>
+                <span class="text-lg">👤</span>
+                <span>Profile</span>
             </a>
         </nav>
     </div>
 
+    <!-- Firebase Script & Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
 
         observeAuthState((userData) => {
             if (userData) {
-                document.getElementById('userName').innerText = userData.displayName || "User";
+                const name = userData.displayName || "User";
+                document.getElementById('userName').innerText = name;
+
                 const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
                 const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                // Use referralCode stored in profile or generate a short form based on UID
                 const refCode = userData.referralCode || "MCJB" + userData.uid.substring(0, 5).toUpperCase();
                 document.getElementById('myReferralCode').value = refCode;
 
-                if(userData.totalTeam) document.getElementById('totalTeam').innerText = userData.totalTeam;
-                if(userData.referralBonus) document.getElementById('referralBonus').innerText = `৳ ${Number(userData.referralBonus).toFixed(2)}`;
+                if(userData.totalTeam !== undefined) {
+                    document.getElementById('totalTeam').innerText = userData.totalTeam;
+                }
+                if(userData.referralBonus !== undefined) {
+                    document.getElementById('referralEarnings').innerText = `৳ ${Number(userData.referralBonus).toFixed(2)}`;
+                }
             } else {
                 window.location.href = 'login.html';
             }
         });
 
+        // Copy Referral Code Function
         window.copyReferralCode = function() {
             const copyText = document.getElementById('myReferralCode');
             copyText.select();
+            copyText.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(copyText.value);
-            alert('রেফার কোড সফলভাবে কপি হয়েছে!');
+            alert('Referral code copied successfully!');
         }
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
