@@ -9,7 +9,7 @@
 <body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24">
         
-        <!-- Top Header & Balances (Profile Icon & Full Name on Left) -->
+        <!-- Top Header & Balances -->
         <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center">
@@ -109,30 +109,30 @@
 
     <!-- Firebase Script & Logic -->
     <script type="module">
-        import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
 
         observeAuthState((userData) => {
             if (userData) {
-                const name = userData.displayName || "User";
-                // Set Profile Icon Letter & Full Name
+                const name = userData.fullName || userData.displayName || "User";
                 document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
                 document.getElementById('userNameDisplay').innerText = name;
 
-                const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
-                const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
+                // Load Balances correctly supporting both field formats
+                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
+                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                const refCode = userData.referralCode || "MJP" + userData.uid.substring(0, 3).toUpperCase();
+                // Referral Code fallback to MCJVIP format
+                const refCode = userData.referralCode || "MCJVIP" + userData.uid.substring(0, 4).toUpperCase();
                 document.getElementById('myReferralCode').value = refCode;
 
-                if(userData.totalTeam !== undefined) {
-                    document.getElementById('totalTeam').innerText = userData.totalTeam;
-                }
-                if(userData.referralBonus !== undefined) {
-                    document.getElementById('referralEarnings').innerText = `৳ ${Number(userData.referralBonus).toFixed(2)}`;
-                }
+                // Stats mapping
+                const totalRef = userData.totalReferred ?? userData.totalTeam ?? 0;
+                document.getElementById('totalTeam').innerText = totalRef;
+
+                const refEarnings = userData.referralEarnings ?? userData.referralBonus ?? 0;
+                document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
             } else {
                 window.location.href = 'login.html';
             }
