@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Team - Micro Job Pro</title>
+    <title>Referral Program - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
@@ -12,7 +12,7 @@
         <!-- Top Header & Balances -->
         <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-base font-extrabold tracking-wide">My Team & Referral</h1>
+                <h1 class="text-base font-extrabold tracking-wide">Referral Program</h1>
                 <div class="flex items-center gap-2">
                     <span id="userName" class="text-xs bg-indigo-700/80 px-3 py-1.5 rounded-xl font-medium tracking-wide shadow-inner">Loading...</span>
                     <button id="logoutBtn" class="text-xs bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-semibold shadow-sm transition">Logout</button>
@@ -33,48 +33,38 @@
         <!-- Main Content Area -->
         <main class="p-4 flex-grow space-y-4 overflow-y-auto">
             
-            <!-- Commission Notification Card -->
-            <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-2xl text-center shadow-sm">
-                <p class="text-xs font-bold text-indigo-700">
-                    🎉 রেফার কমিশন অফার: টিম মেম্বারদের ইনকামের <span class="text-pink-600 underline">৫% (5%)</span> কমিশন লাইফটাইম পান!
-                </p>
-            </div>
-
-            <!-- Referral Link Card -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm">
-                <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Invite Friends & Earn</h3>
+            <!-- Invite Banner Info -->
+            <div class="space-y-1">
+                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Invite Friends & Earn Commission</h2>
                 <p class="text-[11px] text-gray-500 leading-relaxed">
-                    আপনার রেফারেল লিঙ্কটি শেয়ার করুন। বন্ধুরা একাউন্ট খুলে কাজ করলে তাদের আয়ের ৫% আপনার একাউন্টে যোগ হবে!
+                    Share your unique referral code with friends. When they join using your code and complete tasks, you will earn lifetime bonuses!
                 </p>
-                <div class="flex gap-2">
-                    <input type="text" id="referralLink" readonly class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-600 focus:outline-none" value="Loading link...">
-                    <button onclick="copyReferralLink()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition shrink-0">
-                        Copy
-                    </button>
-                </div>
             </div>
 
-            <!-- Team Stats Overview -->
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 border border-gray-200 p-3.5 rounded-2xl text-center shadow-sm">
-                    <span class="text-xl">👥</span>
-                    <p class="text-[11px] text-gray-500 mt-1">Total Team Members</p>
-                    <h3 id="totalTeam" class="text-sm font-extrabold text-indigo-600 mt-0.5">0</h3>
+            <!-- Referral Code Card (Only Code, No Link) -->
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3 shadow-sm text-center">
+                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">YOUR REFERRAL CODE</p>
+                <div class="py-1">
+                    <input type="text" id="myReferralCode" readonly class="w-full bg-transparent text-center text-2xl font-extrabold text-indigo-600 tracking-widest focus:outline-none" value="Loading...">
                 </div>
-                <div class="bg-gray-50 border border-gray-200 p-3.5 rounded-2xl text-center shadow-sm">
-                    <span class="text-xl">💰</span>
-                    <p class="text-[11px] text-gray-500 mt-1">5% Referral Commission</p>
-                    <h3 id="referralBonus" class="text-sm font-extrabold text-green-600 mt-0.5">৳ 0.00</h3>
-                </div>
+                <button onclick="copyReferralCode()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                    <span class="text-base">📋</span>
+                    <span>Copy Code</span>
+                </button>
             </div>
 
-            <!-- Team Members List Section -->
-            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm">
-                <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Team Member List</h3>
-                <div id="teamMemberList" class="space-y-2 text-center py-6 text-gray-400 text-xs">
-                    এখনো কোনো টিম মেম্বার যুক্ত হয়নি।
-                </div>
+            <!-- Total Referred Users Card -->
+            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
+                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRED USERS</p>
+                <h3 id="totalTeam" class="text-xl font-extrabold text-indigo-600">0</h3>
             </div>
+
+            <!-- Total Referral Earnings Card -->
+            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
+                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRAL EARNINGS</p>
+                <h3 id="referralEarnings" class="text-xl font-extrabold text-green-600">৳ 0.00</h3>
+            </div>
+
         </main>
 
         <!-- Bottom Navigation Bar -->
@@ -121,31 +111,28 @@
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                // Generate Referral Link based on User ID or UID
-                const userId = userData.uid || "user";
-                const refLink = `${window.location.origin}/pages/register.html?ref=${userId}`;
-                document.getElementById('referralLink').value = refLink;
+                // Generate short referral code (e.g., MCJB12345)
+                const refCode = userData.referralCode || "MCJB" + userData.uid.substring(0, 5).toUpperCase();
+                document.getElementById('myReferralCode').value = refCode;
 
-                // Optional: Team Stats can be populated here if stored in user profile or fetched from Firestore
-                if(userData.totalTeam) {
+                if(userData.totalTeam !== undefined) {
                     document.getElementById('totalTeam').innerText = userData.totalTeam;
                 }
-                if(userData.referralBonus) {
-                    document.getElementById('referralBonus').innerText = `৳ ${Number(userData.referralBonus).toFixed(2)}`;
+                if(userData.referralBonus !== undefined) {
+                    document.getElementById('referralEarnings').innerText = `৳ ${Number(userData.referralBonus).toFixed(2)}`;
                 }
-
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        // Copy Referral Link Function
-        window.copyReferralLink = function() {
-            const copyText = document.getElementById('referralLink');
+        // Copy Referral Code Function
+        window.copyReferralCode = function() {
+            const copyText = document.getElementById('myReferralCode');
             copyText.select();
             copyText.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(copyText.value);
-            alert('রফারেল লিঙ্ক সফলভাবে কপি হয়েছে!');
+            alert('Referral code copied successfully!');
         }
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
