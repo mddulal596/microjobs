@@ -1,217 +1,142 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="transform-gpu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Program - Micro Job Pro</title>
+    <title>Referral Team - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#0B0F19',
-                        cardbg: '#111827',
-                        primary: '#3B82F6',
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col">
-    
-    <!-- Sidebar Overlay -->
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
-
-    <!-- Sidebar Menu -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800/80 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 shrink-0 shadow-2xl">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">MicroJobPro</h1>
-                <button id="closeSidebar" class="text-slate-400 hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+<body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-16">
+        
+        <!-- Top Header & Balances -->
+        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-base font-extrabold tracking-wide">My Team & Referral</h1>
+                <div class="flex items-center gap-2">
+                    <span id="userName" class="text-xs bg-indigo-700/80 px-3 py-1.5 rounded-xl font-medium tracking-wide shadow-inner">Loading...</span>
+                    <button id="logoutBtn" class="text-xs bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-semibold shadow-sm transition">Logout</button>
+                </div>
             </div>
-            <nav class="mt-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Dashboard</a>
-                <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Tasks Marketplace</a>
-                <a href="post-task.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Post New Job</a>
-                <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Wallet</a>
-                <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Withdraw</a>
-                <a href="referral.html" class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25">Referrals</a>
-            </nav>
-        </div>
-        <div class="p-6 border-t border-slate-800/80">
-            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm">Logout</button>
-        </div>
-    </aside>
-
-    <!-- Main Content Wrapper -->
-    <div class="flex-1 flex flex-col min-w-0 w-full">
-        <!-- Header -->
-        <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
-            <div class="flex items-center gap-3">
-                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-                <h1 class="text-lg font-bold text-white">Referral Program</h1>
-            </div>
-            
-            <div class="flex items-center gap-3 shrink-0">
-                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
-                <div class="hidden sm:block text-left">
-                    <p id="userName" class="text-sm font-bold text-white">Loading...</p>
-                    <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
+            <div class="grid grid-cols-2 gap-3 mt-2">
+                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
+                    <p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
+                    <h2 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
+                </div>
+                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
+                    <p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
+                    <h2 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
                 </div>
             </div>
         </header>
 
-        <!-- Main Referral Section -->
-        <main class="flex-1 p-4 md:p-8 max-w-4xl w-full mx-auto space-y-6">
+        <!-- Main Content Area -->
+        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
             
-            <!-- Referral Code Card -->
-            <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-6">
-                <div class="space-y-2">
-                    <h2 class="text-xl md:text-2xl font-black text-white">Invite Friends & Earn Commission</h2>
-                    <p class="text-slate-400 text-xs md:text-sm">Share your unique referral code with friends. When they join using your code and complete tasks, you will earn lifetime bonuses!</p>
-                </div>
-
-                <div class="flex flex-col sm:flex-row items-center gap-4 bg-slate-900/60 p-4 border border-slate-800 rounded-2xl">
-                    <div class="w-full sm:flex-1 text-center sm:text-left">
-                        <span class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Your Referral Code</span>
-                        <div id="referralCodeText" class="text-2xl font-black tracking-widest text-blue-400 mt-1">MCJ---</div>
-                    </div>
-                    <button id="copyCodeBtn" class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                        <span id="copyBtnText">Copy Code</span>
+            <!-- Referral Link Card -->
+            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm">
+                <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Invite Friends & Earn</h3>
+                <p class="text-[11px] text-gray-500 leading-relaxed">
+                    আপনার রেফারেল লিঙ্কটি শেয়ার করুন এবং বন্ধুরা একাউন্ট খুললে আকর্ষণীয় কমিশন অর্জন করুন!
+                </p>
+                <div class="flex gap-2">
+                    <input type="text" id="referralLink" readonly class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-600 focus:outline-none" value="Loading link...">
+                    <button onclick="copyReferralLink()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition shrink-0">
+                        Copy
                     </button>
                 </div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Total Referred Users -->
-                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-2">
-                    <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Referred Users</span>
-                    <h3 id="totalReferred" class="text-3xl font-black text-white">0</h3>
+            <!-- Team Stats Overview -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 border border-gray-200 p-3.5 rounded-2xl text-center shadow-sm">
+                    <span class="text-xl">👥</span>
+                    <p class="text-[11px] text-gray-500 mt-1">Total Team</p>
+                    <h3 id="totalTeam" class="text-sm font-extrabold text-indigo-600 mt-0.5">0</h3>
                 </div>
-
-                <!-- Total Referral Earnings -->
-                <div class="p-6 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-2">
-                    <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Referral Earnings</span>
-                    <h3 id="referralEarnings" class="text-3xl font-black text-emerald-400">৳ 0.00</h3>
+                <div class="bg-gray-50 border border-gray-200 p-3.5 rounded-2xl text-center shadow-sm">
+                    <span class="text-xl">💰</span>
+                    <p class="text-[11px] text-gray-500 mt-1">Referral Bonus</p>
+                    <h3 id="referralBonus" class="text-sm font-extrabold text-green-600 mt-0.5">৳ 0.00</h3>
                 </div>
             </div>
 
+            <!-- Team Members List Section -->
+            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm">
+                <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Team Member List</h3>
+                <div id="teamMemberList" class="space-y-2 text-center py-6 text-gray-400 text-xs">
+                    কোনো টিম মেম্বার পাওয়া যায়নি।
+                </div>
+            </div>
         </main>
 
-        <!-- Footer -->
-        <footer class="bg-cardbg border-t border-slate-800/80 py-6 px-8 mt-auto">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-                <p>&copy; 2026 MicroJobPro. All rights reserved.</p>
-                <div class="flex items-center gap-6 font-medium">
-                    <a href="#" class="hover:text-white transition-all">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-all">Terms of Service</a>
-                    <a href="#" class="hover:text-white transition-all">Support</a>
+        <!-- Bottom Navigation Bar -->
+        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-2 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center">
+            <a href="https://t.me/microjobspro" target="_blank" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+                <span class="text-lg">🎧</span>
+                <span>Help</span>
+            </a>
+            <a href="deposit.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+                <span class="text-lg">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
+                    🏠
                 </div>
-            </div>
-        </footer>
+                <span class="font-medium mt-0.5">Home</span>
+            </a>
+            <a href="referral.html" class="flex flex-col items-center text-indigo-600 text-[10px] -mt-4">
+                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white text-lg">
+                    👥
+                </div>
+                <span class="font-bold mt-0.5">Team</span>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+                <span class="text-lg">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
     </div>
 
-    <!-- Scripts -->
+    <!-- Firebase Script & Logic -->
     <script type="module">
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
         import { db } from '../firebase/firebase-config.js';
-        import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { observeAuthState, logoutUser } from '../firebase/auth.js';
 
-        const menuBtn = document.getElementById('menuBtn');
-        const closeSidebar = document.getElementById('closeSidebar');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        observeAuthState((userData) => {
+            if (userData) {
+                const name = userData.displayName || "User";
+                document.getElementById('userName').innerText = name;
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('-translate-x-full');
-            sidebarOverlay.classList.toggle('hidden');
-        }
+                const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
+                const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
+                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
+                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-        if (menuBtn) menuBtn.addEventListener('click', toggleSidebar);
-        if (closeSidebar) closeSidebar.addEventListener('click', toggleSidebar);
-        if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
+                // Generate Referral Link based on User ID or UID
+                const userId = userData.uid || "user";
+                const refLink = `${window.location.origin}/pages/register.html?ref=${userId}`;
+                document.getElementById('referralLink').value = refLink;
 
-        let currentRefCode = "";
-
-        observeAuthState(async (user) => {
-            if (!user) {
+            } else {
                 window.location.href = 'login.html';
-                return;
-            }
-
-            try {
-                let fullName = user.displayName || user.email.split('@')[0] || 'User';
-                const email = user.email || 'No email available';
-                const photoURL = user.photoURL || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces';
-
-                const userDocRef = doc(db, "users", user.uid);
-                const userDocSnap = await getDoc(userDocRef);
-                
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    fullName = userData.fullName || userData.name || userData.displayName || userData.username || fullName;
-                    
-                    currentRefCode = userData.referralCode || `MCJ${user.uid.substring(0, 5).toUpperCase()}`;
-                    
-                    document.getElementById('totalReferred').innerText = userData.totalReferred || 0;
-                    document.getElementById('referralEarnings').innerText = `৳ ${userData.referralEarnings ? Number(userData.referralEarnings).toFixed(2) : '0.00'}`;
-                } else {
-                    currentRefCode = `MCJ${user.uid.substring(0, 5).toUpperCase()}`;
-                    // যদি ডেটাবেসে ইউজার ডকুমেন্ট না থাকে, তবে একটি বেসিক ডকুমেন্ট তৈরি করে নেওয়া ভালো
-                    await setDoc(userDocRef, {
-                        uid: user.uid,
-                        fullName: fullName,
-                        email: email,
-                        referralCode: currentRefCode,
-                        totalReferred: 0,
-                        referralEarnings: 0,
-                        createdAt: new Date().toISOString()
-                    }, { merge: true });
-                }
-
-                document.getElementById('userName').innerText = fullName;
-                document.getElementById('userEmail').innerText = email;
-                document.getElementById('userAvatar').src = photoURL;
-                document.getElementById('referralCodeText').innerText = currentRefCode;
-
-            } catch (error) {
-                console.error("Error loading referral data:", error);
             }
         });
 
-        // Copy Code Functionality
-        const copyCodeBtn = document.getElementById('copyCodeBtn');
-        if (copyCodeBtn) {
-            copyCodeBtn.addEventListener('click', () => {
-                if (!currentRefCode) return;
-                navigator.clipboard.writeText(currentRefCode);
-                
-                const btnText = document.getElementById('copyBtnText');
-                if (btnText) {
-                    btnText.innerText = "Copied!";
-                    setTimeout(() => {
-                        btnText.innerText = "Copy Code";
-                    }, 2000);
-                }
-            });
+        // Copy Referral Link Function
+        window.copyReferralLink = function() {
+            const copyText = document.getElementById('referralLink');
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            alert('রফারেল লিঙ্ক সফলভাবে কপি হয়েছে!');
         }
 
-        const logoutBtnSidebar = document.getElementById('logoutBtnSidebar');
-        if (logoutBtnSidebar) {
-            logoutBtnSidebar.addEventListener('click', async () => {
-                await logoutUser();
-                window.location.href = 'login.html';
-            });
-        }
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await logoutUser();
+            window.location.href = 'login.html';
+        });
     </script>
 </body>
 </html>
