@@ -6,33 +6,40 @@
     <title>Task Details - Micro Job Pro</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #1e293b; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.3); position: relative; padding-bottom: 30px; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 30px; }
         
         /* Header */
-        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
-        .back-link { color: #38bdf8; text-decoration: none; font-size: 12px; font-weight: bold; }
-        .profile-img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid #38bdf8; }
+        header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .back-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        
+        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        
+        .header-title { font-size: 16px; font-weight: 800; }
 
         /* Main Content */
-        main { padding: 20px; flex-grow: 1; overflow-y: auto; }
-        .task-card { background: #0f172a; border: 1px solid #334155; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-        .task-title { font-size: 15px; font-weight: 700; color: #f8fafc; margin-bottom: 8px; }
-        .task-reward { font-size: 14px; font-weight: 800; color: #4ade80; margin-bottom: 12px; display: inline-block; background: rgba(74, 222, 128, 0.1); padding: 4px 10px; border-radius: 8px; }
-        .section-heading { font-size: 12px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-top: 14px; margin-bottom: 6px; }
-        .task-desc { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
+        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
+        .task-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .task-title { font-size: 14px; font-weight: 700; color: #1f2937; margin-bottom: 8px; }
+        .task-reward { font-size: 13px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 8px; display: inline-block; margin-bottom: 12px; }
+        .section-heading { font-size: 11px; font-weight: bold; color: #4b5563; text-transform: uppercase; margin-top: 14px; margin-bottom: 6px; }
+        .task-desc { font-size: 11px; color: #6b7280; line-height: 1.5; }
         
         .proof-box { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
-        .proof-input { width: 100%; padding: 10px 14px; background: #1e293b; border: 1px solid #475569; border-radius: 10px; color: #fff; font-size: 12px; outline: none; }
-        .proof-input:focus { border-color: #38bdf8; }
+        .form-label { font-size: 11px; font-weight: bold; color: #374151; }
+        .proof-input { width: 100%; padding: 12px; background: #f9fafb; border: 1px solid #d1d5db; border-radius: 12px; color: #1f2937; font-size: 12px; outline: none; }
+        .proof-input:focus { border-color: #4f46e5; background: #ffffff; }
         
-        .btn-submit { width: 100%; background: #2563eb; color: #ffffff; border: none; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; margin-top: 16px; transition: 0.2s; }
-        .btn-submit:hover { background: #1d4ed8; }
+        .btn-submit { width: 100%; background: #4f46e5; color: #ffffff; border: none; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; margin-top: 16px; transition: 0.2s; }
+        .btn-submit:hover { background: #4338ca; }
+        .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
 
-        .error-box { text-align: center; padding: 40px 20px; color: #94a3b8; font-size: 13px; }
+        .error-box { text-align: center; padding: 40px 20px; color: #6b7280; font-size: 12px; }
         
         /* Footer */
-        footer { text-align: center; font-size: 10px; color: #64748b; padding-top: 10px; }
+        footer { text-align: center; font-size: 10px; color: #9ca3af; padding: 10px 0; }
     </style>
 </head>
 <body>
@@ -40,10 +47,14 @@
         <div>
             <!-- Header -->
             <header>
-                <a href="microjobs.html" class="back-link">← Back to Tasks</a>
-                <div id="userAvatar">
-                    <img src="https://via.placeholder.com/32" alt="Profile" class="profile-img" id="profileImg">
+                <div class="header-top">
+                    <a href="microjobs.html" class="back-link">← Back to Tasks</a>
+                    <a href="profile.html" class="profile-btn">
+                        <div id="profileIconBtn" class="profile-icon">U</div>
+                        <span id="userNameDisplay">Loading...</span>
+                    </a>
                 </div>
+                <div class="header-title">Task Details</div>
             </header>
 
             <!-- Main Content Area -->
@@ -64,7 +75,6 @@
 
         const db = getFirestore();
 
-        // স্ট্যাটিক টাস্ক ডাটা (যদি ফায়ারবেজে আইডি না থাকে তবে এটি কাজ করবে)
         const staticTasks = {
             "1": {
                 title: "YouTube Video Watch & Subscribe",
@@ -96,10 +106,9 @@
         observeAuthState(async (userData) => {
             if (userData) {
                 currentUser = userData;
-                const name = userData.fullName || userData.displayName || "U";
-                if(userData.photoURL) {
-                    document.getElementById('profileImg').src = userData.photoURL;
-                }
+                const name = userData.fullName || userData.displayName || "User";
+                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
+                document.getElementById('userNameDisplay').innerText = name;
 
                 await loadTaskDetails(taskId);
             } else {
@@ -110,17 +119,15 @@
         async function loadTaskDetails(id) {
             const mainContent = document.getElementById('mainContent');
             if (!id) {
-                mainContent.innerHTML = `<div class="error-box">টাস্ক আইডি পাওয়া যায়নি! <br><br> <a href="microjobs.html" class="back-link">Back to Tasks</a></div>`;
+                mainContent.innerHTML = `<div class="error-box">টাস্ক আইডি পাওয়া যায়নি! <br><br> <a href="microjobs.html" class="back-link" style="display:inline-block; background:#4f46e5; color:#fff; padding:8px 16px; border-radius:8px;">Back to Tasks</a></div>`;
                 return;
             }
 
             let taskData = null;
 
-            // প্রথমে চেক করবো স্ট্যাটিক লিস্টে আছে কি না
             if (staticTasks[id]) {
                 taskData = staticTasks[id];
             } else {
-                // যদি ফায়ারবেজ থেকে আনতে হয়
                 try {
                     const docRef = doc(db, "microjobs", id);
                     const docSnap = await getDoc(docRef);
@@ -136,12 +143,11 @@
                 mainContent.innerHTML = `
                     <div class="error-box">
                         টাস্কটি খুঁজে পাওয়া যায়নি অথবা মুছে ফেলা হয়েছে।<br><br>
-                        <a href="microjobs.html" class="back-link" style="display:inline-block; background:#2563eb; color:#fff; padding:8px 16px; border-radius:8px;">Back to Tasks</a>
+                        <a href="microjobs.html" class="back-link" style="display:inline-block; background:#4f46e5; color:#fff; padding:8px 16px; border-radius:8px;">Back to Tasks</a>
                     </div>`;
                 return;
             }
 
-            // রেন্ডার টাস্ক ডিটেইলস ফরম
             mainContent.innerHTML = `
                 <div class="task-card">
                     <h2 class="task-title">${taskData.title}</h2>
@@ -154,6 +160,7 @@
                     <p class="task-desc">${taskData.proofNote || 'Submit your work proof below:'}</p>
 
                     <div class="proof-box">
+                        <label class="form-label">Your Proof / Details</label>
                         <input type="text" id="proofText" class="proof-input" placeholder="Enter your proof details (e.g. username / link)..." required>
                         <button id="submitProofBtn" class="btn-submit">Submit Proof</button>
                     </div>
