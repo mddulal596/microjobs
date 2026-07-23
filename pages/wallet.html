@@ -1,165 +1,261 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet - Micro Job Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#0B0F19',
-                        cardbg: '#111827',
-                        primary: '#3B82F6',
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Daily Jobs - Micro Job Pro</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
+        
+        /* Header */
+        header { background-color: #4f46e5; color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        
+        .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .balance-card { background: rgba(255, 255, 255, 0.12); padding: 12px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .balance-title { font-size: 11px; color: #e0e7ff; margin-bottom: 4px; }
+        .balance-amount { font-size: 18px; font-weight: 800; }
+
+        /* Main Content */
+        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
+        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 4px; }
+        .section-desc { font-size: 11px; color: #6b7280; line-height: 1.4; margin-bottom: 16px; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 16px; }
+        .tab-btn { padding: 8px 14px; background: #f3f4f6; color: #374151; border: none; font-weight: bold; font-size: 12px; border-radius: 12px; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .tab-btn.active { background: #4f46e5; color: #ffffff; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
+
+        /* Task Cards */
+        .task-list { display: flex; flex-direction: column; gap: 12px; }
+        .task-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+        .task-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .badge { font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 6px; }
+        .badge-red { background: #fee2e2; color: #dc2626; }
+        .badge-blue { background: #dbeafe; color: #2563eb; }
+        .badge-purple { background: #f3e8ff; color: #7c3aed; }
+        .task-title { font-size: 13px; font-weight: 800; color: #1f2937; margin-top: 4px; }
+        .task-reward { font-size: 14px; font-weight: 800; color: #16a34a; }
+        .task-desc { font-size: 11px; color: #6b7280; line-height: 1.4; }
+        .task-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e5e7eb; padding-top: 10px; }
+        .task-slots { font-size: 10px; color: #9ca3af; font-weight: 600; }
+        .do-btn { background: #4f46e5; color: #ffffff; border: none; padding: 6px 14px; font-size: 12px; font-weight: bold; border-radius: 10px; cursor: pointer; }
+        .do-btn:hover { background: #4338ca; }
+
+        /* Bottom Nav */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6b7280; font-size: 10px; gap: 2px; }
+        .nav-icon-circle { width: 36px; height: 36px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4b5563; }
+        .nav-item:hover { color: #4f46e5; }
+    </style>
 </head>
-<body class="bg-darkbg text-slate-100 flex h-screen overflow-hidden">
-    
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
-
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800/80 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 shrink-0 shadow-2xl">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">MicroJobPro</h1>
-                <button id="closeSidebar" class="text-slate-400 hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+<body>
+    <div class="container">
+        
+        <!-- Top Header & Balances -->
+        <header>
+            <div class="header-top">
+                <a href="profile.html" class="profile-btn">
+                    <div id="profileIconBtn" class="profile-icon">U</div>
+                    <span id="userNameDisplay">Loading...</span>
+                </a>
+                <a href="dashboard.html" class="home-link">Home</a>
             </div>
-            <nav class="mt-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Dashboard</a>
-                <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Tasks Marketplace</a>
-                <a href="post-task.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Post New Job</a>
-                <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25">Wallet</a>
-                <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Withdraw</a>
-                <a href="referral.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Referrals</a>
-            </nav>
-        </div>
-        <div class="p-6 border-t border-slate-800/80">
-            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm">Logout</button>
-        </div>
-    </aside>
-
-    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
-            <div class="flex items-center gap-3">
-                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-                <nav class="flex items-center gap-3 lg:gap-6 text-xs md:text-sm font-semibold text-slate-300 overflow-x-auto py-2 scrollbar-none">
-                    <a href="dashboard.html" class="hover:text-blue-400 transition-all shrink-0">Home</a>
-                    <a href="tasks.html" class="hover:text-blue-400 transition-all shrink-0">Jobs</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Advertisers</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Quiz</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Paid To Click</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Daily Check</a>
-                    <a href="#" class="hover:text-blue-400 transition-all shrink-0">Analytics</a>
-                </nav>
-            </div>
-            
-            <div class="flex items-center gap-3 shrink-0">
-                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
-                <div class="hidden sm:block text-left">
-                    <p id="userName" class="text-sm font-bold text-white">Loading...</p>
-                    <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
+            <div class="balance-grid">
+                <div class="balance-card">
+                    <p class="balance-title">Main Balance</p>
+                    <h2 id="mainBalance" class="balance-amount">৳ 0.00</h2>
+                </div>
+                <div class="balance-card">
+                    <p class="balance-title">Deposit Balance</p>
+                    <h2 id="depositBalance" class="balance-amount">৳ 0.00</h2>
                 </div>
             </div>
         </header>
 
-        <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-4 relative overflow-hidden">
-                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                    <p class="text-slate-400 text-sm font-semibold">Main Earned Balance</p>
-                    <h2 class="text-3xl md:text-4xl font-black text-emerald-400">৳ 0.00</h2>
-                    <div class="pt-4 flex gap-3">
-                        <a href="withdraw.html" class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition-all">Withdraw Now</a>
-                    </div>
-                </div>
-
-                <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-4 relative overflow-hidden">
-                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                    <p class="text-slate-400 text-sm font-semibold">Deposit Balance (For Posting Jobs)</p>
-                    <h2 class="text-3xl md:text-4xl font-black text-blue-400">৳ 0.00</h2>
-                    <div class="pt-4 flex gap-3">
-                        <button class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/20 transition-all">Deposit Funds</button>
-                    </div>
-                </div>
+        <!-- Main Content Area -->
+        <main>
+            <div>
+                <h2 class="section-title">Available Daily Jobs</h2>
+                <p class="section-desc">
+                    Complete simple micro tasks and earn money instantly. Follow instructions carefully before submitting proof.
+                </p>
             </div>
 
-            <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-4">
-                <h3 class="text-xl font-bold text-white">Recent Transactions</h3>
-                <div class="text-center py-8 text-slate-500 text-sm">No transaction history found yet.</div>
+            <!-- Task Category Filters -->
+            <div class="tabs">
+                <button onclick="filterCategory('all', this)" class="tab-btn active">All Tasks</button>
+                <button onclick="filterCategory('youtube', this)" class="tab-btn">YouTube</button>
+                <button onclick="filterCategory('facebook', this)" class="tab-btn">Facebook</button>
+                <button onclick="filterCategory('website', this)" class="tab-btn">Website Visit</button>
+            </div>
+
+            <!-- Task List Container -->
+            <div id="taskList" class="task-list">
+                <!-- Task Card 1 -->
+                <div class="task-card" data-category="youtube">
+                    <div class="task-header">
+                        <div>
+                            <span class="badge badge-red">YouTube • 3 mins</span>
+                            <h3 class="task-title">Watch Full Video & Subscribe Channel</h3>
+                        </div>
+                        <span class="task-reward">৳ 5.00</span>
+                    </div>
+                    <p class="task-desc">Search on YouTube: "Micro Job Pro Tutorial" and watch the full video without skipping. Submit screenshot as proof.</p>
+                    <div class="task-footer">
+                        <span class="task-slots">Slots: 142 / 200 Done</span>
+                        <button onclick="startTask('Watch Full Video & Subscribe Channel', '5.00')" class="do-btn">Do Task</button>
+                    </div>
+                </div>
+
+                <!-- Task Card 2 -->
+                <div class="task-card" data-category="facebook">
+                    <div class="task-header">
+                        <div>
+                            <span class="badge badge-blue">Facebook • 2 mins</span>
+                            <h3 class="task-title">Like & Share Public Post in Group</h3>
+                        </div>
+                        <span class="task-reward">৳ 3.50</span>
+                    </div>
+                    <p class="task-desc">Like our official page post and share it to any public earning group on Facebook. Submit your profile link.</p>
+                    <div class="task-footer">
+                        <span class="task-slots">Slots: 85 / 150 Done</span>
+                        <button onclick="startTask('Like & Share Public Post in Group', '3.50')" class="do-btn">Do Task</button>
+                    </div>
+                </div>
+
+                <!-- Task Card 3 -->
+                <div class="task-card" data-category="website">
+                    <div class="task-header">
+                        <div>
+                            <span class="badge badge-purple">Website • 1 min</span>
+                            <h3 class="task-title">Visit Site & Click Ads</h3>
+                        </div>
+                        <span class="task-reward">৳ 2.00</span>
+                    </div>
+                    <p class="task-desc">Visit the target website, browse 2 internal pages, spend 60 seconds, and click on an embedded banner ad.</p>
+                    <div class="task-footer">
+                        <span class="task-slots">Slots: 310 / 500 Done</span>
+                        <button onclick="startTask('Visit Site & Click Ads', '2.00')" class="do-btn">Do Task</button>
+                    </div>
+                </div>
             </div>
         </main>
 
-        <footer class="bg-cardbg border-t border-slate-800/80 py-6 px-8 mt-auto">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-                <p>&copy; 2026 MicroJobPro. All rights reserved.</p>
-                <div class="flex items-center gap-6 font-medium">
-                    <a href="#" class="hover:text-white transition-all">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-all">Terms of Service</a>
-                    <a href="#" class="hover:text-white transition-all">Support</a>
-                </div>
-            </div>
-        </footer>
+        <!-- Bottom Navigation Bar -->
+        <nav>
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item">
+                <span style="font-size: 16px;">🎧</span>
+                <span>Help</span>
+            </a>
+            <a href="deposit.html" class="nav-item">
+                <span style="font-size: 16px;">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="dashboard.html" class="nav-item">
+                <div class="nav-icon-circle">🏠</div>
+                <span style="font-weight: 500;">Home</span>
+            </a>
+            <a href="referral.html" class="nav-item">
+                <div class="nav-icon-circle">👥</div>
+                <span style="font-weight: 500;">Team</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span style="font-size: 16px;">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
     </div>
 
+    <!-- Firebase Script & Logic -->
     <script type="module">
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
-        import { db } from '../firebase/firebase-config.js';
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { observeAuthState } from '../firebase/auth.js';
 
-        const menuBtn = document.getElementById('menuBtn');
-        const closeSidebar = document.getElementById('closeSidebar');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        observeAuthState((userData) => {
+            if (userData) {
+                const name = userData.fullName || userData.displayName || "User";
+                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
+                document.getElementById('userNameDisplay').innerText = name;
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('-translate-x-full');
-            sidebarOverlay.classList.toggle('hidden');
+                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
+                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
+                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
+                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        window.filterCategory = function(category, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            btnElement.classList.add('active');
+
+            const cards = document.querySelectorAll('.task-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
-        menuBtn.addEventListener('click', toggleSidebar);
-        closeSidebar.addEventListener('click', toggleSidebar);
-        sidebarOverlay.addEventListener('click', toggleSidebar);
+        window.startTask = function(taskTitle, reward) {
+            let modal = document.getElementById('taskModal');
+            if (!modal) {
+                const modalHTML = `
+                    <div id="taskModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px;">
+                        <div style="background: #ffffff; width: 100%; max-width: 400px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+                            <h3 id="modalTaskTitle" style="font-size: 16px; font-weight: 800; color: #1f2937; margin-bottom: 8px;"></h3>
+                            <p style="font-size: 12px; color: #16a34a; font-weight: bold; margin-bottom: 12px;">Reward: <span id="modalTaskReward"></span></p>
+                            
+                            <div style="background: #f3f4f6; padding: 12px; border-radius: 12px; font-size: 11px; color: #4b5563; margin-bottom: 15px; line-height: 1.4;">
+                                <strong>Instructions:</strong><br>
+                                ১. প্রথমে কাজটি সঠিকভাবে সম্পন্ন করুন।<br>
+                                ২. কাজের প্রুফ হিসেবে স্ক্রিনশট বা আপনার প্রুফ লিংক নিচে বক্সে লিখুন।
+                            </div>
 
-        observeAuthState(async (user) => {
-            if (!user) {
-                window.location.href = 'login.html';
+                            <label style="font-size: 11px; font-weight: bold; color: #374151; display: block; margin-bottom: 6px;">Submit Proof (Text / Link / Details):</label>
+                            <textarea id="taskProofInput" placeholder="Enter your proof here..." style="width: 100%; height: 80px; padding: 10px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 12px; margin-bottom: 15px; resize: none;"></textarea>
+
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="closeTaskModal()" style="flex: 1; background: #e5e7eb; color: #374151; border: none; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer;">Cancel</button>
+                                <button onclick="submitTaskProof()" style="flex: 1; background: #4f46e5; color: #ffffff; border: none; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer;">Submit Proof</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                modal = document.getElementById('taskModal');
+            }
+
+            document.getElementById('modalTaskTitle').innerText = taskTitle;
+            document.getElementById('modalTaskReward').innerText = `৳ ${reward}`;
+            document.getElementById('taskProofInput').value = '';
+            modal.style.display = 'flex';
+        }
+
+        window.closeTaskModal = function() {
+            const modal = document.getElementById('taskModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        window.submitTaskProof = function() {
+            const proof = document.getElementById('taskProofInput').value.trim();
+            if (!proof) {
+                alert('দয়া করে কাজের প্রুফ বা লিংক প্রদান করুন!');
                 return;
             }
-
-            try {
-                let fullName = user.displayName || user.email.split('@')[0] || 'Valued User';
-                const email = user.email || 'No email available';
-                const photoURL = user.photoURL || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces';
-
-                const userDocRef = doc(db, "users", user.uid);
-                const userDocSnap = await getDoc(userDocRef);
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    fullName = userData.fullName || userData.name || userData.displayName || userData.username || fullName;
-                }
-
-                document.getElementById('userName').innerText = fullName;
-                document.getElementById('userEmail').innerText = email;
-                document.getElementById('userAvatar').src = photoURL;
-            } catch (error) {
-                console.error("Error loading profile:", error);
-            }
-        });
-
-        document.getElementById('logoutBtnSidebar').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
-        });
+            alert('আপনার টাস্ক প্রুফ সফলভাবে জমা হয়েছে! অ্যাডমিন যাচাই করার পর আপনার মূল ব্যালেন্সে টাকা যুক্ত করা হবে।');
+            closeTaskModal();
+        }
     </script>
 </body>
 </html>
