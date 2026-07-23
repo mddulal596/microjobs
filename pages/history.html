@@ -1,70 +1,186 @@
 <!DOCTYPE html>
-<html lang="en" class="transform-gpu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transaction History - Micro Job Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
+        
+        /* Header */
+        header { background-color: #4f46e5; color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        
+        .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .balance-card { background: rgba(255, 255, 255, 0.12); padding: 14px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .balance-title { font-size: 11px; color: #e0e7ff; margin-bottom: 4px; }
+        .balance-amount { font-size: 18px; font-weight: 800; }
+
+        /* Main Content */
+        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
+        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+        .tab-btn { flex: 1; padding: 8px; background: #f3f4f6; color: #374151; border: none; font-weight: bold; font-size: 11px; border-radius: 10px; cursor: pointer; transition: 0.2s; text-align: center; }
+        .tab-btn.active { background: #4f46e5; color: #ffffff; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
+
+        /* History List Box */
+        .history-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 12px; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; border-bottom: 1px solid #e5e7eb; }
+        .history-item:last-child { border-bottom: none; }
+        .history-info h4 { font-size: 12px; font-weight: 700; color: #1f2937; }
+        .history-info p { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+        .history-amount { font-size: 12px; font-weight: 800; text-align: right; }
+        .text-success { color: #16a34a; }
+        .text-danger { color: #dc2626; }
+        .status-badge { display: inline-block; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-top: 2px; }
+        .status-pending { background: #fef3c7; color: #d97706; }
+        .status-approved { background: #dcfce7; color: #15803d; }
+
+        /* Bottom Nav */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6b7280; font-size: 10px; gap: 2px; }
+        .nav-icon-circle { width: 36px; height: 36px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4b5563; }
+        .nav-item:hover { color: #4f46e5; }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
-        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md flex justify-between items-center">
-            <h1 class="text-lg font-bold">Transaction History</h1>
-            <a href="dashboard.html" class="text-xs bg-indigo-700 px-3 py-1 rounded-full">Dashboard</a>
+<body>
+    <div class="container">
+        
+        <!-- Top Header & Balances -->
+        <header>
+            <div class="header-top">
+                <a href="profile.html" class="profile-btn">
+                    <div id="profileIconBtn" class="profile-icon">U</div>
+                    <span id="userNameDisplay">Loading...</span>
+                </a>
+                <a href="dashboard.html" class="home-link">Home</a>
+            </div>
+            <div class="balance-grid">
+                <div class="balance-card">
+                    <p class="balance-title">Main Balance</p>
+                    <h2 id="mainBalance" class="balance-amount">৳ 0.00</h2>
+                </div>
+                <div class="balance-card">
+                    <p class="balance-title">Deposit Balance</p>
+                    <h2 id="depositBalance" class="balance-amount">৳ 0.00</h2>
+                </div>
+            </div>
         </header>
 
-        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
-            <h2 class="text-sm font-bold text-gray-700">Withdrawal Records</h2>
-            <div id="historyList" class="space-y-3">
-                <p class="text-center text-gray-500 text-sm">Loading history...</p>
+        <!-- Main Content Area -->
+        <main>
+            <h2 class="section-title">Transaction History</h2>
+
+            <!-- Filter Tabs -->
+            <div class="tabs">
+                <button onclick="filterHistory('all', this)" class="tab-btn active">All</button>
+                <button onclick="filterHistory('deposit', this)" class="tab-btn">Deposit</button>
+                <button onclick="filterHistory('withdraw', this)" class="tab-btn">Withdraw</button>
+                <button onclick="filterHistory('earning', this)" class="tab-btn">Earning</button>
+            </div>
+
+            <!-- History Items Container -->
+            <div class="history-box" id="historyList">
+                <div class="history-item" data-type="earning">
+                    <div class="history-info">
+                        <h4>Task Reward Earned</h4>
+                        <p>24 Jul 2026, 10:30 AM</p>
+                        <span class="status-badge status-approved">Approved</span>
+                    </div>
+                    <div>
+                        <div class="history-amount text-success">+৳ 5.00</div>
+                    </div>
+                </div>
+
+                <div class="history-item" data-type="deposit">
+                    <div class="history-info">
+                        <h4>Deposit via bKash</h4>
+                        <p>Trx: 9H7K3... • 22 Jul 2026</p>
+                        <span class="status-badge status-approved">Completed</span>
+                    </div>
+                    <div>
+                        <div class="history-amount text-success">+৳ 200.00</div>
+                    </div>
+                </div>
+
+                <div class="history-item" data-type="withdraw">
+                    <div class="history-info">
+                        <h4>Withdrawal via Nagad</h4>
+                        <p>A/C: 019XXXXXXXX • 20 Jul 2026</p>
+                        <span class="status-badge status-pending">Pending</span>
+                    </div>
+                    <div>
+                        <div class="history-amount text-danger">-৳ 500.00</div>
+                    </div>
+                </div>
             </div>
         </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav>
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item">
+                <span style="font-size: 16px;">🎧</span>
+                <span>Help</span>
+            </a>
+            <a href="wallet.html" class="nav-item">
+                <span style="font-size: 16px;">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="dashboard.html" class="nav-item">
+                <div class="nav-icon-circle">🏠</div>
+                <span style="font-weight: 500;">Home</span>
+            </a>
+            <a href="referral.html" class="nav-item">
+                <div class="nav-icon-circle">👥</div>
+                <span style="font-weight: 500;">Team</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span style="font-size: 16px;">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
     </div>
 
+    <!-- Firebase Script & Logic -->
     <script type="module">
-        import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState(async (user) => {
-            if (!user) {
+        observeAuthState((userData) => {
+            if (userData) {
+                const name = userData.fullName || userData.displayName || "User";
+                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
+                document.getElementById('userNameDisplay').innerText = name;
+
+                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
+                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
+                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
+                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+            } else {
                 window.location.href = 'login.html';
-                return;
             }
-            loadHistory(user.uid);
         });
 
-        async function loadHistory(userId) {
-            const historyListEl = document.getElementById('historyList');
-            try {
-                const q = query(collection(db, "withdrawals"), where("userId", "==", userId));
-                const querySnapshot = await getDocs(q);
+        window.filterHistory = function(type, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            btnElement.classList.add('active');
 
-                if (querySnapshot.empty) {
-                    historyListEl.innerHTML = `<p class="text-center text-gray-500 text-sm">No transaction records found.</p>`;
-                    return;
+            const items = document.querySelectorAll('.history-item');
+            items.forEach(item => {
+                if (type === 'all' || item.getAttribute('data-type') === type) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
                 }
-
-                historyListEl.innerHTML = "";
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const statusColor = data.status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700';
-
-                    const card = document.createElement('div');
-                    card.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl flex justify-between items-center shadow-sm";
-                    card.innerHTML = `
-                        <div>
-                            <p class="font-bold text-xs text-gray-800">${data.method} - ${data.accountNo}</p>
-                            <p class="text-[10px] text-gray-500">Amount: ৳ ${data.amount}</p>
-                        </div>
-                        <span class="text-[10px] font-bold px-2 py-1 rounded-lg uppercase ${statusColor}">${data.status}</span>
-                    `;
-                    historyListEl.appendChild(card);
-                });
-            } catch (err) {
-                console.error(err);
-                historyListEl.innerHTML = `<p class="text-center text-red-500 text-sm">Failed to load history.</p>`;
-            }
+            });
         }
     </script>
 </body>
