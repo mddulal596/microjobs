@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - Admin Panel</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
+        
+        /* Header */
+        header { background-color: #1e1b4b; color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        
+        .search-box { width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; color: #fff; font-size: 12px; outline: none; }
+        .search-box::placeholder { color: #cbd5e1; }
+
+        /* Main Content */
+        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
+        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
+
+        /* User List Box */
+        .user-list { display: flex; flex-direction: column; gap: 10px; }
+        .user-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .user-info h4 { font-size: 12px; font-weight: 700; color: #1f2937; }
+        .user-info p { font-size: 10px; color: #6b7280; margin-top: 2px; }
+        .user-balances { font-size: 11px; font-weight: 800; color: #4f46e5; margin-top: 2px; }
+
+        .card-actions { display: flex; gap: 6px; }
+        .btn-edit { background: #e0e7ff; color: #3730a3; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .btn-ban { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+
+        /* Bottom Nav */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6b7280; font-size: 10px; gap: 2px; }
+        .nav-icon-circle { width: 36px; height: 36px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4b5563; }
+        .nav-item:hover { color: #4f46e5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Top Header & Search Bar -->
+        <header>
+            <div class="header-top">
+                <a href="admin.html" class="profile-btn">
+                    <div class="profile-icon">A</div>
+                    <span>Admin Control</span>
+                </a>
+                <a href="dashboard.html" class="home-link">Home</a>
+            </div>
+            <input type="text" id="searchUser" class="search-box" placeholder="Search user by name or email..." onkeyup="filterUsers()">
+        </header>
+
+        <!-- Main Content Area -->
+        <main>
+            <h2 class="section-title">All Registered Users</h2>
+
+            <!-- User List Container -->
+            <div class="user-list" id="userListContainer">
+                <div class="user-card" data-name="rakib hasan">
+                    <div class="user-info">
+                        <h4>Rakib Hasan</h4>
+                        <p>rakib@gmail.com • Joined: 20 Jul 2026</p>
+                        <div class="user-balances">Main: ৳150.00 | Deposit: ৳500.00</div>
+                    </div>
+                    <div class="card-actions">
+                        <button onclick="editUserBalance('Rakib Hasan')" class="btn-edit">Edit</button>
+                        <button onclick="toggleBanUser('Rakib Hasan')" class="btn-ban">Ban</button>
+                    </div>
+                </div>
+
+                <div class="user-card" data-name="sumaiya akter">
+                    <div class="user-info">
+                        <h4>Sumaiya Akter</h4>
+                        <p>sumaiya@gmail.com • Joined: 21 Jul 2026</p>
+                        <div class="user-balances">Main: ৳45.00 | Deposit: ৳200.00</div>
+                    </div>
+                    <div class="card-actions">
+                        <button onclick="editUserBalance('Sumaiya Akter')" class="btn-edit">Edit</button>
+                        <button onclick="toggleBanUser('Sumaiya Akter')" class="btn-ban">Ban</button>
+                    </div>
+                </div>
+
+                <div class="user-card" data-name="tanvir hossain">
+                    <div class="user-info">
+                        <h4>Tanvir Hossain</h4>
+                        <p>tanvir@gmail.com • Joined: 22 Jul 2026</p>
+                        <div class="user-balances">Main: ৳1,200.00 | Deposit: ৳0.00</div>
+                    </div>
+                    <div class="card-actions">
+                        <button onclick="editUserBalance('Tanvir Hossain')" class="btn-edit">Edit</button>
+                        <button onclick="toggleBanUser('Tanvir Hossain')" class="btn-ban">Ban</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav>
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item">
+                <span style="font-size: 16px;">🎧</span>
+                <span>Help</span>
+            </a>
+            <a href="wallet.html" class="nav-item">
+                <span style="font-size: 16px;">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="dashboard.html" class="nav-item">
+                <div class="nav-icon-circle">🏠</div>
+                <span style="font-weight: 500;">Home</span>
+            </a>
+            <a href="referral.html" class="nav-item">
+                <div class="nav-icon-circle">👥</div>
+                <span style="font-weight: 500;">Team</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span style="font-size: 16px;">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Firebase Script & Logic -->
+    <script type="module">
+        import { observeAuthState } from '../firebase/auth.js';
+
+        observeAuthState((userData) => {
+            if (!userData) {
+                window.location.href = 'login.html';
+            }
+        });
+
+        window.filterUsers = function() {
+            const query = document.getElementById('searchUser').value.toLowerCase();
+            const cards = document.querySelectorAll('.user-card');
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                if (name.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        window.editUserBalance = function(userName) {
+            const newBal = prompt(`Enter new main balance for ${userName}:`);
+            if (newBal !== null) {
+                alert(`"${userName}" এর ব্যালেন্স সফলভাবে আপডেট করে ৳${newBal} করা হয়েছে।`);
+            }
+        }
+
+        window.toggleBanUser = function(userName) {
+            if (confirm(`আপনি কি নিশ্চিতভাবে ${userName}-কে ব্যান করতে চান?`)) {
+                alert(`"${userName}"-এর অ্যাকাউন্ট ব্যান করা হয়েছে।`);
+            }
+        }
+    </script>
+</body>
+  </html>
