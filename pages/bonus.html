@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Bonus - Micro Job Pro</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
+        
+        /* Top Header */
+        header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        
+        .header-title { font-size: 16px; font-weight: 800; }
+
+        /* Main Content */
+        main { padding: 16px; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        
+        .bonus-card { background: #f0fdf4; border: 1px solid #dcfce7; border-radius: 20px; padding: 24px; width: 100%; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.05); margin-bottom: 20px; }
+        .bonus-icon { font-size: 48px; margin-bottom: 12px; display: block; }
+        .bonus-card h3 { font-size: 18px; font-weight: 800; color: #15803d; margin-bottom: 8px; }
+        .bonus-card p { font-size: 12px; color: #166534; line-height: 1.6; margin-bottom: 16px; }
+
+        .btn-claim { width: 100%; background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: #ffffff; border: none; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(22,163,74,0.3); transition: 0.2s; }
+        .btn-claim:hover { opacity: 0.9; }
+
+        /* Bottom Nav */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6b7280; font-size: 10px; gap: 2px; }
+        .nav-icon-circle { width: 36px; height: 36px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4b5563; }
+        .nav-item:hover { color: #4f46e5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Top Header -->
+        <header>
+            <div class="header-top">
+                <a href="dashboard.html" class="profile-btn">
+                    <div class="profile-icon">M</div>
+                    <span>Micro Job Pro</span>
+                </a>
+                <a href="dashboard.html" class="home-link">Home</a>
+            </div>
+            <div class="header-title">Daily Bonus</div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main>
+            <div class="bonus-card">
+                <span class="bonus-icon">🎉</span>
+                <h3>ডেইলি বোনাস সংগ্রহ করুন</h3>
+                <p>প্রতি ২৪ ঘণ্টায় একবার ফ্রি বোনাস ক্লেইম করে আপনার মেইন ব্যালেন্সে টাকা যোগ করে নিন।</p>
+                <button class="btn-claim" onclick="claimBonus()">Claim Daily Bonus</button>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav>
+            <a href="support.html" class="nav-item">
+                <span style="font-size: 16px;">🎧</span>
+                <span>Help</span>
+            </a>
+            <a href="wallet.html" class="nav-item">
+                <span style="font-size: 16px;">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="dashboard.html" class="nav-item">
+                <div class="nav-icon-circle">🏠</div>
+                <span style="font-weight: 500;">Home</span>
+            </a>
+            <a href="referral.html" class="nav-item">
+                <div class="nav-icon-circle">👥</div>
+                <span style="font-weight: 500;">Team</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span style="font-size: 16px;">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Firebase Script & Logic -->
+    <script type="module">
+        import { observeAuthState } from '../firebase/auth.js';
+
+        observeAuthState((userData) => {
+            if (!userData) {
+                window.location.href = 'login.html';
+            }
+        });
+
+        window.claimBonus = function() {
+            // এখানে ডাটাবেজে বোনাস যোগ করার লজিক যুক্ত হবে
+            alert('অভিনন্দন! আপনি সফলভাবে ডেইলি বোনাস ক্লেইম করেছেন।');
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
