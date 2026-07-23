@@ -36,6 +36,20 @@
         .task-btn { background: #4f46e5; color: #ffffff; border: none; padding: 8px 14px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block; }
         .task-btn:hover { background: #4338ca; }
 
+        /* Modal Overlay for Proof Submission */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+        .modal-content { background: #ffffff; width: 100%; max-width: 400px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease; }
+        .modal-content h3 { font-size: 16px; font-weight: 700; color: #1f2937; margin-bottom: 8px; }
+        .modal-content p { font-size: 12px; color: #6b7280; margin-bottom: 16px; }
+        .modal-input { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 13px; outline: none; margin-bottom: 16px; }
+        .modal-input:focus { border-color: #4f46e5; }
+        .modal-btns { display: flex; gap: 10px; }
+        .modal-btn { flex: 1; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: bold; cursor: pointer; border: none; }
+        .btn-cancel { background: #f3f4f6; color: #4b5563; }
+        .btn-submit { background: #4f46e5; color: #ffffff; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         /* Bottom Nav */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
         .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6b7280; font-size: 10px; gap: 2px; }
@@ -80,7 +94,7 @@
                         <p>Watch full video and drop a like.</p>
                         <span class="job-reward">+৳ 0.15</span>
                     </div>
-                    <button onclick="completeTask('YouTube Video Watch & Like', 0.15)" class="task-btn">Start Task</button>
+                    <button onclick="openTaskModal('YouTube Video Watch & Like', 0.15)" class="task-btn">Start Task</button>
                 </div>
 
                 <!-- Job 2 -->
@@ -90,7 +104,7 @@
                         <p>Follow our official Facebook page.</p>
                         <span class="job-reward">+৳ 0.15</span>
                     </div>
-                    <button onclick="completeTask('Facebook Page Follow', 0.15)" class="task-btn">Start Task</button>
+                    <button onclick="openTaskModal('Facebook Page Follow', 0.15)" class="task-btn">Start Task</button>
                 </div>
 
                 <!-- Job 3 -->
@@ -100,7 +114,7 @@
                         <p>Join our community support channel.</p>
                         <span class="job-reward">+৳ 0.15</span>
                     </div>
-                    <button onclick="completeTask('Telegram Channel Join', 0.15)" class="task-btn">Start Task</button>
+                    <button onclick="openTaskModal('Telegram Channel Join', 0.15)" class="task-btn">Start Task</button>
                 </div>
 
                 <!-- Job 4 -->
@@ -110,10 +124,23 @@
                         <p>Browse our partner site for 30 seconds.</p>
                         <span class="job-reward">+৳ 0.15</span>
                     </div>
-                    <button onclick="completeTask('Website Visit & Browse', 0.15)" class="task-btn">Start Task</button>
+                    <button onclick="openTaskModal('Website Visit & Browse', 0.15)" class="task-btn">Start Task</button>
                 </div>
             </div>
         </main>
+
+        <!-- Screenshot Submission Modal -->
+        <div id="taskModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3 id="modalTaskTitle">Task Submission</h3>
+                <p>কাজটি সম্পন্ন করে স্ক্রিনশটের লিংক (ImgBB বা ড্রাইভ লিংক) নিচে প্রদান করুন:</p>
+                <input type="url" id="screenshotUrlInput" class="modal-input" placeholder="https://i.ibb.co/... বা স্ক্রিনশট লিংক দিন" required>
+                <div class="modal-btns">
+                    <button type="button" class="modal-btn btn-cancel" onclick="closeTaskModal()">Cancel</button>
+                    <button type="button" class="modal-btn btn-submit" onclick="submitTaskProof()">Submit Proof</button>
+                </div>
+            </div>
+        </div>
 
         <!-- Bottom Navigation Bar -->
         <nav>
@@ -143,10 +170,12 @@
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { observeAuthState } from '../firebase/auth.js';
-        import { getFirestore, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const db = getFirestore();
         let currentUserUid = null;
+        let selectedTaskName = "";
+        let selectedTaskReward = 0;
 
         observeAuthState((userData) => {
             if (userData) {
@@ -164,27 +193,58 @@
             }
         });
 
-        window.completeTask = async function(taskName, reward) {
+        window.openTaskModal = function(taskName, reward) {
             if (!currentUserUid) {
                 alert('লগইন করা অবস্থায় নেই!');
                 return;
             }
+            selectedTaskName = taskName;
+            selectedTaskReward = reward;
+            document.getElementById('modalTaskTitle').innerText = taskName;
+            document.getElementById('screenshotUrlInput').value = '';
+            document.getElementById('taskModal').style.display = 'flex';
+        }
 
-            const confirmTask = confirm(`আপনি কি "${taskName}" কাজটি সম্পন্ন করেছেন? সম্পন্ন হলে আপনার মূল ব্যালেন্সে ৳${reward} যোগ হবে।`);
-            if (!confirmTask) return;
+        window.closeTaskModal = function() {
+            document.getElementById('taskModal').style.display = 'none';
+        }
+
+        window.submitTaskProof = async function() {
+            const screenshotUrl = document.getElementById('screenshotUrlInput').value.trim();
+            if (!screenshotUrl) {
+                alert('দয়া করে স্ক্রিনশটের সঠিক ইউআরএল (URL) প্রদান করুন!');
+                return;
+            }
+
+            const submitBtn = document.querySelector('.btn-submit');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Submitting...';
 
             try {
-                const userRef = doc(db, "users", currentUserUid);
-                
-                await updateDoc(userRef, {
-                    mainBalance: increment(reward)
+                // ১. টাস্ক সাবমিশন রেকর্ড 'taskSubmissions' কালেকশনে সেভ করা
+                await addDoc(collection(db, "taskSubmissions"), {
+                    userId: currentUserUid,
+                    taskName: selectedTaskName,
+                    reward: selectedTaskReward,
+                    screenshotUrl: screenshotUrl,
+                    status: 'approved', // সরাসরি অটো অ্যাপ্রুভ বা পেন্ডিং রাখতে পারেন
+                    timestamp: serverTimestamp()
                 });
 
-                alert(`অভিনন্দন! "${taskName}" সফলভাবে সম্পন্ন হয়েছে এবং আপনার অ্যাকাউন্টে ৳${reward} যোগ করা হয়েছে।`);
+                // ২. ইউজারের মূল ব্যালেন্সে রিওয়ার্ড যোগ করা
+                const userRef = doc(db, "users", currentUserUid);
+                await updateDoc(userRef, {
+                    mainBalance: increment(selectedTaskReward)
+                });
+
+                alert(`অভিনন্দন! "${selectedTaskName}" সফলভাবে সাবমিট হয়েছে এবং আপনার অ্যাকাউন্টে ৳${selectedTaskReward} যোগ করা হয়েছে।`);
+                closeTaskModal();
                 window.location.reload();
             } catch (error) {
-                console.error("Error updating balance: ", error);
-                alert('দুঃখিত, ব্যালেন্স আপডেট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                console.error("Error submitting task: ", error);
+                alert('দুঃখিত, টাস্ক সাবমিট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Submit Proof';
             }
         }
     </script>
