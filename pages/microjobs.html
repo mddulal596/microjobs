@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microjobs - Micro Job Pro</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
+        
+        /* Top Header */
+        header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        
+        .header-title { font-size: 16px; font-weight: 800; }
+
+        /* Main Content */
+        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
+        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .post-job-link { font-size: 11px; color: #4f46e5; text-decoration: none; font-weight: 700; }
+
+        /* Job List */
+        .job-list { display: flex; flex-direction: column; gap: 12px; }
+        .job-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; transition: 0.2s; }
+        .job-card:hover { border-color: #cbd5e1; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        
+        .job-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .job-info h4 { font-size: 13px; font-weight: 700; color: #1f2937; margin-bottom: 2px; }
+        .job-info p { font-size: 10px; color: #6b7280; line-height: 1.4; }
+        .job-reward { font-size: 13px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 8px; white-space: nowrap; }
+
+        .job-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e5e7eb; padding-top: 8px; margin-top: 2px; }
+        .job-workers { font-size: 10px; color: #6b7280; font-weight: 600; }
+        .btn-apply { background: #4f46e5; color: #ffffff; border: none; padding: 6px 14px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: none; }
+        .btn-apply:hover { background: #4338ca; }
+
+        /* Bottom Nav */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6b7280; font-size: 10px; gap: 2px; }
+        .nav-icon-circle { width: 36px; height: 36px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4b5563; }
+        .nav-item:hover { color: #4f46e5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Top Header -->
+        <header>
+            <div class="header-top">
+                <a href="dashboard.html" class="profile-btn">
+                    <div class="profile-icon">M</div>
+                    <span>Micro Job Pro</span>
+                </a>
+                <a href="dashboard.html" class="home-link">Home</a>
+            </div>
+            <div class="header-title">Available Microjobs</div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main>
+            <div class="section-title">
+                <span>Active Tasks List</span>
+                <a href="post-job.html" class="post-job-link">+ Post New Job</a>
+            </div>
+
+            <!-- Job List Container -->
+            <div class="job-list" id="microjobList">
+                <!-- Job Card 1 -->
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-info">
+                            <h4>YouTube Video Watch & Subscribe</h4>
+                            <p>Watch the full video without skipping, like and subscribe to the channel permanently.</p>
+                        </div>
+                        <div class="job-reward">+৳ 0.15</div>
+                    </div>
+                    <div class="job-footer">
+                        <span class="job-workers">Workers: 45 / 100 Done</span>
+                        <a href="task-details.html?id=1" class="btn-apply">Do Task</a>
+                    </div>
+                </div>
+
+                <!-- Job Card 2 -->
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-info">
+                            <h4>Facebook Page Follow & Share</h4>
+                            <p>Follow our official Facebook page and share the pinned post on your timeline.</p>
+                        </div>
+                        <div class="job-reward">+৳ 0.15</div>
+                    </div>
+                    <div class="job-footer">
+                        <span class="job-workers">Workers: 12 / 50 Done</span>
+                        <a href="task-details.html?id=2" class="btn-apply">Do Task</a>
+                    </div>
+                </div>
+
+                <!-- Job Card 3 -->
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-info">
+                            <h4>Website Visit & Click Ads</h4>
+                            <p>Browse our target website for 2 minutes and click on any one banner advertisement.</p>
+                        </div>
+                        <div class="job-reward">+৳ 0.25</div>
+                    </div>
+                    <div class="job-footer">
+                        <span class="job-workers">Workers: 80 / 200 Done</span>
+                        <a href="task-details.html?id=3" class="btn-apply">Do Task</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav>
+            <a href="support.html" class="nav-item">
+                <span style="font-size: 16px;">🎧</span>
+                <span>Help</span>
+            </a>
+            <a href="wallet.html" class="nav-item">
+                <span style="font-size: 16px;">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="dashboard.html" class="nav-item">
+                <div class="nav-icon-circle">🏠</div>
+                <span style="font-weight: 500;">Home</span>
+            </a>
+            <a href="referral.html" class="nav-item">
+                <div class="nav-icon-circle">👥</div>
+                <span style="font-weight: 500;">Team</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span style="font-size: 16px;">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Firebase Script & Logic -->
+    <script type="module">
+        import { observeAuthState } from '../firebase/auth.js';
+
+        observeAuthState((userData) => {
+            if (!userData) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+              </html>
