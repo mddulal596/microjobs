@@ -89,8 +89,8 @@
 <body class="bg-gray-50 text-gray-800 antialiased">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
         
-        <!-- Profile Header -->
-        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg text-center relative">
+        <!-- Profile & Balance Header -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg relative">
             <div class="flex justify-between items-center mb-4">
                 <a href="dashboard.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
                     <i class="fa-solid fa-arrow-left"></i> Back
@@ -99,18 +99,30 @@
                 <div class="w-12"></div> <!-- Spacer for alignment -->
             </div>
 
-            <!-- Profile Picture -->
-            <div class="flex flex-col items-center mt-2">
-                <div class="w-20 h-20 rounded-full border-4 border-white/30 overflow-hidden bg-white text-purple-700 flex items-center justify-center font-extrabold text-2xl shadow-xl">
+            <!-- Profile Picture & Details -->
+            <div class="flex flex-col items-center mt-1">
+                <div class="w-16 h-16 rounded-full border-4 border-white/30 overflow-hidden bg-white text-purple-700 flex items-center justify-center font-extrabold text-xl shadow-xl">
                     <span id="profileInitial">U</span>
                     <img id="profileImage" src="" alt="" class="w-full h-full object-cover hidden">
                 </div>
-                <h2 id="userNameDisplay" class="text-lg font-bold mt-2">Loading...</h2>
-                <p id="userEmailDisplay" class="text-xs text-purple-200">loading@gmail.com</p>
+                <h2 id="userNameDisplay" class="text-base font-bold mt-2">Loading...</h2>
+                <p id="userEmailDisplay" class="text-[11px] text-purple-200">loading@gmail.com</p>
+            </div>
+
+            <!-- Balances Cards inside Header -->
+            <div class="grid grid-cols-2 gap-3 mt-4">
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
+                    <h2 id="mainBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
+                </div>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
+                    <h2 id="depositBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
+                </div>
             </div>
         </header>
 
-        <!-- Main Content Area -->
+        <!-- Main Content Area (6 Buttons in 3 Rows) -->
         <main class="p-4 flex-grow">
             <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Account Actions</h2>
             
@@ -127,7 +139,7 @@
                     <a id="activateBtn" href="activate-account.html" class="hidden bg-amber-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow hover:bg-amber-700 transition">Activate</a>
                 </div>
 
-                <!-- First Row: Wallet & Referral (Side by Side) -->
+                <!-- Row 1: Wallet & Referral -->
                 <div class="grid grid-cols-2 gap-2.5">
                     <a href="wallet.html" class="p-3.5 bg-purple-50/60 border border-purple-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-purple-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">💳</span>
@@ -140,7 +152,7 @@
                     </a>
                 </div>
 
-                <!-- Second Row: Task History & Support (Side by Side) -->
+                <!-- Row 2: Task History & Support -->
                 <div class="grid grid-cols-2 gap-2.5">
                     <a href="history.html" class="p-3.5 bg-rose-50/60 border border-rose-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-rose-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">📊</span>
@@ -150,6 +162,19 @@
                     <a href="https://t.me/microjobspro" target="_blank" class="p-3.5 bg-sky-50/60 border border-sky-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-sky-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">🎧</span>
                         <span class="text-xs font-bold text-sky-900 leading-tight">Support & Help</span>
+                    </a>
+                </div>
+
+                <!-- Row 3: Deposit/Withdraw & Leaderboard (Total 6 Action Buttons) -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <a href="deposit.html" class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-emerald-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">💰</span>
+                        <span class="text-xs font-bold text-emerald-900 leading-tight">Deposit Funds</span>
+                    </a>
+
+                    <a href="withdraw.html" class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-amber-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">💸</span>
+                        <span class="text-xs font-bold text-amber-900 leading-tight">Withdraw Earnings</span>
                     </a>
                 </div>
 
@@ -248,11 +273,18 @@
                 profileImgTag.classList.add('hidden');
             }
 
-            // Real-time user data fetch
+            // Real-time user data fetch (Balances & Status)
             const userDocRef = doc(db, "users", user.uid);
             onSnapshot(userDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
+
+                    // Load Balances dynamically
+                    const mainBal = data.mainBalance ?? data.balances?.main ?? 0;
+                    const depositBal = data.depositBalance ?? data.balances?.deposit ?? 0;
+                    document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
+                    document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+
                     const statusText = document.getElementById('statusText');
                     const activateBtn = document.getElementById('activateBtn');
                     const statusBox = document.getElementById('accountStatusBox');
