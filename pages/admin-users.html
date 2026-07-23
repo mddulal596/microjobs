@@ -33,6 +33,7 @@
         .card-actions { display: flex; gap: 6px; }
         .btn-edit { background: #e0e7ff; color: #3730a3; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
         .btn-ban { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .no-data { text-align: center; color: #6b7280; font-size: 12px; margin-top: 30px; }
 
         /* Bottom Nav */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
@@ -51,7 +52,6 @@
                     <div class="profile-icon">A</div>
                     <span>Admin Control</span>
                 </a>
-                <!-- হোম বাটনে ক্লিক করলে admin.html ওপেন হবে -->
                 <a href="admin.html" class="home-link">Home</a>
             </div>
             <div class="search-box">
@@ -65,41 +65,7 @@
 
             <!-- User List Container -->
             <div class="user-list" id="userListContainer">
-                <div class="user-card" id="user-1">
-                    <div class="user-info">
-                        <h4>Rakib Hasan</h4>
-                        <p>rakib@gmail.com • Joined: 20 Jul 2026</p>
-                        <span class="user-balance">Main: ৳150.00 | Deposit: ৳500.00</span>
-                    </div>
-                    <div class="card-actions">
-                        <button onclick="handleUserAction('user-1', 'Rakib Hasan', 'edit')" class="btn-edit">Edit</button>
-                        <button onclick="handleUserAction('user-1', 'Rakib Hasan', 'ban')" class="btn-ban">Ban</button>
-                    </div>
-                </div>
-
-                <div class="user-card" id="user-2">
-                    <div class="user-info">
-                        <h4>Sumaiya Akter</h4>
-                        <p>sumaiya@gmail.com • Joined: 21 Jul 2026</p>
-                        <span class="user-balance">Main: ৳45.00 | Deposit: ৳200.00</span>
-                    </div>
-                    <div class="card-actions">
-                        <button onclick="handleUserAction('user-2', 'Sumaiya Akter', 'edit')" class="btn-edit">Edit</button>
-                        <button onclick="handleUserAction('user-2', 'Sumaiya Akter', 'ban')" class="btn-ban">Ban</button>
-                    </div>
-                </div>
-
-                <div class="user-card" id="user-3">
-                    <div class="user-info">
-                        <h4>Tanvir Hossain</h4>
-                        <p>tanvir@gmail.com • Joined: 22 Jul 2026</p>
-                        <span class="user-balance">Main: ৳1,200.00 | Deposit: ৳0.00</span>
-                    </div>
-                    <div class="card-actions">
-                        <button onclick="handleUserAction('user-3', 'Tanvir Hossain', 'edit')" class="btn-edit">Edit</button>
-                        <button onclick="handleUserAction('user-3', 'Tanvir Hossain', 'ban')" class="btn-ban">Ban</button>
-                    </div>
-                </div>
+                <div class="no-data">Loading users...</div>
             </div>
         </main>
 
@@ -131,20 +97,122 @@
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { observeAuthState } from '../firebase/auth.js';
+        import { db } from '../firebase/firebase-config.js';
+        import { collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((userData) => {
+        let allUsersData = [];
+
+        observeAuthState(async (userData) => {
             if (!userData) {
                 window.location.href = 'login.html';
+                return;
             }
+            await loadUsers();
         });
 
-        window.handleUserAction = function(userId, userName, actionType) {
-            const cardElement = document.getElementById(userId);
-            if (actionType === 'edit') {
-                alert(`"${userName}" এর ব্যালেন্স বা তথ্য এডিট করার প্যানেল ওপেন হচ্ছে।`);
-            } else {
-                alert(`"${userName}" ইউজারকে ব্যান করা হয়েছে!`);
-                if (cardElement) cardElement.remove();
+        async function loadUsers() {
+            const container = document.getElementById('userListContainer');
+            try {
+                const querySnapshot = await getDocs(collection(db, "users"));
+                if (querySnapshot.empty) {
+                    container.innerHTML = `<div class="no-data">কোনো রেজিস্টার্ড ইউজার পাওয়া যায়নি।</div>`;
+                    return;
+                }
+
+                allUsersData = [];
+                querySnapshot.forEach((document) => {
+                    allUsersData.push({ id: document.id, ...document.data() });
+                });
+
+                renderUserList(allUsersData);
+            } catch (error) {
+                console.error("Error loading users: ", error);
+                container.innerHTML = `<div class="no-data" style="color: red;">ইউজার ডেটা লোড করতে সমস্যা হয়েছে।</div>`;
+            }
+        }
+
+        function renderUserList(users) {
+            const container = document.getElementById('userListContainer');
+            if (users.length === 0) {
+                container.innerHTML = `<div class="no-data">কোনো ইউজার পাওয়া যায়নি।</div>`;
+                return;
+            }
+
+            container.innerHTML = "";
+            users.forEach((data) => {
+                const mainBal = data.balances?.main || 0;
+                const depositBal = data.balances?.deposit || 0;
+                const displayName = data.displayName || data.name || "User";
+                const email = data.email || "No Email";
+
+                const card = document.createElement('div');
+                card.className = 'user-card';
+                card.id = data.id;
+                card.innerHTML = `
+                    <div class="user-info">
+                        <h4>${displayName}</h4>
+                        <p>${email}</p>
+                        <span class="user-balance">Main: ৳${mainBal.toFixed(2)} | Deposit: ৳${depositBal.toFixed(2)}</span>
+                    </div>
+                    <div class="card-actions">
+                        <button onclick="handleUserEdit('${data.id}', '${displayName}', ${mainBal}, ${depositBal})" class="btn-edit">Edit</button>
+                        <button onclick="handleUserBan('${data.id}', '${displayName}')" class="btn-ban">Ban</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // লাইভ সার্চ ফিল্টার লজিক
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase();
+            const filtered = allUsersData.filter(user => {
+                const name = (user.displayName || user.name || "").toLowerCase();
+                const email = (user.email || "").toLowerCase();
+                return name.includes(searchText) || email.includes(searchText);
+            });
+            renderUserList(filtered);
+        });
+
+        // ব্যালেন্স এডিট ফাংশন
+        window.handleUserEdit = async function(userId, userName, currentMain, currentDeposit) {
+            const newMain = prompt(`"${userName}" এর নতুন মূল ব্যালেন্স (Main Balance) লিখুন:`, currentMain);
+            if (newMain === null) return;
+            const newDeposit = prompt(`"${userName}" এর নতুন ডিপোজিট ব্যালেন্স (Deposit Balance) লিখুন:`, currentDeposit);
+            if (newDeposit === null) return;
+
+            try {
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, {
+                    "balances.main": Number(newMain),
+                    "balances.deposit": Number(newDeposit)
+                });
+                alert(`"${userName}" এর ব্যালেন্স সফলভাবে আপডেট করা হয়েছে!`);
+                location.reload();
+            } catch (error) {
+                console.error("Error updating user balance: ", error);
+                alert("ব্যালেন্স আপডেট করতে সমস্যা হয়েছে।");
+            }
+        }
+
+        // ইউজার ব্যান বা রিমুভ ফাংশন
+        window.handleUserBan = async function(userId, userName) {
+            if (!confirm(`আপনি কি নিশ্চিতভাবে "${userName}" ইউজারকে ব্যান করতে চান?`)) return;
+
+            try {
+                // চাইলে ডাটাবেজ থেকে ডিলেট বা স্ট্যাটাস 'banned' করা যেতে পারে
+                await deleteDoc(doc(db, "users", userId));
+                alert(`"${userName}" ইউজারকে সিস্টেম থেকে রিমুভ বা ব্যান করা হয়েছে!`);
+                
+                const card = document.getElementById(userId);
+                if (card) card.remove();
+
+                if (document.getElementById('userListContainer').children.length === 0) {
+                    document.getElementById('userListContainer').innerHTML = `<div class="no-data">কোনো ইউজার পাওয়া যায়নি।</div>`;
+                }
+            } catch (error) {
+                console.error("Error banning user: ", error);
+                alert("ইউজার ব্যান করতে সমস্যা হয়েছে।");
             }
         }
     </script>
