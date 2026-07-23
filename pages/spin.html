@@ -1,104 +1,126 @@
 <!DOCTYPE html>
-<html lang="en" class="transform-gpu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Spin - Micro Job Pro</title>
+    <title>Dashboard - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
-        <header class="p-4 bg-purple-600 text-white rounded-b-3xl shadow-md flex justify-between items-center">
-            <h1 class="text-lg font-bold">Lucky Spin Bonus</h1>
-            <a href="dashboard.html" class="text-xs bg-purple-700 px-3 py-1 rounded-full">Dashboard</a>
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between relative pb-20">
+        
+        <!-- Dashboard Header -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-3">
+                    <!-- Profile Picture / First Letter Icon -->
+                    <div id="profilePicContainer" class="w-12 h-12 rounded-full border-2 border-white overflow-hidden bg-white text-purple-700 flex items-center justify-center font-bold text-lg shadow-md">
+                        <span id="profileInitial">U</span>
+                        <img id="profileImage" src="" alt="" class="w-full h-full object-cover hidden">
+                    </div>
+                    <div>
+                        <h2 id="userNameDisplay" class="text-base font-bold">Loading...</h2>
+                        <span class="text-xs text-purple-200">Welcome back!</span>
+                    </div>
+                </div>
+                <a href="profile.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold">Profile</a>
+            </div>
+
+            <!-- Balance Card inside Header -->
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex justify-between items-center">
+                <div>
+                    <p class="text-xs text-purple-200 font-medium">Main Balance</p>
+                    <h3 class="text-xl font-extrabold mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
+                </div>
+                <a href="wallet.html" class="bg-white text-purple-700 px-4 py-2 rounded-xl text-xs font-bold shadow hover:bg-purple-50 transition">Wallet</a>
+            </div>
         </header>
 
-        <main class="p-6 flex-grow flex flex-col items-center justify-center space-y-6">
-            <!-- Pointer Arrow -->
-            <div class="relative flex flex-col items-center">
-                <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[18px] border-b-red-500 z-20 -mb-2"></div>
-                
-                <!-- SVG Spin Wheel (10 Equal Slices) -->
-                <div class="w-72 h-72 rounded-full border-4 border-purple-600 relative overflow-hidden shadow-2xl bg-white flex items-center justify-center">
-                    <svg id="spinWheel" viewBox="0 0 100 100" class="w-full h-full" style="transition: transform 3s cubic-bezier(0.15, 0.95, 0.25, 1);">
-                        <!-- 10 Slices using path (36 degrees each) -->
-                        <path d="M50,50 L50,0 A50,50 0 0,1 79.39,9.55 Z" fill="#f87171" />
-                        <path d="M50,50 L79.39,9.55 A50,50 0 0,1 97.55,34.55 Z" fill="#fb923c" />
-                        <path d="M50,50 L97.55,34.55 A50,50 0 0,1 97.55,65.45 Z" fill="#fbbf24" />
-                        <path d="M50,50 L97.55,65.45 A50,50 0 0,1 79.39,90.45 Z" fill="#a3e635" />
-                        <path d="M50,50 L79.39,90.45 A50,50 0 0,1 50,100 Z" fill="#34d399" />
-                        <path d="M50,50 L50,100 A50,50 0 0,1 20.61,90.45 Z" fill="#22d3ee" />
-                        <path d="M50,50 L20.61,90.45 A50,50 0 0,1 2.45,65.45 Z" fill="#38bdf8" />
-                        <path d="M50,50 L2.45,65.45 A50,50 0 0,1 2.45,34.55 Z" fill="#818cf8" />
-                        <path d="M50,50 L2.45,34.55 A50,50 0 0,1 20.61,9.55 Z" fill="#c084fc" />
-                        <path d="M50,50 L20.61,9.55 A50,50 0 0,1 50,0 Z" fill="#f472b6" />
-
-                        <!-- Text Labels Adjusted to Exact Position -->
-                        <text x="61" y="34" fill="#fff" font-size="4.5" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(18, 61, 34)">1৳</text>
-                        <text x="70" y="46" fill="#fff" font-size="4.5" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(54, 70, 46)">2৳</text>
-                        <text x="70" y="61" fill="#fff" font-size="4.5" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(90, 70, 61)">3৳</text>
-                        <text x="61" y="71" fill="#fff" font-size="4.5" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(126, 61, 71)">4৳</text>
-                        <text x="50" y="75" fill="#fff" font-size="4.5" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(162, 50, 75)">5৳</text>
-                        <text x="39" y="71" fill="#fff" font-size="4.5" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(198, 39, 71)">6৳</text>
-                        <text x="30" y="61" fill="#fff" font-size="4.5" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(234, 30, 61)">7৳</text>
-                        <text x="30" y="46" fill="#fff" font-size="4.5" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(270, 30, 46)">8৳</text>
-                        <text x="39" y="34" fill="#fff" font-size="4.5" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(306, 39, 34)">9৳</text>
-                        <text x="50" y="30" fill="#fff" font-size="4.5" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(342, 50, 30)">10৳</text>
-                    </svg>
-                </div>
+        <!-- Main Content Area -->
+        <main class="p-6 flex-grow">
+            <div class="grid grid-cols-2 gap-4">
+                <a href="microjobs.html" class="p-4 bg-purple-50 border border-purple-100 rounded-2xl text-center hover:bg-purple-100 transition shadow-sm">
+                    <span class="text-2xl">💼</span>
+                    <h4 class="text-sm font-bold mt-2 text-purple-900">Micro Jobs</h4>
+                </a>
+                <!-- Updated spin link path -->
+                <a href="spin.html" class="p-4 bg-pink-50 border border-pink-100 rounded-2xl text-center hover:bg-pink-100 transition shadow-sm">
+                    <span class="text-2xl">🎡</span>
+                    <h4 class="text-sm font-bold mt-2 text-pink-900">Lucky Spin</h4>
+                </a>
             </div>
-            
-            <p id="spinResult" class="text-sm font-bold text-gray-700 text-center h-6">Tap spin to win ৳1 to ৳10!</p>
-
-            <button id="spinBtn" onclick="startSpin()" class="w-full py-3 bg-purple-600 text-white font-bold rounded-2xl shadow-lg hover:bg-purple-700 transition">Spin Now</button>
         </main>
+
+        <!-- Bottom Navigation Bar matching your exact design -->
+        <nav class="absolute bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-100 py-2 px-4 flex justify-between items-end text-xs text-gray-500 shadow-2xl z-50">
+            <a href="help.html" class="flex flex-col items-center hover:text-purple-600 pb-1">
+                <span class="text-lg">🎧</span> Help
+            </a>
+            <a href="wallet.html" class="flex flex-col items-center hover:text-purple-600 pb-1">
+                <span class="text-lg">💳</span> Wallet
+            </a>
+            <!-- Floating Center Home Button -->
+            <div class="relative -top-4 flex flex-col items-center">
+                <a href="dashboard.html" class="w-14 h-14 bg-sky-500 rounded-full border-4 border-white text-white flex items-center justify-center text-2xl shadow-lg hover:bg-sky-600 transition">
+                    🏠
+                </a>
+            </div>
+            <a href="team.html" class="flex flex-col items-center hover:text-purple-600 pb-1">
+                <span class="text-lg">👥</span> Team
+            </a>
+            <a href="profile.html" class="flex flex-col items-center hover:text-purple-600 pb-1">
+                <span class="text-lg">👤</span> Profile
+            </a>
+        </nav>
     </div>
 
+    <!-- Firebase & Auth Script -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        let currentUser = null;
-        observeAuthState((user) => {
+        observeAuthState(async (user) => {
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
-            currentUser = user;
-        });
 
-        window.startSpin = async function() {
-            const btn = document.getElementById('spinBtn');
-            const resultEl = document.getElementById('spinResult');
-            const wheel = document.getElementById('spinWheel');
+            // নাম এবং ছবি সেট করা
+            const name = user.fullName || user.displayName || "User";
+            document.getElementById('userNameDisplay').innerText = name;
+
+            const profileImgTag = document.getElementById('profileImage');
+            const profileInitialTag = document.getElementById('profileInitial');
+
+            if (user.photoURL) {
+                profileImgTag.src = user.photoURL;
+                profileImgTag.classList.remove('hidden');
+                profileInitialTag.classList.add('hidden');
+            } else {
+                profileInitialTag.innerText = name.charAt(0).toUpperCase();
+                profileInitialTag.classList.remove('hidden');
+                profileImgTag.classList.add('hidden');
+            }
+
+            // ফায়ারবেজ থেকে রিয়েল-টাইমে ব্যালেন্স লোড করা
+            const userDocRef = doc(db, "users", user.uid);
             
-            btn.disabled = true;
-            resultEl.innerText = "Spinning...";
-
-            const wonAmount = Math.floor(Math.random() * 10) + 1; // 1 to 10
-            
-            const segmentAngle = 36;
-            const targetIndex = wonAmount - 1; 
-            const randomExtraSpins = 360 * 5; 
-            const targetDegree = randomExtraSpins + (targetIndex * segmentAngle) + (segmentAngle / 2);
-
-            wheel.style.transform = `rotate(-${targetDegree}deg)`;
-
-            setTimeout(async () => {
-                resultEl.innerText = `Congratulations! You won ৳ ${wonAmount}`;
-                
-                try {
-                    const userRef = doc(db, "users", currentUser.uid);
-                    await updateDoc(userRef, {
-                        "balances.main": increment(wonAmount)
-                    });
-                } catch (err) {
-                    console.error("Error updating balance:", err);
+            onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    let balance = 0;
+                    if (data.balances && typeof data.balances.main !== 'undefined') {
+                        balance = data.balances.main;
+                    } else if (typeof data.balance !== 'undefined') {
+                        balance = data.balance;
+                    }
+                    document.getElementById('mainBalance').innerText = Number(balance).toFixed(2);
                 }
-                btn.disabled = false;
-            }, 3000);
-        };
+            }, (error) => {
+                console.error("Error fetching balance:", error);
+            });
+        });
     </script>
 </body>
-    </html>
+</html>
