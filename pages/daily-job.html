@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" class="transform-gpu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Jobs - Micro Job Pro</title>
+<script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
+<div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24">
+<!-- Top Header & Balances -->
+<header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
+<div class="flex justify-between items-center mb-4">
+<div class="flex items-center">
+<a href="profile.html" class="flex items-center gap-2 bg-indigo-700/80 hover:bg-indigo-700 border border-indigo-400/40 px-3 py-1.5 rounded-full shadow-inner transition">
+<div id="profileIconBtn" class="w-6 h-6 bg-white text-indigo-600 rounded-full flex items-center justify-center text-xs font-extrabold shadow">
+U
+</div>
+<span id="userNameDisplay" class="text-xs font-bold tracking-wide truncate max-w-[120px]">Loading...</span>
+</a>
+</div>
+<a href="dashboard.html" class="text-xs bg-indigo-700/80 hover:bg-indigo-700 px-3 py-1.5 rounded-full font-bold transition">Home</a>
+</div>
+<div class="grid grid-cols-2 gap-3 mt-2">
+<div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
+<p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
+<h2 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
+</div>
+<div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
+<p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
+<h2 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="p-4 flex-grow space-y-4 overflow-y-auto">
+<div class="space-y-1">
+<h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">AVAILABLE DAILY JOBS</h2>
+<p class="text-[11px] text-gray-500 leading-relaxed">
+Complete simple micro tasks and earn money instantly. Follow instructions carefully before submitting proof.
+</p>
+</div>
+<!-- Task Category Filters -->
+<div class="flex gap-2 overflow-x-auto pb-1 text-xs">
+<button onclick="filterCategory('all', this)" class="task-tab px-3 py-1.5 bg-indigo-600 text-white font-bold rounded-xl shadow transition whitespace-nowrap">All Tasks</button>
+<button onclick="filterCategory('youtube', this)" class="task-tab px-3 py-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold rounded-xl transition whitespace-nowrap">YouTube</button>
+<button onclick="filterCategory('facebook', this)" class="task-tab px-3 py-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold rounded-xl transition whitespace-nowrap">Facebook</button>
+<button onclick="filterCategory('website', this)" class="task-tab px-3 py-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 font-bold rounded-xl transition whitespace-nowrap">Website Visit</button>
+</div>
+<!-- Task List Container -->
+<div id="taskList" class="space-y-3">
+<!-- Task Card 1 -->
+<div class="task-card bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm" data-category="youtube">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<span class="text-[10px] font-bold bg-red-100 text-red-600 px-2 py-0.5 rounded-md">YouTube • 3 mins</span>
+<h3 class="text-sm font-extrabold text-gray-800">Watch Full Video & Subscribe Channel</h3>
+</div>
+<span class="text-sm font-extrabold text-green-600">৳ 5.00</span>
+</div>
+<p class="text-[11px] text-gray-500">Search on YouTube: "Micro Job Pro Tutorial" and watch the full video without skipping. Submit screenshot as proof.</p>
+<div class="flex justify-between items-center pt-2 border-t border-gray-200">
+<span class="text-[10px] text-gray-400 font-medium">Slots: 142 / 200 Done</span>
+<button onclick="startTask('Watch Full Video & Subscribe Channel', '5.00')" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer">
+Do Task
+</button>
+</div>
+</div>
+<!-- Task Card 2 -->
+<div class="task-card bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm" data-category="facebook">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<span class="text-[10px] font-bold bg-blue-100 text-blue-600 px-2 py-0.5 rounded-md">Facebook • 2 mins</span>
+<h3 class="text-sm font-extrabold text-gray-800">Like & Share Public Post in Group</h3>
+</div>
+<span class="text-sm font-extrabold text-green-600">৳ 3.50</span>
+</div>
+<p class="text-[11px] text-gray-500">Like our official page post and share it to any public earning group on Facebook. Submit your profile link.</p>
+<div class="flex justify-between items-center pt-2 border-t border-gray-200">
+<span class="text-[10px] text-gray-400 font-medium">Slots: 85 / 150 Done</span>
+<button onclick="startTask('Like & Share Public Post in Group', '3.50')" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer">
+Do Task
+</button>
+</div>
+</div>
+<!-- Task Card 3 -->
+<div class="task-card bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm" data-category="website">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<span class="text-[10px] font-bold bg-purple-100 text-purple-600 px-2 py-0.5 rounded-md">Website • 1 min</span>
+<h3 class="text-sm font-extrabold text-gray-800">Visit Site & Click Ads</h3>
+</div>
+<span class="text-sm font-extrabold text-green-600">৳ 2.00</span>
+</div>
+<p class="text-[11px] text-gray-500">Visit the target website, browse 2 internal pages, spend 60 seconds, and click on an embedded banner ad.</p>
+<div class="flex justify-between items-center pt-2 border-t border-gray-200">
+<span class="text-[10px] text-gray-400 font-medium">Slots: 310 / 500 Done</span>
+<button onclick="startTask('Visit Site & Click Ads', '2.00')" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer">
+Do Task
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-2 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center z-50">
+<a href="[https://t.me/microjobspro](https://t.me/microjobspro)" target="_blank" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+<span class="text-lg">🎧</span>
+<span>Help</span>
+</a>
+<a href="deposit.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+<span class="text-lg">👛</span>
+<span>Wallet</span>
+</a>
+<a href="dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+<div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
+🏠
+</div>
+<span class="font-medium mt-0.5">Home</span>
+</a>
+<a href="referral.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+<div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
+👥
+</div>
+<span class="font-medium mt-0.5">Team</span>
+</a>
+<a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
+<span class="text-lg">👤</span>
+<span>Profile</span>
+</a>
+</nav>
+</div>
+<!-- Firebase Script & Logic -->
+<script type="module">
+import { observeAuthState } from '../firebase/auth.js';
+observeAuthState((userData) => {
+if (userData) {
+const name = userData.fullName || userData.displayName || "User";
+document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
+document.getElementById('userNameDisplay').innerText = name;
+const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
+const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
+document.getElementById('mainBalance').innerText = ৳ ${Number(mainBal).toFixed(2)};
+document.getElementById('depositBalance').innerText = ৳ ${Number(depositBal).toFixed(2)};
+} else {
+window.location.href = 'login.html';
+}
+});
+window.filterCategory = function(category, btnElement) {
+document.querySelectorAll('.task-tab').forEach(btn => {
+btn.classList.remove('bg-indigo-600', 'text-white', 'shadow');
+btn.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+});
+btnElement.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+btnElement.classList.add('bg-indigo-600', 'text-white', 'shadow');
+const cards = document.querySelectorAll('.task-card');
+cards.forEach(card => {
+if (category === 'all' || card.getAttribute('data-category') === category) {
+card.style.display = 'block';
+} else {
+card.style.display = 'none';
+}
+});
+}
+window.startTask = function(taskTitle, reward) {
+alert(You selected: "${taskTitle}" (Reward: ৳${reward}). Follow instructions and submit your work proof.);
+}
+</script>
+</body>
+  </html>
