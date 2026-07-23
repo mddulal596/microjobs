@@ -88,7 +88,7 @@
             <!-- Instructions -->
             <div class="instruction-box" id="instructionText">
                 <strong>bKash Deposit Instructions:</strong>
-                ১. আমাদের বিকাশ পার্সোনাল নাম্বারে **01913932587** টাকা Send Money করুন।<br>
+                ১. আমাদের বিকাশ পার্সোনাল নাম্বারে **01913932587** টাকা Send Money করুন (সর্বনিম্ন ৳২০০)।<br>
                 ২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।
             </div>
 
@@ -96,7 +96,7 @@
             <form onsubmit="handleDeposit(event)">
                 <div class="form-group">
                     <label class="form-label">Deposit Amount (৳)</label>
-                    <input type="number" id="depositAmount" class="form-input" placeholder="Enter amount (Min ৳50)" required min="50">
+                    <input type="number" id="depositAmount" class="form-input" placeholder="Enter amount (Min ৳200)" required min="200">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Sender Account Number</label>
@@ -165,22 +165,27 @@
 
             const instBox = document.getElementById('instructionText');
             if (method === 'bKash') {
-                instBox.innerHTML = `<strong>bKash Deposit Instructions:</strong>১. আমাদের বিকাশ পার্সোনাল নাম্বারে **01913932587** টাকা Send Money করুন।<br>২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।`;
+                instBox.innerHTML = `<strong>bKash Deposit Instructions:</strong>১. আমাদের বিকাশ পার্সোনাল নাম্বারে **01913932587** টাকা Send Money করুন (সর্বনিম্ন ৳২০০)।<br>২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।`;
             } else if (method === 'Nagad') {
-                instBox.innerHTML = `<strong>Nagad Deposit Instructions:</strong>১. আমাদের নগদ পার্সোনাল নাম্বারে **01913932587** টাকা Send Money করুন।<br>২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।`;
+                instBox.innerHTML = `<strong>Nagad Deposit Instructions:</strong>১. আমাদের নগদ পার্সোনাল নাম্বারে **01913932587** টাকা Send Money করুন (সর্বনিম্ন ৳২০০)।<br>২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।`;
             } else if (method === 'Rocket') {
-                instBox.innerHTML = `<strong>Rocket Deposit Instructions:</strong>১. আমাদের রকেট পার্সোনাল নাম্বারে **01917044596** টাকা Send Money করুন।<br>২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।`;
+                instBox.innerHTML = `<strong>Rocket Deposit Instructions:</strong>১. আমাদের রকেট পার্সোনাল নাম্বারে **01917044596** টাকা Send Money করুন (সর্বনিম্ন ৳২০০)।<br>২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।`;
             }
         }
 
         window.handleDeposit = function(event) {
             event.preventDefault();
-            const amount = document.getElementById('depositAmount').value;
+            const amount = parseFloat(document.getElementById('depositAmount').value);
             const sender = document.getElementById('senderNumber').value;
             const trx = document.getElementById('trxId').value;
 
             if(!amount || !sender || !trx) {
                 alert('দয়া করে সব তথ্য সঠিকভাবে পূরণ করুন!');
+                return;
+            }
+
+            if(amount < 200) {
+                alert('সর্বনিম্ন ডিপোজিট পরিমাণ ৳200 হতে হবে!');
                 return;
             }
 
