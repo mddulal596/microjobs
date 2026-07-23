@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Withdraw Requests - Admin Panel</title>
+    <title>Manage Withdraws - Admin Panel</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
@@ -20,17 +20,17 @@
 
         /* Main Content */
         main { padding: 16px; flex-grow: 1; overflow-y: auto; }
-        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
+        .section-title { font-size: 11px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
 
         /* Withdraw List Box */
         .withdraw-list { display: flex; flex-direction: column; gap: 10px; }
         .withdraw-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .withdraw-info h4 { font-size: 12px; font-weight: 700; color: #1f2937; }
-        .withdraw-info p { font-size: 10px; color: #6b7280; margin-top: 2px; line-height: 1.4; }
-        .withdraw-amount { font-size: 13px; font-weight: 800; color: #dc2626; margin-top: 4px; }
+        .withdraw-info h4 { font-size: 12px; font-weight: 700; color: #1f2937; margin-bottom: 2px; }
+        .withdraw-info p { font-size: 10px; color: #6b7280; line-height: 1.4; }
+        .withdraw-amount { font-size: 11px; font-weight: 800; color: #dc2626; background: #fee2e2; padding: 2px 6px; border-radius: 6px; display: inline-block; margin-top: 4px; }
 
         .card-actions { display: flex; gap: 6px; }
-        .btn-paid { background: #dcfce7; color: #15803d; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .btn-approve { background: #dcfce7; color: #15803d; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
         .btn-reject { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
 
         /* Bottom Nav */
@@ -50,38 +50,38 @@
                     <div class="profile-icon">A</div>
                     <span>Admin Control</span>
                 </a>
-                <a href="dashboard.html" class="home-link">Home</a>
+                <a href="admin.html" class="home-link">Home</a>
             </div>
-            <p class="header-title">Pending Withdrawal Requests</p>
+            <p class="header-title">Pending Withdraw Requests</p>
         </header>
 
         <!-- Main Content Area -->
         <main>
-            <h2 class="section-title">Review User Withdrawals</h2>
+            <h2 class="section-title">Review User Withdraw Requests</h2>
 
-            <!-- Withdrawal List Container -->
+            <!-- Withdraw List Container -->
             <div class="withdraw-list" id="withdrawListContainer">
-                <div class="withdraw-card" id="withdraw-1">
+                <div class="withdraw-card" id="wit-1">
                     <div class="withdraw-info">
-                        <h4>Tanvir Hossain</h4>
-                        <p>Method: bKash • A/C: 019XXXXXXXX<br>Date: 23 Jul 2026</p>
-                        <div class="withdraw-amount">-৳ 500.00</div>
+                        <h4>Rakib Hasan (bKash)</h4>
+                        <p>Number: 01712345678<br>Method: Personal</p>
+                        <span class="withdraw-amount">Amount: ৳ 500.00</span>
                     </div>
                     <div class="card-actions">
-                        <button onclick="handleWithdrawAction('withdraw-1', 'Tanvir Hossain', 500, 'paid')" class="btn-paid">Pay</button>
-                        <button onclick="handleWithdrawAction('withdraw-1', 'Tanvir Hossain', 500, 'rejected')" class="btn-reject">Reject</button>
+                        <button onclick="handleWithdrawAction('wit-1', 'Rakib Hasan', 500, 'approved')" class="btn-approve">Approve</button>
+                        <button onclick="handleWithdrawAction('wit-1', 'Rakib Hasan', 500, 'rejected')" class="btn-reject">Reject</button>
                     </div>
                 </div>
 
-                <div class="withdraw-card" id="withdraw-2">
+                <div class="withdraw-card" id="wit-2">
                     <div class="withdraw-info">
-                        <h4>Rakib Hasan</h4>
-                        <p>Method: Nagad • A/C: 017XXXXXXXX<br>Date: 23 Jul 2026</p>
-                        <div class="withdraw-amount">-৳ 300.00</div>
+                        <h4>Sumaiya Akter (Nagad)</h4>
+                        <p>Number: 01812345678<br>Method: Personal</p>
+                        <span class="withdraw-amount">Amount: ৳ 300.00</span>
                     </div>
                     <div class="card-actions">
-                        <button onclick="handleWithdrawAction('withdraw-2', 'Rakib Hasan', 300, 'paid')" class="btn-paid">Pay</button>
-                        <button onclick="handleWithdrawAction('withdraw-2', 'Rakib Hasan', 300, 'rejected')" class="btn-reject">Reject</button>
+                        <button onclick="handleWithdrawAction('wit-2', 'Sumaiya Akter', 300, 'approved')" class="btn-approve">Approve</button>
+                        <button onclick="handleWithdrawAction('wit-2', 'Sumaiya Akter', 300, 'rejected')" class="btn-reject">Reject</button>
                     </div>
                 </div>
             </div>
@@ -97,7 +97,7 @@
                 <span style="font-size: 16px;">👛</span>
                 <span>Wallet</span>
             </a>
-            <a href="dashboard.html" class="nav-item">
+            <a href="admin.html" class="nav-item">
                 <div class="nav-icon-circle">🏠</div>
                 <span style="font-weight: 500;">Home</span>
             </a>
@@ -124,10 +124,10 @@
 
         window.handleWithdrawAction = function(cardId, userName, amount, status) {
             const cardElement = document.getElementById(cardId);
-            if (status === 'paid') {
-                alert(`"${userName}" কে ৳${amount} সফলভাবে পেমেন্ট (Paid) করা হয়েছে!`);
+            if (status === 'approved') {
+                alert(`"${userName}" এর ৳${amount} উইথড্র রিকোয়েস্ট সফলভাবে পেইড বা অ্যাপ্রুভ করা হয়েছে!`);
             } else {
-                alert(`"${userName}" এর উইথড্র রিকোয়েস্ট বাতিল করা হয়েছে এবং ব্যালেন্স রিফান্ড করা হয়েছে।`);
+                alert(`"${userName}" এর উইথড্র রিকোয়েস্ট রিজেক্ট করা হয়েছে এবং ব্যালেন্স রিফান্ড করা হয়েছে।`);
             }
             if (cardElement) {
                 cardElement.remove();
