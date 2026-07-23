@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" class="transform-gpu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - Micro Job Pro</title>
+    <title>Profile Settings - Micro Job Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome CDN for Navigation Icons -->
+    <!-- FontAwesome CDN for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
@@ -19,7 +19,7 @@
             width: 92%;  
             max-width: 440px;  
             height: 70px;  
-            background: #16a34a;  
+            background: #4f46e5;  
             border-radius: 22px;  
             display: flex;  
             justify-content: space-around;  
@@ -60,14 +60,14 @@
           
         .indicator {  
             position: absolute;  
-            top: -15px; /* এটি অ্যাডজাস্ট করে মাঝামাঝি করা হয়েছে */
+            top: -15px;  
             width: 60px;  
             height: 60px;  
-            background: #2196f3;  
+            background: #312e81;  
             border-radius: 50%;  
             border: 4px solid #fff;  
             transition: left .35s ease;  
-            box-shadow: 0 0 20px rgba(33,150,243,.5);  
+            box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
           
@@ -76,106 +76,95 @@
             position: absolute;  
             inset: -6px;  
             border-radius: 50%;  
-            border: 2px solid rgba(33,150,243,.4);  
+            border: 2px solid rgba(49,46,129,.4);  
             animation: pulse 2s infinite;  
         }  
           
         @keyframes pulse {  
-            0% {  
-                transform: scale(1);  
-                opacity: 1;  
-            }  
-            100% {  
-                transform: scale(1.4);  
-                opacity: 0;  
-            }  
+            0% { transform: scale(1); opacity: 1; }  
+            100% { transform: scale(1.4); opacity: 0; }  
         } 
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24 relative">
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
         
-        <!-- Top Header: Profile Icon, Name, Email & Balances -->
-        <header class="p-5 bg-indigo-600 text-white rounded-b-3xl shadow-md space-y-4">
-            <!-- Profile Icon, Name & Email Below It -->
-            <div class="flex items-center gap-3">
-                <div id="profileIconBtn" class="w-12 h-12 bg-white text-indigo-600 rounded-full flex items-center justify-center text-lg font-extrabold shadow-md flex-shrink-0">
-                    U
-                </div>
-                <div class="overflow-hidden flex-grow">
-                    <h2 id="userNameDisplay" class="text-sm font-bold tracking-wide truncate">Loading...</h2>
-                    <p id="userEmail" class="text-xs text-indigo-200 truncate">loading@email.com</p>
-                </div>
+        <!-- Profile Header -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg text-center relative">
+            <div class="flex justify-between items-center mb-4">
+                <a href="dashboard.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </a>
+                <span class="text-xs font-bold tracking-wider uppercase text-purple-200">Account Profile</span>
+                <div class="w-12"></div> <!-- Spacer for alignment -->
             </div>
 
-            <!-- Balances Grid -->
-            <div class="grid grid-cols-2 gap-3 pt-1">
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
-                    <h3 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h3>
+            <!-- Profile Picture -->
+            <div class="flex flex-col items-center mt-2">
+                <div class="w-20 h-20 rounded-full border-4 border-white/30 overflow-hidden bg-white text-purple-700 flex items-center justify-center font-extrabold text-2xl shadow-xl">
+                    <span id="profileInitial">U</span>
+                    <img id="profileImage" src="" alt="" class="w-full h-full object-cover hidden">
                 </div>
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
-                    <h3 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h3>
-                </div>
+                <h2 id="userNameDisplay" class="text-lg font-bold mt-2">Loading...</h2>
+                <p id="userEmailDisplay" class="text-xs text-purple-200">loading@gmail.com</p>
             </div>
         </header>
 
         <!-- Main Content Area -->
-        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
+        <main class="p-4 flex-grow">
+            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Account Actions</h2>
             
-            <!-- Referral Code Submit Section -->
-            <div id="referralSection" class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm hidden">
-                <div class="space-y-1">
-                    <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Have a Referral Code?</h2>
-                    <p class="text-[11px] text-gray-500 leading-relaxed">
-                        Enter a friend's 6-digit referral code below to claim your instant ৳10 bonus!
-                    </p>
+            <div class="flex flex-col gap-2.5">
+                <!-- Account Status -->
+                <div id="accountStatusBox" class="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">⭐</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-amber-900">Membership Status</h4>
+                            <p id="statusText" class="text-[11px] text-amber-700">Checking status...</p>
+                        </div>
+                    </div>
+                    <a id="activateBtn" href="activate-account.html" class="hidden bg-amber-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow hover:bg-amber-700 transition">Activate</a>
                 </div>
-                <div class="flex gap-2">
-                    <input type="text" id="submitRefCodeInput" maxlength="10" placeholder="e.g. MCJFB" class="w-full bg-white border border-gray-300 rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-widest text-indigo-600 focus:outline-none focus:border-indigo-600">
-                    <button id="applyRefBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition whitespace-nowrap cursor-pointer">
-                        Apply Code
-                    </button>
-                </div>
-            </div>
 
-            <!-- Quick Navigation Links -->
-            <div class="grid grid-cols-2 gap-2">
-                <a href="referral.html" class="bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex flex-col items-center text-center gap-1 text-xs font-bold text-gray-700 transition shadow-sm">
-                    <span class="text-xl">👥</span>
-                    <span>Referral Team</span>
+                <!-- Menu Links matching Dashboard style -->
+                <a href="wallet.html" class="p-3.5 bg-purple-50/60 border border-purple-100 rounded-2xl flex items-center justify-between hover:bg-purple-100 transition shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">💳</span>
+                        <span class="text-xs font-bold text-purple-900">My Wallet & Balances</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-purple-400"></i>
                 </a>
-                <a href="deposit.html" class="bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex flex-col items-center text-center gap-1 text-xs font-bold text-gray-700 transition shadow-sm">
-                    <span class="text-xl">👛</span>
-                    <span>Deposit Wallet</span>
-                </a>
-                <a href="history.html" class="bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex flex-col items-center text-center gap-1 text-xs font-bold text-gray-700 transition shadow-sm">
-                    <span class="text-xl">📊</span>
-                    <span>Task History</span>
-                </a>
-                <a href="transactions.html" class="bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex flex-col items-center text-center gap-1 text-xs font-bold text-gray-700 transition shadow-sm">
-                    <span class="text-xl">📜</span>
-                    <span>Transactions</span>
-                </a>
-                <a href="task-complete.html" class="bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex flex-col items-center text-center gap-1 text-xs font-bold text-gray-700 transition shadow-sm">
-                    <span class="text-xl">✅</span>
-                    <span>Task Complete</span>
-                </a>
-                <a href="task-pending.html" class="bg-gray-50 hover:bg-gray-100 border border-gray-200 p-3.5 rounded-2xl flex flex-col items-center text-center gap-1 text-xs font-bold text-gray-700 transition shadow-sm">
-                    <span class="text-xl">⏳</span>
-                    <span>Task Pending</span>
-                </a>
-            </div>
 
-            <!-- Logout Button -->
-            <div class="pt-2">
-                <button id="logoutBtn" class="w-full py-3.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs rounded-2xl border border-red-200 shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
-                    <span>🚪</span>
-                    <span>Logout Account</span>
+                <a href="referral.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex items-center justify-between hover:bg-indigo-100 transition shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">👥</span>
+                        <span class="text-xs font-bold text-indigo-900">Referral Team</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-indigo-400"></i>
+                </a>
+
+                <a href="history.html" class="p-3.5 bg-rose-50/60 border border-rose-100 rounded-2xl flex items-center justify-between hover:bg-rose-100 transition shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">📊</span>
+                        <span class="text-xs font-bold text-rose-900">Task History</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-rose-400"></i>
+                </a>
+
+                <a href="https://t.me/microjobspro" target="_blank" class="p-3.5 bg-sky-50/60 border border-sky-100 rounded-2xl flex items-center justify-between hover:bg-sky-100 transition shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">🎧</span>
+                        <span class="text-xs font-bold text-sky-900">Support & Help</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-sky-400"></i>
+                </a>
+
+                <!-- Logout Button -->
+                <button id="logoutBtn" class="w-full mt-2 p-3.5 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 transition shadow-sm text-red-600 font-bold text-xs">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout Account
                 </button>
             </div>
-
         </main>
 
         <!-- Animated Bottom Navigation Bar -->
@@ -232,107 +221,72 @@
         window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
 
-    <!-- Firebase Script & Logic -->
+    <!-- Firebase & Auth Script -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
-        import { doc, getDocs, collection, query, where, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { observeAuthState } from '../firebase/auth.js';
+        import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        let currentUserUid = null;
-        let myGeneratedCode = "";
+        const auth = getAuth();
 
-        observeAuthState(async (userData) => {
-            if (userData) {
-                currentUserUid = userData.uid;
-                const name = userData.fullName || userData.displayName || "User";
-                const email = userData.email || "No Email";
-
-                // Set Header Profile Icon, Name & Email
-                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
-                document.getElementById('userNameDisplay').innerText = name;
-                document.getElementById('userEmail').innerText = email;
-
-                // Support both mainBalance/depositBalance and balances object structure
-                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
-                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
-                
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
-
-                myGeneratedCode = userData.referralCode || "";
-
-                // Show or hide referral code submit section based on whether already used
-                if (!userData.referredBy) {
-                    document.getElementById('referralSection').classList.remove('hidden');
-                } else {
-                    document.getElementById('referralSection').classList.add('hidden');
-                }
-            } else {
+        observeAuthState(async (user) => {
+            if (!user) {
                 window.location.href = 'login.html';
-            }
-        });
-
-        // Apply Referral Code Logic
-        document.getElementById('applyRefBtn').addEventListener('click', async () => {
-            const inputCode = document.getElementById('submitRefCodeInput').value.trim().toUpperCase();
-            if (!inputCode) {
-                alert('দয়া করে একটি রেফার কোড লিখুন!');
                 return;
             }
 
-            if (inputCode === myGeneratedCode) {
-                alert('আপনি নিজের রেফার কোড ব্যবহার করতে পারবেন না!');
-                return;
+            const name = user.fullName || user.displayName || "User";
+            const email = user.email || "No email available";
+            
+            document.getElementById('userNameDisplay').innerText = name;
+            document.getElementById('userEmailDisplay').innerText = email;
+
+            const profileImgTag = document.getElementById('profileImage');
+            const profileInitialTag = document.getElementById('profileInitial');
+
+            if (user.photoURL) {
+                profileImgTag.src = user.photoURL;
+                profileImgTag.classList.remove('hidden');
+                profileInitialTag.classList.add('hidden');
+            } else {
+                profileInitialTag.innerText = name.charAt(0).toUpperCase();
+                profileInitialTag.classList.remove('hidden');
+                profileImgTag.classList.add('hidden');
             }
 
-            const applyBtn = document.getElementById('applyRefBtn');
-            applyBtn.disabled = true;
-            applyBtn.innerText = "Applying...";
+            // Real-time user data fetch
+            const userDocRef = doc(db, "users", user.uid);
+            onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const statusText = document.getElementById('statusText');
+                    const activateBtn = document.getElementById('activateBtn');
+                    const statusBox = document.getElementById('accountStatusBox');
 
-            try {
-                const usersRef = collection(db, "users");
-                const q = query(usersRef, where("referralCode", "==", inputCode));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    alert('ভুল রেফার কোড! সঠিক কোড দিয়ে আবার চেষ্টা করুন।');
-                    applyBtn.disabled = false;
-                    applyBtn.innerText = "Apply Code";
-                    return;
+                    if (data.isActivated) {
+                        statusText.innerText = "Account is Active (Premium)";
+                        statusBox.className = "p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex justify-between items-center shadow-sm";
+                        activateBtn.classList.add('hidden');
+                    } else {
+                        statusText.innerText = "Account is Unactivated";
+                        statusBox.className = "p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center shadow-sm";
+                        activateBtn.classList.remove('hidden');
+                    }
                 }
-
-                let validReferrerUid = null;
-                querySnapshot.forEach((docSnap) => {
-                    validReferrerUid = docSnap.id;
-                });
-
-                // Update current user (Add ৳10 bonus and set referredBy)
-                const userDocRef = doc(db, "users", currentUserUid);
-                await updateDoc(userDocRef, {
-                    referredBy: validReferrerUid,
-                    mainBalance: increment(10.00)
-                });
-
-                // Update Referrer (Increment totalReferred count)
-                const referrerDocRef = doc(db, "users", validReferrerUid);
-                await updateDoc(referrerDocRef, {
-                    totalReferred: increment(1)
-                });
-
-                alert('অভিনন্দন! সফলভাবে রেফার কোড জমা হয়েছে এবং আপনার একাউন্টে ৳১০ বোনাস যোগ হয়েছে!');
-                window.location.reload();
-
-            } catch (error) {
-                console.error("Referral submit error:", error);
-                alert('ত্রুটি: ' + error.message);
-                applyBtn.disabled = false;
-                applyBtn.innerText = "Apply Code";
-            }
+            });
         });
 
+        // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
+            if (confirm("আপনি কি নিশ্চিতভাবে অ্যাকাউন্ট থেকে বের হতে চান?")) {
+                try {
+                    await signOut(auth);
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error("Logout error:", error);
+                }
+            }
         });
     </script>
 </body>
