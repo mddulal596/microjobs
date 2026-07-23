@@ -1,140 +1,169 @@
 <!DOCTYPE html>
-<html lang="en" class="transform-gpu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Micro Job Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
         
-        <!-- Top Header with Balances -->
-        <header class="p-5 bg-indigo-600 text-white rounded-b-3xl shadow-md space-y-4">
-            <div class="flex items-center justify-between">
-                <h1 class="text-base font-extrabold tracking-wide">Micro Job Pro</h1>
-                <div class="flex items-center gap-2">
-                    <span id="userNameDisplay" class="text-xs font-bold bg-indigo-700 px-3 py-1 rounded-full">User</span>
-                    <button id="logoutBtn" class="text-xs bg-red-500 hover:bg-red-600 px-3 py-1 rounded-full font-bold transition">Logout</button>
+        /* Top Header */
+        .header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .app-title { font-size: 18px; font-weight: 800; }
+        .user-badge-area { display: flex; gap: 8px; align-items: center; }
+        .user-role { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .logout-btn { background: #ef4444; color: #fff; border: none; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: none; }
+
+        /* Balance Cards */
+        .balance-container { display: flex; gap: 10px; }
+        .balance-card { flex: 1; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); }
+        .balance-title { font-size: 11px; color: #e0e7ff; margin-bottom: 4px; }
+        .balance-amount { font-size: 18px; font-weight: 900; color: #ffffff; }
+
+        /* Main Content & 12 Buttons Grid */
+        main { padding: 16px; flex-grow: 1; }
+        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        .menu-btn { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px 4px; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #374151; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .menu-btn:hover { background: #f3f4f6; border-color: #cbd5e1; transform: translateY(-2px); }
+        .menu-icon { font-size: 20px; margin-bottom: 6px; }
+        .menu-text { font-size: 10px; font-weight: 700; text-align: center; }
+
+        /* Activation Box */
+        .activation-box { background: #fffbeb; border: 1px solid #fef3c7; border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 20px; }
+        .activation-box h4 { font-size: 13px; font-weight: 800; color: #b45309; margin-bottom: 6px; }
+        .activation-box p { font-size: 11px; color: #92400e; margin-bottom: 12px; line-height: 1.4; }
+        .active-btn { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: #fff; border: none; padding: 10px 20px; border-radius: 50px; font-size: 12px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 4px 12px rgba(236,72,153,0.3); }
+
+        /* Bottom Nav */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6b7280; font-size: 10px; gap: 2px; }
+        .nav-icon-circle { width: 36px; height: 36px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4b5563; }
+        .nav-item:hover { color: #4f46e5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Top Header & Balance -->
+        <div class="header">
+            <div class="header-top">
+                <span class="app-title">Micro Job Pro</span>
+                <div class="user-badge-area">
+                    <span class="user-role" id="userRoleText">User</span>
+                    <a href="login.html" class="logout-btn">Logout</a>
                 </div>
             </div>
-
-            <!-- Balances Grid -->
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
-                    <h3 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h3>
+            <div class="balance-container">
+                <div class="balance-card">
+                    <div class="balance-title">Main Balance</div>
+                    <div class="balance-amount" id="mainBalance">৳ 10.00</div>
                 </div>
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
-                    <h3 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h3>
+                <div class="balance-card">
+                    <div class="balance-title">Deposit Balance</div>
+                    <div class="balance-amount" id="depositBalance">৳ 0.00</div>
                 </div>
             </div>
-        </header>
+        </div>
 
-        <!-- Main Content Area -->
-        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
-            
-            <!-- Quick Menu Grid -->
-            <div class="grid grid-cols-4 gap-2 text-center">
-                <a href="daily-job.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
-                    <span class="text-xl">💼</span>
-                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Daily Job</span>
+        <!-- Main Dashboard 12 Buttons Grid -->
+        <main>
+            <div class="menu-grid">
+                <!-- 1. Daily Job -->
+                <a href="daily-job.html" class="menu-btn">
+                    <span class="menu-icon">💼</span>
+                    <span class="menu-text">Daily Job</span>
                 </a>
-                <a href="recharge.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
-                    <span class="text-xl">📱</span>
-                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Recharge</span>
+                <!-- 2. Recharge -->
+                <a href="recharge.html" class="menu-btn">
+                    <span class="menu-icon">📱</span>
+                    <span class="menu-text">Recharge</span>
                 </a>
-                <a href="withdraw.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
-                    <span class="text-xl">💳</span>
-                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Withdraw</span>
+                <!-- 3. Withdraw -->
+                <a href="withdraw.html" class="menu-btn">
+                    <span class="menu-icon">💳</span>
+                    <span class="menu-text">Withdraw</span>
                 </a>
-                <a href="drive-offer.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
-                    <span class="text-xl">🎁</span>
-                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Drive Offer</span>
+                <!-- 4. Drive Offer -->
+                <a href="drive-offer.html" class="menu-btn">
+                    <span class="menu-icon">🎁</span>
+                    <span class="menu-text">Drive Offer</span>
                 </a>
-                <a href="deposit.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
-                    <span class="text-xl">👛</span>
-                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Add Money</span>
+                <!-- 5. Add Money -->
+                <a href="wallet.html" class="menu-btn">
+                    <span class="menu-icon">👛</span>
+                    <span class="menu-text">Add Money</span>
                 </a>
-                <a href="history.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
-                    <span class="text-xl">⏰</span>
-                    <span class="block text-[10px] font-bold text-gray-700 mt-1">History</span>
+                <!-- 6. History -->
+                <a href="history.html" class="menu-btn">
+                    <span class="menu-icon">⏰</span>
+                    <span class="menu-text">History</span>
                 </a>
-                <a href="leaderboard.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
-                    <span class="text-xl">🏆</span>
-                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Leaderboard</span>
+                <!-- 7. Leaderboard -->
+                <a href="leaderboard.html" class="menu-btn">
+                    <span class="menu-icon">🏆</span>
+                    <span class="menu-text">Leaderboard</span>
                 </a>
-                <a href="microjobs.html" class="bg-gray-50 p-3 rounded-2xl border border-gray-200 hover:bg-gray-100 transition shadow-sm">
-                    <span class="text-xl">📋</span>
-                    <span class="block text-[10px] font-bold text-gray-700 mt-1">Microjobs</span>
+                <!-- 8. Microjobs -->
+                <a href="microjobs.html" class="menu-btn">
+                    <span class="menu-icon">📋</span>
+                    <span class="menu-text">Microjobs</span>
+                </a>
+                <!-- 9. Post Job -->
+                <a href="post-job.html" class="menu-btn">
+                    <span class="menu-icon">➕</span>
+                    <span class="menu-text">Post Job</span>
+                </a>
+                <!-- 10. My Team -->
+                <a href="referral.html" class="menu-btn">
+                    <span class="menu-icon">👥</span>
+                    <span class="menu-text">My Team</span>
+                </a>
+                <!-- 11. Support -->
+                <a href="support.html" class="menu-btn">
+                    <span class="menu-icon">🎧</span>
+                    <span class="menu-text">Support</span>
+                </a>
+                <!-- 12. Profile -->
+                <a href="profile.html" class="menu-btn">
+                    <span class="menu-icon">👤</span>
+                    <span class="menu-text">Profile</span>
                 </a>
             </div>
 
-            <!-- Account Inactive Warning Box (If needed) -->
-            <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl text-center space-y-2 shadow-sm">
-                <p class="text-xs font-bold text-amber-800">⚠️ আপনার একাউন্টটি একটিভ নেই</p>
-                <p class="text-[11px] text-amber-600">ইনকাম শুরু করতে এবং সকল প্রিমিয়াম সুবিধা পেতে এখনি আপনার একাউন্টটি নির্দিষ্ট ফি দিয়ে একটিভ করুন।</p>
-                <button class="mt-2 w-full py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold text-xs rounded-xl shadow transition">Active Now →</button>
+            <!-- Account Activation Notice Box -->
+            <div class="activation-box">
+                <h4>⚠️ আপনার অ্যাকাউন্টটি একটিভ নেই</h4>
+                <p>ইনকাম শুরু করতে এবং সকল প্রিমিয়াম সুবিধা পেতে এখনি আপনার অ্যাকাউন্টটি নির্দিষ্ট ফি দিয়ে একটিভ করুন।</p>
+                <a href="activate.html" class="active-btn">Active Now →</a>
             </div>
-
         </main>
 
         <!-- Bottom Navigation Bar -->
-        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-2 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center">
-            <a href="https://t.me/microjobspro" target="_blank" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">🎧</span>
+        <nav>
+            <a href="support.html" class="nav-item">
+                <span style="font-size: 16px;">🎧</span>
                 <span>Help</span>
             </a>
-            <a href="deposit.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👛</span>
+            <a href="wallet.html" class="nav-item">
+                <span style="font-size: 16px;">👛</span>
                 <span>Wallet</span>
             </a>
-            <a href="dashboard.html" class="flex flex-col items-center text-indigo-600 text-[10px]">
-                <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white text-base shadow-md">
-                    🏠
-                </div>
-                <span class="font-bold mt-0.5">Home</span>
+            <a href="dashboard.html" class="nav-item">
+                <div class="nav-icon-circle">🏠</div>
+                <span style="font-weight: 500;">Home</span>
             </a>
-            <a href="referral.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
-                    👥
-                </div>
-                <span class="font-medium mt-0.5">Team</span>
+            <a href="referral.html" class="nav-item">
+                <div class="nav-icon-circle">👥</div>
+                <span style="font-weight: 500;">Team</span>
             </a>
-            <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
-                    👤
-                </div>
-                <span class="font-medium mt-0.5">Profile</span>
+            <a href="profile.html" class="nav-item">
+                <span style="font-size: 16px;">👤</span>
+                <span>Profile</span>
             </a>
         </nav>
     </div>
-
-    <!-- Firebase Script & Logic -->
-    <script type="module">
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
-
-        observeAuthState((userData) => {
-            if (userData) {
-                const name = userData.fullName || userData.displayName || "User";
-                document.getElementById('userNameDisplay').innerText = name;
-
-                // Load Balances correctly from Firestore fields
-                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
-                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
-
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
-        });
-    </script>
 </body>
 </html>
