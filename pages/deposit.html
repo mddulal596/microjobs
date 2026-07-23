@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deposit Money - Micro Job Pro</title>
+    <title>Deposit - Micro Job Pro</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
         
         /* Header */
-        header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
+        header { background-color: #4f46e5; color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
         .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
         
         .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -25,19 +25,24 @@
         main { padding: 16px; flex-grow: 1; overflow-y: auto; }
         .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
 
-        /* Deposit Form Styling */
-        .deposit-form { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        /* Gateway Selection */
+        .gateway-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+        .gateway-card { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 10px 4px; text-align: center; cursor: pointer; transition: 0.2s; font-weight: bold; font-size: 11px; color: #4b5563; }
+        .gateway-card.selected { border-color: #4f46e5; background: #f5f3ff; color: #4f46e5; }
+
+        /* Instructions Box */
+        .instruction-box { background: #fef2f2; border: 1px solid #fecaca; border-radius: 14px; padding: 14px; font-size: 11px; color: #991b1b; margin-bottom: 16px; line-height: 1.5; }
+        .instruction-box strong { display: block; margin-bottom: 4px; font-size: 12px; }
+
+        /* Form Inputs */
         .form-group { margin-bottom: 14px; }
-        .form-label { font-size: 12px; font-weight: 700; color: #374151; display: block; margin-bottom: 6px; }
-        .form-select, .form-input { width: 100%; padding: 12px 14px; border: 1px solid #d1d5db; border-radius: 12px; font-size: 13px; outline: none; background: #ffffff; transition: 0.2s; }
-        .form-select:focus, .form-input:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        .form-label { display: block; font-size: 11px; font-weight: bold; color: #374151; margin-bottom: 6px; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 12px; font-size: 12px; outline: none; transition: 0.2s; background: #f9fafb; }
+        .form-input:focus { border-color: #4f46e5; background: #ffffff; }
 
-        /* Gateway Info Box */
-        .gateway-notice { background: #e0e7ff; border: 1px solid #c7d2fe; border-radius: 12px; padding: 12px; font-size: 12px; color: #312e81; margin-bottom: 16px; line-height: 1.5; }
-        .gateway-notice span { font-weight: bold; }
-
-        .btn-deposit { width: 100%; background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); color: #ffffff; border: none; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(79,70,229,0.3); transition: 0.2s; }
-        .btn-deposit:hover { opacity: 0.9; }
+        .submit-btn { width: 100%; background: #4f46e5; color: #ffffff; border: none; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 8px; }
+        .submit-btn:hover { background: #4338ca; }
+        .submit-btn:disabled { background: #9ca3af; cursor: not-allowed; }
 
         /* Bottom Nav */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
@@ -74,41 +79,36 @@
         <main>
             <h2 class="section-title">Deposit Funds</h2>
 
-            <div class="deposit-form">
-                <div class="gateway-notice">
-                    নিয়মাবলী: সর্বনিম্ন ডিপোজিট ৳২০০ টাকা। পেমেন্ট করার পর নিচের ছকে সঠিক পেমেন্ট মেথড, ট্রানজেকশন আইডি (TrxID) এবং আপনার সেন্ডার নম্বর প্রদান করুন।
-                </div>
+            <!-- Select Payment Method -->
+            <div class="gateway-grid">
+                <div class="gateway-card selected" onclick="selectGateway('bKash', this)">bKash</div>
+                <div class="gateway-card" onclick="selectGateway('Nagad', this)">Nagad</div>
+                <div class="gateway-card" onclick="selectGateway('Rocket', this)">Rocket</div>
+            </div>
 
-                <div class="form-group">
-                    <label class="form-label">Select Gateway</label>
-                    <select id="gatewaySelect" class="form-select" onchange="updateGatewayInfo()">
-                        <option value="bkash">bKash (Personal)</option>
-                        <option value="nagad">Nagad (Personal)</option>
-                        <option value="rocket">Rocket (Personal)</option>
-                    </select>
-                </div>
+            <!-- Instructions -->
+            <div class="instruction-box" id="instructionText">
+                <strong>bKash Deposit Instructions:</strong>
+                ১. আমাদের বিকাশ পার্সোনাল নাম্বারে **01913932587** টাকা Send Money করুন (সর্বনিম্ন ৳২০০)।<br>
+                ২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।
+            </div>
 
-                <div id="accountInfoNotice" class="gateway-notice" style="background: #f0fdf4; border-color: #dcfce7; color: #166534;">
-                    bKash Send Money করতে হবে এই নম্বরে: <span id="targetNumber" style="font-size: 13px;">01700000000</span>
-                </div>
-
+            <!-- Deposit Form -->
+            <form onsubmit="handleDeposit(event)">
                 <div class="form-group">
                     <label class="form-label">Deposit Amount (৳)</label>
-                    <input type="number" id="depositAmount" class="form-input" placeholder="যেমন: 500" min="200" required>
+                    <input type="number" id="depositAmount" class="form-input" placeholder="Enter amount (Min ৳200)" required min="200">
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label">Sender Number (যে নম্বর থেকে টাকা পাঠিয়েছেন)</label>
-                    <input type="text" id="senderNumber" class="form-input" placeholder="017XXXXXXXX" required>
+                    <label class="form-label">Sender Account Number</label>
+                    <input type="text" id="senderNumber" class="form-input" placeholder="e.g. 019XXXXXXXX" required>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">Transaction ID (TrxID)</label>
-                    <input type="text" id="trxId" class="form-input" placeholder="ഉദാ: 8N7A65XYZ" required>
+                    <input type="text" id="trxId" class="form-input" placeholder="e.g. 9H7K3..." required>
                 </div>
-
-                <button type="button" class="btn-deposit" onclick="submitDeposit()">Submit Deposit Request</button>
-            </div>
+                <button type="submit" id="submitBtn" class="submit-btn">Submit Deposit Request</button>
+            </form>
         </main>
 
         <!-- Bottom Navigation Bar -->
@@ -143,19 +143,7 @@
 
         const db = getFirestore();
         let currentUserUid = null;
-
-        // গেটওয়ে অনুযায়ী মার্চেন্ট বা পার্সোনাল নম্বর পরিবর্তন করার অবজেক্ট
-        const gatewayNumbers = {
-            bkash: "01700000000",
-            nagad: "01800000000",
-            rocket: "01900000000"
-        };
-
-        window.updateGatewayInfo = function() {
-            const selected = document.getElementById('gatewaySelect').value;
-            const targetEl = document.getElementById('targetNumber');
-            targetEl.innerText = gatewayNumbers[selected] || "01700000000";
-        }
+        let selectedMethod = 'bKash';
 
         observeAuthState((userData) => {
             if (userData) {
@@ -173,49 +161,68 @@
             }
         });
 
-        window.submitDeposit = async function() {
+        window.selectGateway = function(method, element) {
+            selectedMethod = method;
+            document.querySelectorAll('.gateway-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+
+            const instBox = document.getElementById('instructionText');
+            if (method === 'bKash') {
+                instBox.innerHTML = `<strong>bKash Deposit Instructions:</strong>১. আমাদের বিকাশ পার্সোনাল নাম্বারে **01913932587** টাকা Send Money করুন (সর্বনিম্ন ৳২০০)।<br>২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।`;
+            } else if (method === 'Nagad') {
+                instBox.innerHTML = `<strong>Nagad Deposit Instructions:</strong>১. আমাদের নগদ পার্সোনাল নাম্বারে **01913932587** টাকা Send Money করুন (সর্বনিম্ন ৳২০০)।<br>২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।`;
+            } else if (method === 'Rocket') {
+                instBox.innerHTML = `<strong>Rocket Deposit Instructions:</strong>১. আমাদের রকেট পার্সোনাল নাম্বারে **01917044596** টাকা Send Money করুন (সর্বনিম্ন ৳২০০)।<br>২. ট্রানজেকশন সফল হলে প্রাপ্ত TrxID এবং প্রেরক নাম্বার নিচে লিখে সাবমিট করুন।`;
+            }
+        }
+
+        window.handleDeposit = async function(event) {
+            event.preventDefault();
+
             if (!currentUserUid) {
                 alert('লগইন করা অবস্থায় নেই!');
                 return;
             }
 
-            const gateway = document.getElementById('gatewaySelect').value;
             const amount = parseFloat(document.getElementById('depositAmount').value);
-            const senderNo = document.getElementById('senderNumber').value.trim();
-            const trxId = document.getElementById('trxId').value.trim();
+            const sender = document.getElementById('senderNumber').value.trim();
+            const trx = document.getElementById('trxId').value.trim();
 
-            if (!amount || amount < 200) {
-                alert('সর্বনিম্ন ডিপোজিট পরিমাণ ২০০ টাকা হতে হবে!');
-                return;
-            }
-            if (!senderNo || !trxId) {
-                alert('দয়া করে সেন্ডার নম্বর এবং ট্রানজেকশন আইডি (TrxID) সঠিকভাবে পূরণ করুন!');
+            if(!amount || !sender || !trx) {
+                alert('দয়া করে সব তথ্য সঠিকভাবে পূরণ করুন!');
                 return;
             }
 
-            const btn = document.querySelector('.btn-deposit');
-            btn.disabled = true;
-            btn.innerText = 'Submitting Request...';
+            if(amount < 200) {
+                alert('সর্বনিম্ন ডিপোজিট পরিমাণ ৳200 হতে হবে!');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Submitting...';
 
             try {
-                // ফায়ারস্টোরের 'deposits' কালেকশনে রিকোয়েস্ট জমা দেওয়া
+                // ফায়ারস্টোরের 'deposits' কালেকশনে রিকোয়েস্ট সেভ করা হচ্ছে
                 await addDoc(collection(db, "deposits"), {
                     userId: currentUserUid,
-                    gateway: gateway.toUpperCase(),
+                    gateway: selectedMethod,
                     amount: amount,
-                    senderNumber: senderNo,
-                    trxId: trxId,
-                    status: 'pending', // অ্যাডমিন অ্যাপ্রুভ করার পর ব্যালেন্সে যোগ হবে
+                    senderNumber: sender,
+                    trxId: trx,
+                    status: 'pending', // অ্যাডমিন অ্যাপ্রুভ করার পর ব্যালেন্সে যুক্ত হবে
                     timestamp: serverTimestamp()
                 });
 
-                alert('আপনার ডিপোজিট রিকোয়েস্ট সফলভাবে জমা হয়েছে! অ্যাডমিন কর্তৃক যাচাই করার পর ব্যালেন্স আপডেট করা হবে।');
+                alert(`আপনার ${selectedMethod} এর মাধ্যমে ৳${amount} ডিপোজিট রিকোয়েস্ট সফলভাবে জমা হয়েছে। অ্যাডমিন চেক করার পর ব্যালেন্স আপডেট করা হবে।`);
                 window.location.href = 'wallet.html';
             } catch (error) {
                 console.error("Error submitting deposit: ", error);
                 alert('দুঃখিত, ডিপোজিট রিকোয়েস্ট সাবমিট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
-                btn.disabled = false;
-                btn.innerText = 'Submit Deposit Request';
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Submit Deposit Request';
             }
         }
     </script>
