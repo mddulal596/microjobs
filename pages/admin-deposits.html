@@ -32,6 +32,7 @@
         .card-actions { display: flex; gap: 6px; }
         .btn-approve { background: #dcfce7; color: #15803d; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
         .btn-reject { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .no-data { text-align: center; color: #6b7280; font-size: 12px; margin-top: 30px; }
 
         /* Bottom Nav */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
@@ -61,29 +62,7 @@
 
             <!-- Deposit List Container -->
             <div class="deposit-list" id="depositListContainer">
-                <div class="deposit-card" id="dep-1">
-                    <div class="deposit-info">
-                        <h4>Rakib Hasan (bKash)</h4>
-                        <p>Number: 01712345678<br>TrxID: <strong>TRX987654321</strong></p>
-                        <span class="deposit-amount">Amount: ৳ 500.00</span>
-                    </div>
-                    <div class="card-actions">
-                        <button onclick="handleDepositAction('dep-1', 'Rakib Hasan', 500, 'approved')" class="btn-approve">Approve</button>
-                        <button onclick="handleDepositAction('dep-1', 'Rakib Hasan', 500, 'rejected')" class="btn-reject">Reject</button>
-                    </div>
-                </div>
-
-                <div class="deposit-card" id="dep-2">
-                    <div class="deposit-info">
-                        <h4>Sumaiya Akter (Nagad)</h4>
-                        <p>Number: 01812345678<br>TrxID: <strong>TRX123456789</strong></p>
-                        <span class="deposit-amount">Amount: ৳ 200.00</span>
-                    </div>
-                    <div class="card-actions">
-                        <button onclick="handleDepositAction('dep-2', 'Sumaiya Akter', 200, 'approved')" class="btn-approve">Approve</button>
-                        <button onclick="handleDepositAction('dep-2', 'Sumaiya Akter', 200, 'rejected')" class="btn-reject">Reject</button>
-                    </div>
-                </div>
+                <div class="no-data">Loading deposit requests...</div>
             </div>
         </main>
 
@@ -115,22 +94,99 @@
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { observeAuthState } from '../firebase/auth.js';
+        import { db } from '../firebase/firebase-config.js';
+        import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((userData) => {
+        observeAuthState(async (userData) => {
             if (!userData) {
                 window.location.href = 'login.html';
+                return;
             }
+
+            // অ্যাডমিন চেক (প্রয়োজনীয় সিকিউরিটি নিশ্চিত করতে)
+            // if (!userData.isAdmin) { alert('Access Denied'); window.location.href = 'dashboard.html'; return; }
+
+            await loadPendingDeposits();
         });
 
-        window.handleDepositAction = function(cardId, userName, amount, status) {
-            const cardElement = document.getElementById(cardId);
-            if (status === 'approved') {
-                alert(`"${userName}" এর ৳${amount} ডিপোজিট রিকোয়েস্ট অ্যাপ্রুভ করা হয়েছে এবং ডিপোজিট ব্যালেন্সে যোগ করা হয়েছে!`);
-            } else {
-                alert(`"${userName}" এর ডিপোজিট রিকোয়েস্ট রিজেক্ট বা বাতিল করা হয়েছে।`);
+        async function loadPendingDeposits() {
+            const container = document.getElementById('depositListContainer');
+            try {
+                const q = query(collection(db, "deposits"), where("status", "==", "pending"));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = `<div class="no-data">কোনো পেন্ডিং ডিপোজিট রিকোয়েস্ট নেই।</div>`;
+                    return;
+                }
+
+                container.innerHTML = "";
+                querySnapshot.forEach((document) => {
+                    const data = document.data();
+                    const docId = document.id;
+
+                    const card = document.createElement('div');
+                    card.className = 'deposit-card';
+                    card.id = docId;
+                    card.innerHTML = `
+                        <div class="deposit-info">
+                            <h4>${data.userName || 'User'} (${data.method || 'Method'})</h4>
+                            <p>Number: ${data.senderNumber || 'N/A'}<br>TrxID: <strong>${data.trxId || 'N/A'}</strong></p>
+                            <span class="deposit-amount">Amount: ৳ ${data.amount || 0}.00</span>
+                        </div>
+                        <div class="card-actions">
+                            <button onclick="handleDepositAction('${docId}', '${data.userId}', ${data.amount}, 'approved')" class="btn-approve">Approve</button>
+                            <button onclick="handleDepositAction('${docId}', '${data.userId}', ${data.amount}, 'rejected')" class="btn-reject">Reject</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error loading deposits: ", error);
+                container.innerHTML = `<div class="no-data" style="color: red;">ডেটা লোড করতে সমস্যা হয়েছে।</div>`;
             }
-            if (cardElement) {
-                cardElement.remove();
+        }
+
+        window.handleDepositAction = async function(depositId, userId, amount, status) {
+            if (!confirm(`আপনি কি এই ডিপোজিট রিকোয়েস্টটি ${status === 'approved' ? 'অ্যাপ্রুভ' : 'বাতিল'} করতে চান?`)) return;
+
+            try {
+                const depositRef = doc(db, "deposits", depositId);
+
+                if (status === 'approved') {
+                    // ইউজারের ব্যালেন্স (balances.deposit) আপডেট করা
+                    const userRef = doc(db, "users", userId);
+                    const userSnap = await getDoc(userRef);
+
+                    if (userSnap.exists()) {
+                        const userData = userSnap.data();
+                        const currentDepositBalance = userData.balances?.deposit || 0;
+                        const currentMainBalance = userData.balances?.main || 0;
+
+                        await updateDoc(userRef, {
+                            "balances.deposit": currentDepositBalance + Number(amount)
+                        });
+                    }
+
+                    // ডিপোজিট রিকোয়েস্টের স্ট্যাটাস আপডেট করা
+                    await updateDoc(depositRef, { status: 'approved' });
+                    alert('ডিপোজিট সফলভাবে অ্যাপ্রুভ করা হয়েছে এবং ইউজারের ব্যালেন্সে যোগ হয়েছে!');
+                } else {
+                    await updateDoc(depositRef, { status: 'rejected' });
+                    alert('ডিপোজিট রিকোয়েস্টটি বাতিল করা হয়েছে।');
+                }
+
+                // UI থেকে কার্ড রিমুভ করা
+                const cardElement = document.getElementById(depositId);
+                if (cardElement) cardElement.remove();
+
+                if (document.getElementById('depositListContainer').children.length === 0) {
+                    document.getElementById('depositListContainer').innerHTML = `<div class="no-data">কোনো পেন্ডিং ডিপোজিট রিকোয়েস্ট নেই।</div>`;
+                }
+
+            } catch (error) {
+                console.error("Error processing deposit: ", error);
+                alert("অপারেশন সম্পন্ন করতে সমস্যা হয়েছে। কনসোল চেক করুন।");
             }
         }
     </script>
