@@ -80,7 +80,7 @@
 <body class="bg-gray-50 text-gray-800 antialiased">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
         
-        <!-- Profile & Balance Header (ওয়ালেট স্টাইলে সাজানো) -->
+        <!-- Profile & Balance Header -->
         <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg relative">
             <div class="flex justify-between items-center mb-3">
                 <a href="dashboard.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
@@ -100,7 +100,7 @@
                 <p id="userEmailDisplay" class="text-[11px] text-purple-200">loading@gmail.com</p>
             </div>
 
-            <!-- Balances Cards (ওয়ালেটের মতো গ্রিড সিস্টেমে ব্যালেন্স লোড) -->
+            <!-- Balances Cards -->
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
                     <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
@@ -242,13 +242,14 @@
                 profileImgTag.classList.add('hidden');
             }
 
-            // Realtime Balances & Status Sync (ওয়ালেটের মতোই হুবহু লোড হবে)
+            // Realtime Balances & Status Sync (balances ম্যাপ থেকে মূল ব্যালেন্স রিড করা হচ্ছে)
             const userDocRef = doc(db, "users", user.uid);
             onSnapshot(userDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    const mainBal = Number(data.mainBalance ?? 0);
+                    // balances ম্যাপের ভেতরে থাকা main এবং বাইরে থাকা depositBalance নেওয়া হলো
+                    const mainBal = Number(data.balances?.main ?? data.mainBalance ?? 0);
                     const depositBal = Number(data.depositBalance ?? 0);
                     
                     document.getElementById('mainBalance').innerText = `৳ ${mainBal.toFixed(2)}`;
