@@ -1,99 +1,183 @@
 <!DOCTYPE html>
-<html lang="en" class="transform-gpu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Withdraw - Micro Job Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
+        
+        /* Header */
+        header { background-color: #4f46e5; color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        
+        .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .balance-card { background: rgba(255, 255, 255, 0.12); padding: 14px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .balance-title { font-size: 11px; color: #e0e7ff; margin-bottom: 4px; }
+        .balance-amount { font-size: 18px; font-weight: 800; }
+
+        /* Main Content */
+        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
+        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
+
+        /* Gateway Selection */
+        .gateway-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+        .gateway-card { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 10px 4px; text-align: center; cursor: pointer; transition: 0.2s; font-weight: bold; font-size: 11px; color: #4b5563; }
+        .gateway-card.selected { border-color: #4f46e5; background: #f5f3ff; color: #4f46e5; }
+
+        /* Instructions Box */
+        .instruction-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 14px; font-size: 11px; color: #1e40af; margin-bottom: 16px; line-height: 1.5; }
+        .instruction-box strong { display: block; margin-bottom: 4px; font-size: 12px; }
+
+        /* Form Inputs */
+        .form-group { margin-bottom: 14px; }
+        .form-label { display: block; font-size: 11px; font-weight: bold; color: #374151; margin-bottom: 6px; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 12px; font-size: 12px; outline: none; transition: 0.2s; background: #f9fafb; }
+        .form-input:focus { border-color: #4f46e5; background: #ffffff; }
+
+        .submit-btn { width: 100%; background: #4f46e5; color: #ffffff; border: none; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 8px; }
+        .submit-btn:hover { background: #4338ca; }
+
+        /* Bottom Nav */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6b7280; font-size: 10px; gap: 2px; }
+        .nav-icon-circle { width: 36px; height: 36px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4b5563; }
+        .nav-item:hover { color: #4f46e5; }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
-        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md flex justify-between items-center">
-            <h1 class="text-lg font-bold">Withdraw Funds</h1>
-            <a href="dashboard.html" class="text-xs bg-indigo-700 px-3 py-1 rounded-full">Dashboard</a>
+<body>
+    <div class="container">
+        
+        <!-- Top Header & Balances -->
+        <header>
+            <div class="header-top">
+                <a href="profile.html" class="profile-btn">
+                    <div id="profileIconBtn" class="profile-icon">U</div>
+                    <span id="userNameDisplay">Loading...</span>
+                </a>
+                <a href="dashboard.html" class="home-link">Home</a>
+            </div>
+            <div class="balance-grid">
+                <div class="balance-card">
+                    <p class="balance-title">Main Balance</p>
+                    <h2 id="mainBalance" class="balance-amount">৳ 0.00</h2>
+                </div>
+                <div class="balance-card">
+                    <p class="balance-title">Deposit Balance</p>
+                    <h2 id="depositBalance" class="balance-amount">৳ 0.00</h2>
+                </div>
+            </div>
         </header>
 
-        <main class="p-4 flex-grow space-y-4">
-            <div class="bg-indigo-50 p-4 rounded-2xl">
-                <p class="text-xs text-indigo-600 font-medium">Available Balance</p>
-                <h2 id="availBalance" class="text-2xl font-extrabold text-indigo-700 mt-1">৳ 0.00</h2>
+        <!-- Main Content Area -->
+        <main>
+            <h2 class="section-title">Withdraw Funds</h2>
+
+            <!-- Select Payment Method -->
+            <div class="gateway-grid">
+                <div class="gateway-card selected" onclick="selectGateway('bKash', this)">bKash</div>
+                <div class="gateway-card" onclick="selectGateway('Nagad', this)">Nagad</div>
+                <div class="gateway-card" onclick="selectGateway('Rocket', this)">Rocket</div>
             </div>
 
-            <form id="withdrawForm" class="space-y-3">
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Payment Method</label>
-                    <select id="method" class="w-full text-sm px-3 py-3 border border-gray-300 rounded-xl">
-                        <option value="bKash">bKash</option>
-                        <option value="Nagad">Nagad</option>
-                        <option value="Rocket">Rocket</option>
-                    </select>
+            <!-- Instructions -->
+            <div class="instruction-box" id="instructionText">
+                <strong>Withdrawal Guidelines:</strong>
+                ১. সর্বনিম্ন উত্তোলনের পরিমাণ **৳500**।<br>
+                ২. ২৪ ঘণ্টার মধ্যে আপনার অ্যাকাউন্টে পেমেন্ট পৌঁছে যাবে।
+            </div>
+
+            <!-- Withdraw Form -->
+            <form onsubmit="handleWithdraw(event)">
+                <div class="form-group">
+                    <label class="form-label">Withdraw Amount (৳)</label>
+                    <input type="number" id="withdrawAmount" class="form-input" placeholder="Enter amount (Min ৳500)" required min="500">
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Account Number</label>
-                    <input type="text" id="accountNo" required placeholder="01XXXXXXXXX" class="w-full text-sm px-3 py-3 border border-gray-300 rounded-xl">
+                <div class="form-group">
+                    <label class="form-label">Receiver Account Number</label>
+                    <input type="text" id="receiverNumber" class="form-input" placeholder="e.g. 019XXXXXXXX" required>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Amount (BDT)</label>
-                    <input type="number" id="amount" required placeholder="100" class="w-full text-sm px-3 py-3 border border-gray-300 rounded-xl">
-                </div>
-                <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 transition">Request Withdrawal</button>
+                <button type="submit" class="submit-btn">Submit Withdrawal Request</button>
             </form>
         </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav>
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item">
+                <span style="font-size: 16px;">🎧</span>
+                <span>Help</span>
+            </a>
+            <a href="wallet.html" class="nav-item">
+                <span style="font-size: 16px;">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="dashboard.html" class="nav-item">
+                <div class="nav-icon-circle">🏠</div>
+                <span style="font-weight: 500;">Home</span>
+            </a>
+            <a href="referral.html" class="nav-item">
+                <div class="nav-icon-circle">👥</div>
+                <span style="font-weight: 500;">Team</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span style="font-size: 16px;">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
     </div>
 
+    <!-- Firebase Script & Logic -->
     <script type="module">
-        import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        let userDataGlobal = null;
+        let selectedMethod = 'bKash';
 
         observeAuthState((userData) => {
-            if (!userData) {
+            if (userData) {
+                const name = userData.fullName || userData.displayName || "User";
+                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
+                document.getElementById('userNameDisplay').innerText = name;
+
+                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
+                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
+                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
+                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+            } else {
                 window.location.href = 'login.html';
-                return;
-            }
-            userDataGlobal = userData;
-            const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
-            document.getElementById('availBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-        });
-
-        document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const method = document.getElementById('method').value;
-            const accountNo = document.getElementById('accountNo').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-
-            const currentMain = userDataGlobal.balances?.main ?? userDataGlobal.mainBalance ?? 0;
-
-            if (amount < 50) {
-                alert("Minimum withdrawal amount is ৳ 50");
-                return;
-            }
-
-            if (amount > currentMain) {
-                alert("Insufficient balance!");
-                return;
-            }
-
-            try {
-                await addDoc(collection(db, "withdrawals"), {
-                    userId: userDataGlobal.uid,
-                    userEmail: userDataGlobal.email,
-                    method,
-                    accountNo,
-                    amount,
-                    status: "pending",
-                    requestedAt: serverTimestamp()
-                });
-
-                alert("Withdrawal request submitted successfully!");
-                window.location.href = 'dashboard.html';
-            } catch (err) {
-                console.error(err);
-                alert("Error: " + err.message);
             }
         });
+
+        window.selectGateway = function(method, element) {
+            selectedMethod = method;
+            document.querySelectorAll('.gateway-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        window.handleWithdraw = function(event) {
+            event.preventDefault();
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const receiver = document.getElementById('receiverNumber').value;
+
+            if(!amount || !receiver) {
+                alert('দয়া করে সব তথ্য সঠিকভাবে পূরণ করুন!');
+                return;
+            }
+
+            if(amount < 500) {
+                alert('সর্বনিম্ন উত্তোলনের পরিমাণ ৳500 হতে হবে!');
+                return;
+            }
+
+            alert(`আপনার ${selectedMethod} এর মাধ্যমে ৳${amount} উত্তোলনের রিকোয়েস্ট সফলভাবে জমা হয়েছে।`);
+            window.location.href = 'wallet.html';
+        }
     </script>
 </body>
 </html>
