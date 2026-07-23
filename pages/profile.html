@@ -4,10 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for Navigation Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
+    
+    <style>
+        /* Animated Bottom Nav Styles */
+        .nav-container {  
+            position: fixed;  
+            bottom: 15px;  
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;  
+            max-width: 440px;  
+            height: 70px;  
+            background: #16a34a;  
+            border-radius: 22px;  
+            display: flex;  
+            justify-content: space-around;  
+            align-items: center;  
+            box-shadow: 0 10px 25px rgba(0,0,0,.2);  
+            overflow: visible;  
+            z-index: 100;
+        }  
+          
+        .nav-item-animated {  
+            flex: 1;  
+            text-decoration: none;  
+            color: #fff;  
+            text-align: center;  
+            position: relative;  
+            z-index: 2;  
+        }  
+          
+        .nav-item-animated i {  
+            font-size: 22px;  
+            transition: .35s;  
+        }  
+          
+        .nav-item-animated span {  
+            display: block;  
+            font-size: 11px;  
+            margin-top: 4px;  
+            transition: .35s;  
+        }  
+          
+        .nav-item-animated.active i {  
+            transform: translateY(-10px);  
+        }  
+          
+        .nav-item-animated.active span {  
+            font-weight: bold;  
+        }  
+          
+        .indicator {  
+            position: absolute;  
+            top: -15px; /* এটি অ্যাডজাস্ট করে মাঝামাঝি করা হয়েছে */
+            width: 60px;  
+            height: 60px;  
+            background: #2196f3;  
+            border-radius: 50%;  
+            border: 4px solid #fff;  
+            transition: left .35s ease;  
+            box-shadow: 0 0 20px rgba(33,150,243,.5);  
+            z-index: 1;  
+        }  
+          
+        .indicator::before {  
+            content: "";  
+            position: absolute;  
+            inset: -6px;  
+            border-radius: 50%;  
+            border: 2px solid rgba(33,150,243,.4);  
+            animation: pulse 2s infinite;  
+        }  
+          
+        @keyframes pulse {  
+            0% {  
+                transform: scale(1);  
+                opacity: 1;  
+            }  
+            100% {  
+                transform: scale(1.4);  
+                opacity: 0;  
+            }  
+        } 
+    </style>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24 relative">
         
         <!-- Top Header: Profile Icon, Name, Email & Balances -->
         <header class="p-5 bg-indigo-600 text-white rounded-b-3xl shadow-md space-y-4">
@@ -92,36 +178,59 @@
 
         </main>
 
-        <!-- Bottom Navigation Bar -->
-        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-2 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center">
-            <a href="https://t.me/microjobspro" target="_blank" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">🎧</span>
-                <span>Help</span>
-            </a>
-            <a href="deposit.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👛</span>
-                <span>Wallet</span>
-            </a>
-            <a href="dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
-                    🏠
-                </div>
-                <span class="font-medium mt-0.5">Home</span>
-            </a>
-            <a href="referral.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
-                    👥
-                </div>
-                <span class="font-medium mt-0.5">Team</span>
-            </a>
-            <a href="profile.html" class="flex flex-col items-center text-indigo-600 text-[10px] -mt-4">
-                <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white text-lg">
-                    👤
-                </div>
-                <span class="font-bold mt-0.5">Profile</span>
-            </a>
-        </nav>
+        <!-- Animated Bottom Navigation Bar -->
+        <div class="nav-container">  
+            <div class="indicator"></div>  
+            
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
+                <i class="fa-solid fa-headset"></i>  
+                <span>Help</span>  
+            </a>  
+
+            <a href="wallet.html" class="nav-item-animated">  
+                <i class="fa-solid fa-wallet"></i>  
+                <span>Wallet</span>  
+            </a>  
+            
+            <a href="dashboard.html" class="nav-item-animated">  
+                <i class="fa-solid fa-house"></i>  
+                <span>Home</span>  
+            </a>  
+            
+            <a href="referral.html" class="nav-item-animated">  
+                <i class="fa-solid fa-user-group"></i>  
+                <span>Team</span>  
+            </a>  
+            
+            <a href="profile.html" class="nav-item-animated active">  
+                <i class="fa-solid fa-user"></i>  
+                <span>Profile</span>  
+            </a>  
+        </div>  
     </div>
+
+    <!-- Navigation Animation Script -->
+    <script>  
+        const items = document.querySelectorAll(".nav-item-animated");  
+        const indicator = document.querySelector(".indicator");  
+          
+        function moveIndicator(el){  
+            if (!el) return;
+            const left = el.offsetLeft + (el.offsetWidth / 2) - (indicator.offsetWidth / 2);  
+            indicator.style.left = left + "px";  
+            items.forEach(i => i.classList.remove("active"));  
+            el.classList.add("active");  
+        }  
+          
+        items.forEach(item => {  
+            item.addEventListener("click", () => {  
+                moveIndicator(item);  
+            });  
+        });  
+          
+        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
+        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
+    </script>
 
     <!-- Firebase Script & Logic -->
     <script type="module">
