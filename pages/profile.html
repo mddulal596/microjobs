@@ -80,9 +80,9 @@
 <body class="bg-gray-50 text-gray-800 antialiased">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
         
-        <!-- Profile & Balance Header -->
+        <!-- Profile & Balance Header (ওয়ালেট স্টাইলে সাজানো) -->
         <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg relative">
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex justify-between items-center mb-3">
                 <a href="dashboard.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
                     <i class="fa-solid fa-arrow-left"></i> Back
                 </a>
@@ -91,7 +91,7 @@
             </div>
 
             <!-- Profile Picture, Name & Email -->
-            <div class="flex flex-col items-center mt-1">
+            <div class="flex flex-col items-center mb-4">
                 <div class="w-16 h-16 rounded-full border-4 border-white/30 overflow-hidden bg-white text-purple-700 flex items-center justify-center font-extrabold text-xl shadow-xl">
                     <span id="profileInitial">U</span>
                     <img id="profileImage" src="" alt="" class="w-full h-full object-cover hidden">
@@ -100,19 +100,15 @@
                 <p id="userEmailDisplay" class="text-[11px] text-purple-200">loading@gmail.com</p>
             </div>
 
-            <!-- Balances Cards (Main, Deposit & Total Balance) -->
-            <div class="grid grid-cols-3 gap-2 mt-4">
-                <div class="bg-purple-800/50 p-2.5 rounded-2xl backdrop-blur-sm border border-purple-400/30 text-center">
-                    <p class="text-[9px] text-purple-200 font-medium">Main Balance</p>
-                    <h2 id="mainBalance" class="text-xs font-extrabold mt-0.5">৳ 0.00</h2>
+            <!-- Balances Cards (ওয়ালেটের মতো গ্রিড সিস্টেমে ব্যালেন্স লোড) -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
+                    <h2 id="mainBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
                 </div>
-                <div class="bg-purple-800/50 p-2.5 rounded-2xl backdrop-blur-sm border border-purple-400/30 text-center">
-                    <p class="text-[9px] text-purple-200 font-medium">Deposit Balance</p>
-                    <h2 id="depositBalance" class="text-xs font-extrabold mt-0.5">৳ 0.00</h2>
-                </div>
-                <div class="bg-indigo-900/70 p-2.5 rounded-2xl backdrop-blur-sm border border-indigo-400/40 text-center shadow">
-                    <p class="text-[9px] text-indigo-200 font-bold">Total Balance</p>
-                    <h2 id="totalBalance" class="text-xs font-extrabold mt-0.5 text-yellow-300">৳ 0.00</h2>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
+                    <h2 id="depositBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
                 </div>
             </div>
         </header>
@@ -212,7 +208,7 @@
         window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
 
-    <!-- Firebase Realtime Sync & Total Balance Logic -->
+    <!-- Firebase Realtime Sync -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
@@ -246,7 +242,7 @@
                 profileImgTag.classList.add('hidden');
             }
 
-            // Realtime Balances, Status & Total Balance Calculation
+            // Realtime Balances & Status Sync (ওয়ালেটের মতোই হুবহু লোড হবে)
             const userDocRef = doc(db, "users", user.uid);
             onSnapshot(userDocRef, (docSnap) => {
                 if (docSnap.exists()) {
@@ -254,11 +250,9 @@
 
                     const mainBal = Number(data.mainBalance ?? 0);
                     const depositBal = Number(data.depositBalance ?? 0);
-                    const totalBal = mainBal + depositBal; // মোট ব্যালেন্স যোগ করা হলো
                     
                     document.getElementById('mainBalance').innerText = `৳ ${mainBal.toFixed(2)}`;
                     document.getElementById('depositBalance').innerText = `৳ ${depositBal.toFixed(2)}`;
-                    document.getElementById('totalBalance').innerText = `৳ ${totalBal.toFixed(2)}`;
 
                     const statusText = document.getElementById('statusText');
                     const activateBtn = document.getElementById('activateBtn');
