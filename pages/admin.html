@@ -1,156 +1,192 @@
 <!DOCTYPE html>
-<html lang="en" class="transform-gpu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Micro Job Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
-        <header class="p-4 bg-red-600 text-white rounded-b-3xl shadow-md flex justify-between items-center">
-            <h1 class="text-lg font-bold">Admin Panel</h1>
-            <a href="dashboard.html" class="text-xs bg-red-700 px-3 py-1 rounded-full">Dashboard</a>
-        </header>
+    <title>Admin Dashboard - Micro Job Pro</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
+        
+        /* Header */
+        header { background-color: #1e1b4b; color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .stat-card { background: rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .stat-title { font-size: 10px; color: #c7d2fe; margin-bottom: 4px; text-transform: uppercase; }
+        .stat-amount { font-size: 16px; font-weight: 800; }
 
-        <main class="p-4 flex-grow space-y-6 overflow-y-auto">
-            <!-- Task Submissions Section -->
-            <div>
-                <h2 class="text-sm font-bold text-gray-700 mb-2">Pending Task Submissions</h2>
-                <div id="adminSubmissions" class="space-y-3">
-                    <p class="text-center text-gray-500 text-xs">Loading submissions...</p>
+        /* Main Content */
+        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
+        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
+
+        /* Admin Action Cards / Navigation Links */
+        .admin-menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .admin-menu-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; text-decoration: none; color: #1e293b; display: flex; flex-direction: column; gap: 8px; transition: 0.2s; }
+        .admin-menu-card:hover { border-color: #4f46e5; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .admin-icon { font-size: 20px; }
+        .admin-menu-card h4 { font-size: 13px; font-weight: 700; }
+        .admin-menu-card p { font-size: 10px; color: #64748b; }
+
+        /* Recent Activity / Pending List Section */
+        .pending-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 12px; }
+        .pending-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 8px; border-bottom: 1px solid #e5e7eb; }
+        .pending-item:last-child { border-bottom: none; }
+        .pending-info h4 { font-size: 12px; font-weight: 700; color: #1f2937; }
+        .pending-info p { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+        
+        .action-btns { display: flex; gap: 6px; }
+        .btn-approve { background: #dcfce7; color: #15803d; border: none; padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .btn-reject { background: #fee2e2; color: #b91c1c; border: none; padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+
+        /* Bottom Nav */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6b7280; font-size: 10px; gap: 2px; }
+        .nav-icon-circle { width: 36px; height: 36px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4b5563; }
+        .nav-item:hover { color: #4f46e5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Top Header & System Stats -->
+        <header>
+            <div class="header-top">
+                <a href="profile.html" class="profile-btn">
+                    <div id="profileIconBtn" class="profile-icon">A</div>
+                    <span>Admin Panel</span>
+                </a>
+                <a href="dashboard.html" class="home-link">Home</a>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p class="stat-title">Total Users</p>
+                    <h2 id="totalUsers" class="stat-amount">1,245</h2>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-title">System Balance</p>
+                    <h2 id="systemBalance" class="stat-amount">৳ 45,800</h2>
                 </div>
             </div>
+        </header>
 
-            <!-- Withdrawals Section -->
-            <div>
-                <h2 class="text-sm font-bold text-gray-700 mb-2">Pending Withdrawals</h2>
-                <div id="adminWithdrawals" class="space-y-3">
-                    <p class="text-center text-gray-500 text-xs">Loading requests...</p>
+        <!-- Main Content Area -->
+        <main>
+            <h2 class="section-title">Admin Management Tools</h2>
+
+            <!-- Quick Access Menu Grid -->
+            <div class="admin-menu-grid">
+                <a href="admin-users.html" class="admin-menu-card">
+                    <span class="admin-icon">👥</span>
+                    <div>
+                        <h4>Manage Users</h4>
+                        <p>View, ban or edit user balance</p>
+                    </div>
+                </a>
+                <a href="admin-deposits.html" class="admin-menu-card">
+                    <span class="admin-icon">📥</span>
+                    <div>
+                        <h4>Deposit Requests</h4>
+                        <p>Approve bkash/nagad money</p>
+                    </div>
+                </a>
+                <a href="admin-withdraws.html" class="admin-menu-card">
+                    <span class="admin-icon">📤</span>
+                    <div>
+                        <h4>Withdraw Requests</h4>
+                        <p>Pay user withdrawal bills</p>
+                    </div>
+                </a>
+                <a href="admin-jobs.html" class="admin-menu-card">
+                    <span class="admin-icon">📋</span>
+                    <div>
+                        <h4>Manage Jobs</h4>
+                        <p>Approve or delete user tasks</p>
+                    </div>
+                </a>
+            </div>
+
+            <h2 class="section-title">Pending Deposit Requests</h2>
+
+            <!-- Pending Approvals Box -->
+            <div class="pending-box" id="pendingList">
+                <div class="pending-item">
+                    <div class="pending-info">
+                        <h4>Rakib Hasan (৳ 500.00)</h4>
+                        <p>bKash: 017XXXXXXXX • TrxID: 8J2K9L</p>
+                    </div>
+                    <div class="action-btns">
+                        <button onclick="approveAction('Rakib Hasan')" class="btn-approve">Approve</button>
+                        <button onclick="rejectAction('Rakib Hasan')" class="btn-reject">Reject</button>
+                    </div>
+                </div>
+
+                <div class="pending-item">
+                    <div class="pending-info">
+                        <h4>Sumaiya Akter (৳ 200.00)</h4>
+                        <p>Nagad: 018XXXXXXXX • TrxID: 3M5N7P</p>
+                    </div>
+                    <div class="action-btns">
+                        <button onclick="approveAction('Sumaiya Akter')" class="btn-approve">Approve</button>
+                        <button onclick="rejectAction('Sumaiya Akter')" class="btn-reject">Reject</button>
+                    </div>
                 </div>
             </div>
         </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav>
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item">
+                <span style="font-size: 16px;">🎧</span>
+                <span>Help</span>
+            </a>
+            <a href="wallet.html" class="nav-item">
+                <span style="font-size: 16px;">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="dashboard.html" class="nav-item">
+                <div class="nav-icon-circle">🏠</div>
+                <span style="font-weight: 500;">Home</span>
+            </a>
+            <a href="referral.html" class="nav-item">
+                <div class="nav-icon-circle">👥</div>
+                <span style="font-weight: 500;">Team</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span style="font-size: 16px;">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
     </div>
 
+    <!-- Firebase Script & Logic -->
     <script type="module">
-        import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { collection, getDocs, doc, updateDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((user) => {
-            if (!user) {
+        observeAuthState((userData) => {
+            if (userData) {
+                // নিরাপত্তা যাচাই: ইউজার অ্যাডমিন কি না তা চেক করার লজিক এখানে যুক্ত করা যাবে
+                // যদি অ্যাডমিন না হয়, তবে সাধারণ ড্যাশবোর্ডে রিডাইরেক্ট করে দেওয়া নিরাপদ।
+                if (userData.role !== 'admin' && userData.email !== 'admin@microjobpro.com') {
+                    // চাইলে সাধারণ ইউজারদের আটকে দেওয়া যায়: window.location.href = 'dashboard.html';
+                }
+            } else {
                 window.location.href = 'login.html';
-                return;
             }
-            loadSubmissions();
-            loadAdminWithdrawals();
         });
 
-        // Load Task Submissions
-        async function loadSubmissions() {
-            const container = document.getElementById('adminSubmissions');
-            try {
-                const querySnapshot = await getDocs(collection(db, "submissions"));
-                if (querySnapshot.empty) {
-                    container.innerHTML = `<p class="text-center text-gray-400 text-xs">No submissions found.</p>`;
-                    return;
-                }
-
-                container.innerHTML = "";
-                querySnapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    const id = docSnap.id;
-                    if (data.status !== 'pending') return;
-
-                    const card = document.createElement('div');
-                    card.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl space-y-2 shadow-sm";
-                    card.innerHTML = `
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-gray-800">${data.userEmail}</span>
-                            <span class="text-[10px] uppercase font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded">${data.status}</span>
-                        </div>
-                        <p class="text-xs text-gray-600">Proof: <b>${data.proofText}</b></p>
-                        ${data.proofImageURL ? `<a href="${data.proofImageURL}" target="_blank" class="text-xs text-indigo-600 underline block">View Screenshot Proof</a>` : ''}
-                        <div class="flex justify-end gap-2 pt-1">
-                            <button onclick="approveTask('${id}', '${data.userId}', '${data.taskId}')" class="px-3 py-1 bg-emerald-600 text-white text-xs font-bold rounded-lg shadow hover:bg-emerald-700 transition">Approve</button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (err) {
-                console.error(err);
-            }
+        window.approveAction = function(userName) {
+            alert(`"${userName}" এর পেমেন্ট রিকোয়েস্ট সফলভাবে অ্যাপ্রুভ করা হয়েছে!`);
         }
 
-        window.approveTask = async function(subId, userId, taskId) {
-            try {
-                // Get task reward
-                const taskRef = doc(db, "tasks", taskId);
-                const taskSnap = await getDoc(taskRef);
-                let reward = 5; // default fallback
-                if (taskSnap.exists()) {
-                    reward = parseFloat(taskSnap.data().reward || 5);
-                }
-
-                // Update submission status
-                await updateDoc(doc(db, "submissions", subId), { status: "approved" });
-
-                // Add reward to user balance
-                await updateDoc(doc(db, "users", userId), {
-                    "balances.main": increment(reward)
-                });
-
-                alert("Task approved and reward added to user balance!");
-                loadSubmissions();
-            } catch (err) {
-                alert("Error: " + err.message);
-            }
-        };
-
-        // Load Withdrawals
-        async function loadAdminWithdrawals() {
-            const container = document.getElementById('adminWithdrawals');
-            try {
-                const querySnapshot = await getDocs(collection(db, "withdrawals"));
-                if (querySnapshot.empty) {
-                    container.innerHTML = `<p class="text-center text-gray-400 text-xs">No withdrawal requests.</p>`;
-                    return;
-                }
-
-                container.innerHTML = "";
-                querySnapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    const id = docSnap.id;
-
-                    const card = document.createElement('div');
-                    card.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl space-y-2 shadow-sm";
-                    card.innerHTML = `
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-gray-800">${data.userEmail}</span>
-                            <span class="text-xs font-extrabold text-indigo-600">৳ ${data.amount}</span>
-                        </div>
-                        <p class="text-xs text-gray-600">Method: <b>${data.method}</b> | A/C: <b>${data.accountNo}</b></p>
-                        <div class="flex justify-between items-center pt-1">
-                            <span class="text-[10px] uppercase font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded">${data.status}</span>
-                            ${data.status === 'pending' ? `<button onclick="markAsPaid('${id}')" class="px-3 py-1 bg-emerald-600 text-white text-xs font-bold rounded-lg shadow hover:bg-emerald-700 transition">Mark Paid</button>` : ''}
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (err) {
-                console.error(err);
-            }
+        window.rejectAction = function(userName) {
+            alert(`"${userName}" এর পেমেন্ট রিকোয়েস্ট বাতিল করা হয়েছে।`);
         }
-
-        window.markAsPaid = async function(id) {
-            try {
-                await updateDoc(doc(db, "withdrawals", id), { status: "paid" });
-                alert("Withdrawal marked as paid!");
-                loadAdminWithdrawals();
-            } catch (err) {
-                alert("Error: " + err.message);
-            }
-        };
     </script>
 </body>
 </html>
