@@ -1,205 +1,78 @@
 <!DOCTYPE html>
-<html lang="en" class="transform-gpu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Program - Micro Job Pro</title>
-    <!-- Tailwind CSS -->
+    <title>Referral Team - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome CDN for Navigation Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Animated Bottom Nav Styles */
         .nav-container {  
-            position: fixed;  
-            bottom: 15px;  
-            left: 50%;
-            transform: translateX(-50%);
-            width: 92%;  
-            max-width: 440px;  
-            height: 70px;  
-            background: #16a34a;  
-            border-radius: 22px;  
-            display: flex;  
-            justify-content: space-around;  
-            align-items: center;  
-            box-shadow: 0 10px 25px rgba(0,0,0,.2);  
-            overflow: visible;  
-            z-index: 100;
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);  
+            width: 92%; max-width: 440px; height: 70px; background: #4f46e5;  
+            border-radius: 22px; display: flex; justify-content: space-around;  
+            align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,.2); z-index: 100;  
         }  
-          
-        .nav-item-animated {  
-            flex: 1;  
-            text-decoration: none;  
-            color: #fff;  
-            text-align: center;  
-            position: relative;  
-            z-index: 2;  
-        }  
-          
-        .nav-item-animated i {  
-            font-size: 22px;  
-            transition: .35s;  
-        }  
-          
-        .nav-item-animated span {  
-            display: block;  
-            font-size: 11px;  
-            margin-top: 4px;  
-            transition: .35s;  
-        }  
-          
-        .nav-item-animated.active i {  
-            transform: translateY(-10px);  
-        }  
-          
-        .nav-item-animated.active span {  
-            font-weight: bold;  
-        }  
-          
+        .nav-item-animated { flex: 1; text-decoration: none; color: #fff; text-align: center; position: relative; z-index: 2; }  
+        .nav-item-animated i { font-size: 22px; transition: .35s; }  
+        .nav-item-animated span { display: block; font-size: 11px; margin-top: 4px; transition: .35s; }  
+        .nav-item-animated.active i { transform: translateY(-10px); }  
+        .nav-item-animated.active span { font-weight: bold; }  
         .indicator {  
-            position: absolute;  
-            top: -15px; /* এটি অ্যাডজাস্ট করে মাঝামাঝি করা হয়েছে */
-            width: 60px;  
-            height: 60px;  
-            background: #2196f3;  
-            border-radius: 50%;  
-            border: 4px solid #fff;  
-            transition: left .35s ease;  
-            box-shadow: 0 0 20px rgba(33,150,243,.5);  
-            z-index: 1;  
+            position: absolute; top: -15px; width: 60px; height: 60px;  
+            background: #312e81; border-radius: 50%; border: 4px solid #fff;  
+            transition: left .35s ease; box-shadow: 0 0 20px rgba(49,46,129,.5); z-index: 1;  
         }  
-          
-        .indicator::before {  
-            content: "";  
-            position: absolute;  
-            inset: -6px;  
-            border-radius: 50%;  
-            border: 2px solid rgba(33,150,243,.4);  
-            animation: pulse 2s infinite;  
-        }  
-          
-        @keyframes pulse {  
-            0% {  
-                transform: scale(1);  
-                opacity: 1;  
-            }  
-            100% {  
-                transform: scale(1.4);  
-                opacity: 0;  
-            }  
-        } 
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24 relative">
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
         
-        <!-- Top Header & Balances -->
-        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center">
-                    <a href="profile.html" class="flex items-center gap-2 bg-indigo-700/80 hover:bg-indigo-700 border border-indigo-400/40 px-3 py-1.5 rounded-full shadow-inner transition">
-                        <div id="profileIconBtn" class="w-6 h-6 bg-white text-indigo-600 rounded-full flex items-center justify-center text-xs font-extrabold shadow">
-                            U
-                        </div>
-                        <span id="userNameDisplay" class="text-xs font-bold tracking-wide truncate max-w-[120px]">Loading...</span>
-                    </a>
-                </div>
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
+            <div class="flex justify-between items-center mb-2">
+                <a href="dashboard.html" class="text-xs bg-white/25 hover:bg-white/40 transition px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left"></i> Home
+                </a>
+                <span class="text-xs font-bold tracking-wider uppercase text-purple-200">Referral Team</span>
+                <div class="w-12"></div>
             </div>
-            <div class="grid grid-cols-2 gap-3 mt-2">
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
-                    <h2 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
-                </div>
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
-                    <h2 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
-                </div>
-            </div>
+            <div class="text-base font-extrabold mt-1">Invite & Earn</div>
         </header>
 
-        <!-- Main Content Area -->
-        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
-            
-            <!-- Invite Banner Info -->
-            <div class="space-y-1">
-                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">INVITE FRIENDS & EARN COMMISSION</h2>
-                <p class="text-[11px] text-gray-500 leading-relaxed">
-                    Share your unique referral code with friends. When they join using your code and complete tasks, you will earn lifetime bonuses!
-                </p>
+        <main class="p-4 flex-grow">
+            <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 mb-4 text-center shadow-sm">
+                <h3 class="text-xs font-bold text-indigo-900 mb-1">🔗 আপনার রেফারেল লিংক</h3>
+                <p id="refLinkText" class="text-[11px] text-indigo-700 break-all bg-white p-2.5 rounded-xl border border-indigo-100 my-2">Loading referral link...</p>
+                <button onclick="copyRefLink()" class="w-full py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow hover:bg-indigo-700 transition">Copy Link</button>
             </div>
 
-            <!-- Referral Code Card -->
-            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3 shadow-sm text-center">
-                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">YOUR REFERRAL CODE</p>
-                <div class="py-1">
-                    <input type="text" id="myReferralCode" readonly class="w-full bg-transparent text-center text-2xl font-extrabold text-indigo-600 tracking-widest focus:outline-none" value="Loading...">
-                </div>
-                <button onclick="copyReferralCode()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
-                    <span class="text-base">📋</span>
-                    <span>Copy Code</span>
-                </button>
-            </div>
-
-            <!-- Stats Side-by-Side -->
+            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Team Statistics</h2>
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRED</p>
-                    <h3 id="totalTeam" class="text-lg font-extrabold text-indigo-600">0</h3>
+                <div class="p-4 bg-purple-50/60 border border-purple-100 rounded-2xl text-center shadow-sm">
+                    <p class="text-[11px] text-purple-600 font-bold uppercase">Total Referrals</p>
+                    <h3 class="text-lg font-extrabold text-purple-900 mt-1" id="totalReferrals">0</h3>
                 </div>
-                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">REFERRAL EARNINGS</p>
-                    <h3 id="referralEarnings" class="text-lg font-extrabold text-green-600">৳ 0.00</h3>
+                <div class="p-4 bg-emerald-50/60 border border-emerald-100 rounded-2xl text-center shadow-sm">
+                    <p class="text-[11px] text-emerald-600 font-bold uppercase">Referral Earnings</p>
+                    <h3 class="text-lg font-extrabold text-emerald-900 mt-1">৳ <span id="refEarnings">0.00</span></h3>
                 </div>
             </div>
-
-            <!-- Logout Button -->
-            <div class="pt-2">
-                <button id="logoutBtn" class="w-full py-3.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs rounded-2xl border border-red-200 shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
-                    <span>🚪</span>
-                    <span>Logout Account</span>
-                </button>
-            </div>
-
         </main>
 
-        <!-- Animated Bottom Navigation Bar -->
         <div class="nav-container">  
             <div class="indicator"></div>  
-            
-            <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
-                <i class="fa-solid fa-headset"></i>  
-                <span>Help</span>  
-            </a>  
-
-            <a href="wallet.html" class="nav-item-animated">  
-                <i class="fa-solid fa-wallet"></i>  
-                <span>Wallet</span>  
-            </a>  
-            
-            <a href="dashboard.html" class="nav-item-animated">  
-                <i class="fa-solid fa-house"></i>  
-                <span>Home</span>  
-            </a>  
-            
-            <a href="referral.html" class="nav-item-animated active">  
-                <i class="fa-solid fa-user-group"></i>  
-                <span>Team</span>  
-            </a>  
-            
-            <a href="profile.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user"></i>  
-                <span>Profile</span>  
-            </a>  
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated"><i class="fa-solid fa-headset"></i><span>Help</span></a>  
+            <a href="wallet.html" class="nav-item-animated"><i class="fa-solid fa-wallet"></i><span>Wallet</span></a>  
+            <a href="dashboard.html" class="nav-item-animated"><i class="fa-solid fa-house"></i><span>Home</span></a>  
+            <a href="referral.html" class="nav-item-animated active"><i class="fa-solid fa-user-group"></i><span>Team</span></a>  
+            <a href="profile.html" class="nav-item-animated"><i class="fa-solid fa-user"></i><span>Profile</span></a>  
         </div>  
     </div>
 
-    <!-- Navigation Animation Script -->
     <script>  
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
-          
         function moveIndicator(el){  
             if (!el) return;
             const left = el.offsetLeft + (el.offsetWidth / 2) - (indicator.offsetWidth / 2);  
@@ -207,60 +80,36 @@
             items.forEach(i => i.classList.remove("active"));  
             el.classList.add("active");  
         }  
-          
-        items.forEach(item => {  
-            item.addEventListener("click", () => {  
-                moveIndicator(item);  
-            });  
-        });  
-          
+        items.forEach(item => item.addEventListener("click", () => moveIndicator(item)));  
         window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
         window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
 
-    <!-- Firebase Script & Logic -->
     <script type="module">
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { observeAuthState } from '../firebase/auth.js';
+        import { db } from '../firebase/firebase-config.js';
+        import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((userData) => {
-            if (userData) {
-                const name = userData.fullName || userData.displayName || "User";
-                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
-                document.getElementById('userNameDisplay').innerText = name;
+        observeAuthState((user) => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            
+            const refUrl = `${window.location.origin}/pages/register.html?ref=${user.uid}`;
+            document.getElementById('refLinkText').innerText = refUrl;
 
-                // Load Balances correctly supporting both field formats
-                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
-                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
-
-                // Referral Code fallback to MCJVIP format
-                const refCode = userData.referralCode || "MCJVIP" + userData.uid.substring(0, 4).toUpperCase();
-                document.getElementById('myReferralCode').value = refCode;
-
-                // Stats mapping
-                const totalRef = userData.totalReferred ?? userData.totalTeam ?? 0;
-                document.getElementById('totalTeam').innerText = totalRef;
-
-                const refEarnings = userData.referralEarnings ?? userData.referralBonus ?? 0;
-                document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
-            } else {
-                window.location.href = 'login.html';
-            }
+            onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('totalReferrals').innerText = data.totalReferrals || 0;
+                    document.getElementById('refEarnings').innerText = Number(data.referralEarnings || 0).toFixed(2);
+                }
+            });
         });
 
-        window.copyReferralCode = function() {
-            const copyText = document.getElementById('myReferralCode');
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(copyText.value);
-            alert('Referral code copied successfully!');
+        window.copyRefLink = function() {
+            const linkText = document.getElementById('refLinkText').innerText;
+            navigator.clipboard.writeText(linkText);
+            alert("রেফারেল লিংক কপি করা হয়েছে!");
         }
-
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
-        });
     </script>
 </body>
 </html>
