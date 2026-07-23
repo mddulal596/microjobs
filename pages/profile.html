@@ -127,41 +127,34 @@
                     <a id="activateBtn" href="activate-account.html" class="hidden bg-amber-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow hover:bg-amber-700 transition">Activate</a>
                 </div>
 
-                <!-- Menu Links matching Dashboard style -->
-                <a href="wallet.html" class="p-3.5 bg-purple-50/60 border border-purple-100 rounded-2xl flex items-center justify-between hover:bg-purple-100 transition shadow-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="text-xl">💳</span>
-                        <span class="text-xs font-bold text-purple-900">My Wallet & Balances</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-purple-400"></i>
-                </a>
+                <!-- First Row: Wallet & Referral (Side by Side) -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <a href="wallet.html" class="p-3.5 bg-purple-50/60 border border-purple-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-purple-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">💳</span>
+                        <span class="text-xs font-bold text-purple-900 leading-tight">My Wallet & Balances</span>
+                    </a>
 
-                <a href="referral.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex items-center justify-between hover:bg-indigo-100 transition shadow-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="text-xl">👥</span>
-                        <span class="text-xs font-bold text-indigo-900">Referral Team</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-indigo-400"></i>
-                </a>
+                    <a href="referral.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-indigo-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">👥</span>
+                        <span class="text-xs font-bold text-indigo-900 leading-tight">Referral Team</span>
+                    </a>
+                </div>
 
-                <a href="history.html" class="p-3.5 bg-rose-50/60 border border-rose-100 rounded-2xl flex items-center justify-between hover:bg-rose-100 transition shadow-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="text-xl">📊</span>
-                        <span class="text-xs font-bold text-rose-900">Task History</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-rose-400"></i>
-                </a>
+                <!-- Second Row: Task History & Support (Side by Side) -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <a href="history.html" class="p-3.5 bg-rose-50/60 border border-rose-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-rose-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">📊</span>
+                        <span class="text-xs font-bold text-rose-900 leading-tight">Task History</span>
+                    </a>
 
-                <a href="https://t.me/microjobspro" target="_blank" class="p-3.5 bg-sky-50/60 border border-sky-100 rounded-2xl flex items-center justify-between hover:bg-sky-100 transition shadow-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="text-xl">🎧</span>
-                        <span class="text-xs font-bold text-sky-900">Support & Help</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-sky-400"></i>
-                </a>
+                    <a href="https://t.me/microjobspro" target="_blank" class="p-3.5 bg-sky-50/60 border border-sky-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-sky-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">🎧</span>
+                        <span class="text-xs font-bold text-sky-900 leading-tight">Support & Help</span>
+                    </a>
+                </div>
 
                 <!-- Logout Button -->
-                <button id="logoutBtn" class="w-full mt-2 p-3.5 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 transition shadow-sm text-red-600 font-bold text-xs">
+                <button id="logoutBtn" class="w-full mt-2 p-3.5 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 transition shadow-sm text-red-600 font-bold text-xs cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout Account
                 </button>
             </div>
