@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Job - Micro Job Pro</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
+        
+        /* Header */
+        header { background-color: #4f46e5; color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        
+        .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .balance-card { background: rgba(255, 255, 255, 0.12); padding: 14px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.2); }
+        .balance-title { font-size: 11px; color: #e0e7ff; margin-bottom: 4px; }
+        .balance-amount { font-size: 18px; font-weight: 800; }
+
+        /* Main Content */
+        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
+        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
+
+        /* Form Inputs */
+        .form-group { margin-bottom: 14px; }
+        .form-label { display: block; font-size: 11px; font-weight: bold; color: #374151; margin-bottom: 6px; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 12px; font-size: 12px; outline: none; transition: 0.2s; background: #f9fafb; color: #1f2937; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #4f46e5; background: #ffffff; }
+        .form-textarea { resize: vertical; min-height: 80px; }
+
+        .calculation-box { background: #e0e7ff; border: 1px solid #c7d2fe; border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 11px; color: #3730a3; display: flex; justify-content: space-between; align-items: center; }
+        .calculation-box span { font-weight: 800; font-size: 13px; }
+
+        .submit-btn { width: 100%; background: #4f46e5; color: #ffffff; border: none; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 4px; }
+        .submit-btn:hover { background: #4338ca; }
+
+        /* Bottom Nav */
+        nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6b7280; font-size: 10px; gap: 2px; }
+        .nav-icon-circle { width: 36px; height: 36px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #4b5563; }
+        .nav-item:hover { color: #4f46e5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Top Header & Balances -->
+        <header>
+            <div class="header-top">
+                <a href="profile.html" class="profile-btn">
+                    <div id="profileIconBtn" class="profile-icon">U</div>
+                    <span id="userNameDisplay">Loading...</span>
+                </a>
+                <a href="dashboard.html" class="home-link">Home</a>
+            </div>
+            <div class="balance-grid">
+                <div class="balance-card">
+                    <p class="balance-title">Main Balance</p>
+                    <h2 id="mainBalance" class="balance-amount">৳ 0.00</h2>
+                </div>
+                <div class="balance-card">
+                    <p class="balance-title">Deposit Balance</p>
+                    <h2 id="depositBalance" class="balance-amount">৳ 0.00</h2>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main>
+            <h2 class="section-title">Create New Job Post</h2>
+
+            <!-- Job Post Form -->
+            <form onsubmit="handlePostJob(event)">
+                <div class="form-group">
+                    <label class="form-label">Select Category</label>
+                    <select id="jobCategory" class="form-select" required>
+                        <option value="YouTube">YouTube Video Watch & Like</option>
+                        <option value="Facebook">Facebook Page Follow</option>
+                        <option value="Telegram">Telegram Channel Join</option>
+                        <option value="Website">Website Visit & Browse</option>
+                        <option value="Custom">Custom Task</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Job Title</label>
+                    <input type="text" id="jobTitle" class="form-input" placeholder="e.g. Watch full video and subscribe" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Job Description / Instructions</label>
+                    <textarea id="jobDescription" class="form-textarea" placeholder="1. Go to this link... 2. Watch 2 minutes... 3. Submit proof..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Required Workers (Quantity)</label>
+                    <input type="number" id="jobWorkers" class="form-input" placeholder="e.g. 100" min="1" required oninput="calculateTotal()">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Reward Per Worker (৳)</label>
+                    <input type="number" id="jobReward" class="form-input" value="0.15" step="0.01" min="0.15" required oninput="calculateTotal()">
+                </div>
+
+                <!-- Total Cost Calculation Box -->
+                <div class="calculation-box">
+                    <span>Total Budget Needed:</span>
+                    <span id="totalBudget">৳ 0.00</span>
+                </div>
+
+                <button type="submit" class="submit-btn">Publish Job</button>
+            </form>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav>
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item">
+                <span style="font-size: 16px;">🎧</span>
+                <span>Help</span>
+            </a>
+            <a href="wallet.html" class="nav-item">
+                <span style="font-size: 16px;">👛</span>
+                <span>Wallet</span>
+            </a>
+            <a href="dashboard.html" class="nav-item">
+                <div class="nav-icon-circle">🏠</div>
+                <span style="font-weight: 500;">Home</span>
+            </a>
+            <a href="referral.html" class="nav-item">
+                <div class="nav-icon-circle">👥</div>
+                <span style="font-weight: 500;">Team</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span style="font-size: 16px;">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Firebase Script & Logic -->
+    <script type="module">
+        import { observeAuthState } from '../firebase/auth.js';
+
+        observeAuthState((userData) => {
+            if (userData) {
+                const name = userData.fullName || userData.displayName || "User";
+                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
+                document.getElementById('userNameDisplay').innerText = name;
+
+                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
+                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
+                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
+                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        window.calculateTotal = function() {
+            const workers = parseFloat(document.getElementById('jobWorkers').value) || 0;
+            const reward = parseFloat(document.getElementById('jobReward').value) || 0;
+            const total = workers * reward;
+            document.getElementById('totalBudget').innerText = `৳ ${total.toFixed(2)}`;
+        }
+
+        window.handlePostJob = function(event) {
+            event.preventDefault();
+            const category = document.getElementById('jobCategory').value;
+            const title = document.getElementById('jobTitle').value;
+            const description = document.getElementById('jobDescription').value;
+            const workers = parseInt(document.getElementById('jobWorkers').value);
+            const reward = parseFloat(document.getElementById('jobReward').value);
+            const totalBudget = workers * reward;
+
+            if(!title || !description || !workers || !reward) {
+                alert('দয়া করে সব তথ্য সঠিকভাবে পূরণ করুন!');
+                return;
+            }
+
+            alert(`আপনার জব পোস্ট সফলভাবে পাবলিশ হয়েছে! মোট বাজেট ৳${totalBudget.toFixed(2)} কেটে নেওয়া হয়েছে।`);
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+  </html>
