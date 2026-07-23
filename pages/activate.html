@@ -43,8 +43,10 @@
         <header>
             <div class="header-top">
                 <a href="dashboard.html" class="profile-btn" id="headerProfileBtn">
-                    <div class="profile-icon" id="headerProfileIcon">M</div>
-                    <span id="headerUserName">Micro Job Pro</span>
+                    <span id="headerProfileIconContainer">
+                        <div class="profile-icon" id="headerProfileIcon">M</div>
+                    </span>
+                    <span id="headerUserName">Loading...</span>
                 </a>
                 <a href="dashboard.html" class="home-link">Home</a>
             </div>
@@ -91,9 +93,11 @@
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { observeAuthState } from '../firebase/auth.js';
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         
         const db = getFirestore();
+        const auth = getAuth();
         let currentUserUid = null;
 
         observeAuthState((userData) => {
@@ -103,18 +107,19 @@
             }
 
             currentUserUid = userData.uid;
+            const firebaseUser = auth.currentUser;
 
-            // ইউজারের নাম এবং জিমেইলের ছবি 헤ডার-এ সেট করার কোড
-            const userName = userData.fullName || userData.name || "Micro Job Pro";
-            const userPhoto = userData.photoURL || userData.profilePic;
+            // ডাটাবেজ এবং ফায়ারবেজ অথ উভয় জায়গা থেকে নাম ও ছবি కలেক্ট করার লজিক
+            const userName = userData.fullName || userData.name || (firebaseUser ? firebaseUser.displayName : null) || "Micro Job Pro";
+            const userPhoto = userData.photoURL || userData.profilePic || userData.image || (firebaseUser ? firebaseUser.photoURL : null);
             
             document.getElementById('headerUserName').textContent = userName;
             
-            const iconContainer = document.getElementById('headerProfileIcon');
+            const iconContainer = document.getElementById('headerProfileIconContainer');
             if (userPhoto) {
-                iconContainer.outerHTML = `<img src="${userPhoto}" class="profile-icon" id="headerProfileIcon" alt="Profile">`;
+                iconContainer.innerHTML = `<img src="${userPhoto}" class="profile-icon" alt="Profile">`;
             } else {
-                iconContainer.textContent = userName.charAt(0).toUpperCase();
+                iconContainer.innerHTML = `<div class="profile-icon">${userName.charAt(0).toUpperCase()}</div>`;
             }
 
             // যদি অ্যাকাউন্ট ইতিমধ্যে একটিভ থাকে
