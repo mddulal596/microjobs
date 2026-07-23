@@ -12,9 +12,9 @@
         /* Top Header */
         header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
-        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; object-fit: cover; flex-shrink: 0; }
+        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; flex-shrink: 0; }
         
         .header-title { font-size: 16px; font-weight: 800; }
 
@@ -42,9 +42,9 @@
         <!-- Top Header -->
         <header>
             <div class="header-top">
-                <a href="dashboard.html" class="profile-btn">
-                    <div class="profile-icon">M</div>
-                    <span>Micro Job Pro</span>
+                <a href="dashboard.html" class="profile-btn" id="headerProfileBtn">
+                    <div class="profile-icon" id="headerProfileIcon">M</div>
+                    <span id="headerUserName">Micro Job Pro</span>
                 </a>
                 <a href="dashboard.html" class="home-link">Home</a>
             </div>
@@ -103,6 +103,19 @@
             }
 
             currentUserUid = userData.uid;
+
+            // ইউজারের নাম এবং জিমেইলের ছবি 헤ডার-এ সেট করার কোড
+            const userName = userData.fullName || userData.name || "Micro Job Pro";
+            const userPhoto = userData.photoURL || userData.profilePic;
+            
+            document.getElementById('headerUserName').textContent = userName;
+            
+            const iconContainer = document.getElementById('headerProfileIcon');
+            if (userPhoto) {
+                iconContainer.outerHTML = `<img src="${userPhoto}" class="profile-icon" id="headerProfileIcon" alt="Profile">`;
+            } else {
+                iconContainer.textContent = userName.charAt(0).toUpperCase();
+            }
 
             // যদি অ্যাকাউন্ট ইতিমধ্যে একটিভ থাকে
             if (userData.isActivated) {
