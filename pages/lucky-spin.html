@@ -144,7 +144,7 @@
 
         <button id="spin-btn" disabled>Loading...</button>
         <div id="result-display"></div>
-        <a href="../dashboard.html" class="back-link">← Back to Dashboard</a>
+        <a href="/spin.html" class="back-link">← Back to Dashboard</a>
     </div>
 
     <!-- Firebase & Spin Logic Integration -->
@@ -293,7 +293,6 @@
                 // Firebase Database আপডেট করা
                 const userDocRef = doc(db, "users", currentUser.uid);
                 
-                // আপনার ডাটাবেজ স্ট্রাকচারে ব্যালেন্স যে ফিল্ডে সেভ হয় (balances.main অথবা balance)
                 await updateDoc(userDocRef, {
                     "balances.main": increment(wonAmount)
                 });
