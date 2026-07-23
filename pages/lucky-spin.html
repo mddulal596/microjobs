@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Spin & Win</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1f4068, #162447);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #e43f5a;
+        }
+
+        p.instructions {
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            color: #a4b0be;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 20px auto;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Triangle Pointer / Arrow */
+        .pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 24px solid #e43f5a;
+            z-index: 10;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+        }
+
+        #spin-btn {
+            background-color: #e43f5a;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 15px rgba(228, 63, 90, 0.4);
+        }
+
+        #spin-btn:hover {
+            background-color: #d6304f;
+        }
+
+        #spin-btn:active {
+            transform: scale(0.95);
+        }
+
+        #spin-btn:disabled {
+            background-color: #57606f;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #result-display {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-height: 30px;
+            color: #2ed573;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Lucky Spin</h1>
+        <p class="instructions">Spin the wheel to win exciting prizes!</p>
+        
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <canvas id="wheel" width="500" height="500"></canvas>
+        </div>
+
+        <button id="spin-btn">SPIN NOW</button>
+        <div id="result-display"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const spinBtn = document.getElementById('spin-btn');
+        const resultDisplay = document.getElementById('result-display');
+
+        // Define the segments of the wheel (Prize, Color)
+        const prizes = [
+            { text: "$50 Voucher", color: "#f7f1e3" },
+            { text: "Try Again", color: "#aaa69d" },
+            { text: "20% Off", color: "#ff5252" },
+            { text: "Free Shipping", color: "#ffb142" },
+            { text: "$100 Prize", color: "#33d9b2" },
+            { text: "Better Luck", color: "#706fd3" }
+        ];
+
+        const numSegments = prizes.length;
+        const arcSize = (2 * Math.PI) / numSegments;
+        
+        let startAngle = 0;
+        let outsideRadius = 225;
+        let textRadius = 140;
+        let center = 250;
+
+        let isSpinning = false;
+        let currentAngle = 0;
+
+        // Draw individual wheel slices
+        function drawWheel() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < numSegments; i++) {
+                let angle = startAngle + i * arcSize;
+
+                // Draw Slice
+                ctx.beginPath();
+                ctx.fillStyle = prizes[i].color;
+                ctx.moveTo(center, center);
+                ctx.arc(center, center, outsideRadius, angle, angle + arcSize, false);
+                ctx.lineTo(center, center);
+                ctx.fill();
+                ctx.strokeStyle = "#ffffff";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw Text
+                ctx.save();
+                ctx.fillStyle = (prizes[i].color === "#f7f1e3") ? "#2f3542" : "#ffffff";
+                ctx.font = "bold 18px 'Segoe UI', Tahoma, sans-serif";
+                ctx.translate(
+                    center + Math.cos(angle + arcSize / 2) * textRadius,
+                    center + Math.sin(angle + arcSize / 2) * textRadius
+                );
+                ctx.rotate(angle + arcSize / 2 + Math.PI / 2);
+                let text = prizes[i].text;
+                ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+                ctx.restore();
+            }
+
+            // Draw outer border wheel hub
+            ctx.beginPath();
+            ctx.arc(center, center, outsideRadius, 0, 2 * Math.PI, false);
+            ctx.lineWidth = 8;
+            ctx.strokeStyle = "#ffffff";
+            ctx.stroke();
+        }
+
+        // Spin animation logic
+        function spinWheel() {
+            if (isSpinning) return;
+            isSpinning = true;
+            spinBtn.disabled = true;
+            resultDisplay.textContent = "";
+
+            let randomSpinAngle = Math.random() * 2000 + 3000; // Total rotation degree 
+            let spinTime = 0;
+            let totalSpinTime = Math.random() * 1000 + 4000; // 4 to 5 seconds duration
+
+            function rotateStep() {
+                spinTime += 30;
+                if (spinTime >= totalSpinTime) {
+                    stopRotation(randomSpinAngle);
+                    return;
+                }
+                
+                // Ease-out formula (slows down smoothly)
+                let progress = spinTime / totalSpinTime;
+                let easeOutCurrentAngle = randomSpinAngle * (1 - Math.pow(1 - progress, 3));
+                
+                startAngle = (currentAngle + easeOutCurrentAngle * Math.PI / 180) % (2 * Math.PI);
+                drawWheel();
+                
+                requestAnimationFrame(rotateStep);
+            }
+
+            rotateStep();
+        }
+
+        // Determine the winning prize when wheel stops
+        function stopRotation(randomSpinAngle) {
+            currentAngle = (currentAngle + randomSpinAngle * Math.PI / 180) % (2 * Math.PI);
+            isSpinning = false;
+            spinBtn.disabled = false;
+
+            // Calculate winning index based on top-center pointer location (270 degrees / -Math.PI / 2)
+            let degrees = (currentAngle * 180) / Math.PI;
+            let arcd = (360 / numSegments);
+            let index = Math.floor((360 - (degrees % 360)) / arcd) % numSegments;
+
+            let winningPrize = prizes[index].text;
+            resultDisplay.textContent = `🎉 Congratulations! You won: ${winningPrize}`;
+        }
+
+        // Initialize drawing on load
+        drawWheel();
+
+        // Event listener
+        spinBtn.addEventListener('click', spinWheel);
+    </script>
+</body>
+</html>
