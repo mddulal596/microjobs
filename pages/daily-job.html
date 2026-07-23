@@ -208,7 +208,53 @@
         }
 
         window.startTask = function(taskTitle, reward) {
-            alert(`You selected: "${taskTitle}" (Reward: ৳${reward}). Follow instructions and submit your work proof.`);
+            let modal = document.getElementById('taskModal');
+            if (!modal) {
+                const modalHTML = `
+                    <div id="taskModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px;">
+                        <div style="background: #ffffff; width: 100%; max-width: 400px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+                            <h3 id="modalTaskTitle" style="font-size: 16px; font-weight: 800; color: #1f2937; margin-bottom: 8px;"></h3>
+                            <p style="font-size: 12px; color: #16a34a; font-weight: bold; margin-bottom: 12px;">Reward: <span id="modalTaskReward"></span></p>
+                            
+                            <div style="background: #f3f4f6; padding: 12px; border-radius: 12px; font-size: 11px; color: #4b5563; margin-bottom: 15px; line-height: 1.4;">
+                                <strong>Instructions:</strong><br>
+                                ১. প্রথমে কাজটি সঠিকভাবে সম্পন্ন করুন।<br>
+                                ২. কাজের প্রুফ হিসেবে স্ক্রিনশট বা আপনার প্রুফ লিংক নিচে বক্সে লিখুন।
+                            </div>
+
+                            <label style="font-size: 11px; font-weight: bold; color: #374151; display: block; margin-bottom: 6px;">Submit Proof (Text / Link / Details):</label>
+                            <textarea id="taskProofInput" placeholder="Enter your proof here..." style="width: 100%; height: 80px; padding: 10px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 12px; margin-bottom: 15px; resize: none;"></textarea>
+
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="closeTaskModal()" style="flex: 1; background: #e5e7eb; color: #374151; border: none; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer;">Cancel</button>
+                                <button onclick="submitTaskProof()" style="flex: 1; background: #4f46e5; color: #ffffff; border: none; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer;">Submit Proof</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                modal = document.getElementById('taskModal');
+            }
+
+            document.getElementById('modalTaskTitle').innerText = taskTitle;
+            document.getElementById('modalTaskReward').innerText = `৳ ${reward}`;
+            document.getElementById('taskProofInput').value = '';
+            modal.style.display = 'flex';
+        }
+
+        window.closeTaskModal = function() {
+            const modal = document.getElementById('taskModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        window.submitTaskProof = function() {
+            const proof = document.getElementById('taskProofInput').value.trim();
+            if (!proof) {
+                alert('দয়া করে কাজের প্রুফ বা লিংক প্রদান করুন!');
+                return;
+            }
+            alert('আপনার টাস্ক প্রুফ সফলভাবে জমা হয়েছে! অ্যাডমিন যাচাই করার পর আপনার মূল ব্যালেন্সে টাকা যুক্ত করা হবে।');
+            closeTaskModal();
         }
     </script>
 </body>
