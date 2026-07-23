@@ -143,9 +143,14 @@
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { observeAuthState } from '../firebase/auth.js';
+        import { getFirestore, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const db = getFirestore();
+        let currentUserUid = null;
 
         observeAuthState((userData) => {
             if (userData) {
+                currentUserUid = userData.uid;
                 const name = userData.fullName || userData.displayName || "User";
                 document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
                 document.getElementById('userNameDisplay').innerText = name;
@@ -159,9 +164,28 @@
             }
         });
 
-        window.completeTask = function(taskName, reward) {
-            alert(`ধন্যবাদ! "${taskName}" সম্পন্ন হয়েছে। আপনার অ্যাকাউন্টে ৳${reward} যোগ করা হয়েছে।`);
-            // এখানে পরবর্তীতে টাস্ক সাবমিট এবং ব্যালেন্স আপডেটের জন্য Firebase ডাটাবেজ ফাংশন যুক্ত করা যাবে।
+        window.completeTask = async function(taskName, reward) {
+            if (!currentUserUid) {
+                alert('লগইন করা অবস্থায় নেই!');
+                return;
+            }
+
+            const confirmTask = confirm(`আপনি কি "${taskName}" কাজটি সম্পন্ন করেছেন? সম্পন্ন হলে আপনার মূল ব্যালেন্সে ৳${reward} যোগ হবে।`);
+            if (!confirmTask) return;
+
+            try {
+                const userRef = doc(db, "users", currentUserUid);
+                
+                await updateDoc(userRef, {
+                    mainBalance: increment(reward)
+                });
+
+                alert(`অভিনন্দন! "${taskName}" সফলভাবে সম্পন্ন হয়েছে এবং আপনার অ্যাকাউন্টে ৳${reward} যোগ করা হয়েছে।`);
+                window.location.reload();
+            } catch (error) {
+                console.error("Error updating balance: ", error);
+                alert('দুঃখিত, ব্যালেন্স আপডেট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+            }
         }
     </script>
 </body>
