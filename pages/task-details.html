@@ -9,13 +9,13 @@
         body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 30px; }
         
-        /* Header */
+        /* Top Header - Matching main design */
         header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .back-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
         
         .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
         .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
         
         .header-title { font-size: 16px; font-weight: 800; }
 
@@ -24,7 +24,7 @@
         .task-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .task-title { font-size: 14px; font-weight: 700; color: #1f2937; margin-bottom: 8px; }
         .task-reward { font-size: 13px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 8px; display: inline-block; margin-bottom: 12px; }
-        .section-heading { font-size: 11px; font-weight: bold; color: #4b5563; text-transform: uppercase; margin-top: 14px; margin-bottom: 6px; }
+        .section-heading { font-size: 11px; font-weight: bold; color: #374151; text-transform: uppercase; margin-top: 14px; margin-bottom: 6px; }
         .task-desc { font-size: 11px; color: #6b7280; line-height: 1.5; }
         
         .proof-box { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
@@ -45,14 +45,14 @@
 <body>
     <div class="container">
         <div>
-            <!-- Header -->
+            <!-- Top Header Matching Screenshot Design -->
             <header>
                 <div class="header-top">
-                    <a href="microjobs.html" class="back-link">← Back to Tasks</a>
-                    <a href="profile.html" class="profile-btn">
-                        <div id="profileIconBtn" class="profile-icon">U</div>
-                        <span id="userNameDisplay">Loading...</span>
+                    <a href="microjobs.html" class="profile-btn">
+                        <div class="profile-icon">←</div>
+                        <span>Back</span>
                     </a>
+                    <a href="dashboard.html" class="home-link">Home</a>
                 </div>
                 <div class="header-title">Task Details</div>
             </header>
@@ -106,10 +106,6 @@
         observeAuthState(async (userData) => {
             if (userData) {
                 currentUser = userData;
-                const name = userData.fullName || userData.displayName || "User";
-                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
-                document.getElementById('userNameDisplay').innerText = name;
-
                 await loadTaskDetails(taskId);
             } else {
                 window.location.href = 'login.html';
@@ -119,7 +115,7 @@
         async function loadTaskDetails(id) {
             const mainContent = document.getElementById('mainContent');
             if (!id) {
-                mainContent.innerHTML = `<div class="error-box">টাস্ক আইডি পাওয়া যায়নি! <br><br> <a href="microjobs.html" class="back-link" style="display:inline-block; background:#4f46e5; color:#fff; padding:8px 16px; border-radius:8px;">Back to Tasks</a></div>`;
+                mainContent.innerHTML = `<div class="error-box">টাস্ক আইডি পাওয়া যায়নি! <br><br> <a href="microjobs.html" class="home-link" style="display:inline-block; background:#4f46e5; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none;">Back to Tasks</a></div>`;
                 return;
             }
 
@@ -143,7 +139,7 @@
                 mainContent.innerHTML = `
                     <div class="error-box">
                         টাস্কটি খুঁজে পাওয়া যায়নি অথবা মুছে ফেলা হয়েছে।<br><br>
-                        <a href="microjobs.html" class="back-link" style="display:inline-block; background:#4f46e5; color:#fff; padding:8px 16px; border-radius:8px;">Back to Tasks</a>
+                        <a href="microjobs.html" class="home-link" style="display:inline-block; background:#4f46e5; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none;">Back to Tasks</a>
                     </div>`;
                 return;
             }
