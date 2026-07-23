@@ -4,47 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Micro Job Pro</title>
-    <!-- FontAwesome CDN for Navigation & UI Icons -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
+    
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 95px; }
-        
-        /* Header */
-        header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
-        .notification-bell { background: rgba(255, 255, 255, 0.15); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; font-size: 14px; }
-        
-        .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .balance-card { background: rgba(255, 255, 255, 0.12); padding: 14px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.2); }
-        .balance-title { font-size: 11px; color: #e0e7ff; margin-bottom: 4px; }
-        .balance-amount { font-size: 18px; font-weight: 800; }
-
-        /* Main Content */
-        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
-        
-        /* Notice Board */
-        .notice-card { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-        .notice-card i { color: #2563eb; font-size: 18px; }
-        .notice-text { font-size: 11px; color: #1e40af; line-height: 1.4; }
-
-        /* Quick Actions Grid */
-        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
-        .actions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-        .action-item { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px 6px; text-align: center; text-decoration: none; color: #374151; transition: 0.2s; }
-        .action-item:hover { background: #ffffff; border-color: #4f46e5; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .action-item i { font-size: 20px; color: #4f46e5; margin-bottom: 6px; }
-        .action-item span { display: block; font-size: 10px; font-weight: 600; }
-
-        /* Feature Banners / Tasks shortcut */
-        .banner-card { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: #fff; border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2); }
-        .banner-info h3 { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
-        .banner-info p { font-size: 10px; opacity: 0.9; }
-        .banner-btn { background: #ffffff; color: #16a34a; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; white-space: nowrap; }
-
         /* Animated Bottom Nav Styles */
         .nav-container {  
             position: fixed;  
@@ -121,72 +86,89 @@
         } 
     </style>
 </head>
-<body>
-    <div class="container">
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
         
-        <!-- Header & Balance Section -->
-        <header>
-            <div class="header-top">
-                <a href="profile.html" class="profile-btn">
-                    <div id="profileIconBtn" class="profile-icon">U</div>
-                    <span id="userNameDisplay">Loading...</span>
-                </a>
-                <a href="https://t.me/microjobspro" target="_blank" class="notification-bell">
-                    <i class="fa-solid fa-bell"></i>
-                </a>
+        <!-- Dashboard Header -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-3">
+                    <!-- Profile Picture / First Letter Icon -->
+                    <div id="profilePicContainer" class="w-12 h-12 rounded-full border-2 border-white overflow-hidden bg-white text-purple-700 flex items-center justify-center font-bold text-lg shadow-md flex-shrink-0">
+                        <span id="profileInitial">U</span>
+                        <img id="profileImage" src="" alt="" class="w-full h-full object-cover hidden">
+                    </div>
+                    <div class="overflow-hidden">
+                        <h2 id="userNameDisplay" class="text-base font-bold truncate">Loading...</h2>
+                        <span class="text-xs text-purple-200">Welcome back!</span>
+                    </div>
+                </div>
+                <a href="profile.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">Profile</a>
             </div>
-            <div class="balance-grid">
-                <div class="balance-card">
-                    <p class="balance-title">Main Balance</p>
-                    <h2 id="mainBalance" class="balance-amount">৳ 0.00</h2>
+
+            <!-- Balance Card inside Header -->
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex justify-between items-center">
+                <div>
+                    <p class="text-xs text-purple-200 font-medium">Main Balance</p>
+                    <h3 class="text-xl font-extrabold mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
                 </div>
-                <div class="balance-card">
-                    <p class="balance-title">Deposit Balance</p>
-                    <h2 id="depositBalance" class="balance-amount">৳ 0.00</h2>
-                </div>
+                <a href="wallet.html" class="bg-white text-purple-700 px-4 py-2 rounded-xl text-xs font-bold shadow hover:bg-purple-50 transition">Wallet</a>
             </div>
         </header>
 
-        <!-- Main Content Area -->
-        <main>
-            <!-- Notice Board -->
-            <div class="notice-card">
-                <i class="fa-solid fa-bullhorn"></i>
-                <div class="notice-text">
-                    <strong>Notice:</strong> প্রতিদিনের টাস্ক সময়মতো কমপ্লিট করুন এবং সঠিকভাবে স্ক্রিনশট লিংক জমা দিন। ধন্যবাদ!
-                </div>
+        <!-- Main Content Area (12 Quick Action Buttons Grid) -->
+        <main class="p-4 flex-grow">
+            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Quick Menu</h2>
+            <div class="grid grid-cols-3 gap-3">
+                <a href="microjobs.html" class="p-3 bg-purple-50/60 border border-purple-100 rounded-2xl text-center hover:bg-purple-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">💼</span>
+                    <h4 class="text-[11px] font-bold text-purple-900 leading-tight">Microjobs</h4>
+                </a>
+                <a href="daily-jobs.html" class="p-3 bg-emerald-50/60 border border-emerald-100 rounded-2xl text-center hover:bg-emerald-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">🎯</span>
+                    <h4 class="text-[11px] font-bold text-emerald-900 leading-tight">Daily Jobs</h4>
+                </a>
+                <a href="lucky-spin.html" class="p-3 bg-pink-50/60 border border-pink-100 rounded-2xl text-center hover:bg-pink-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">🎡</span>
+                    <h4 class="text-[11px] font-bold text-pink-900 leading-tight">Lucky Spin</h4>
+                </a>
+                <a href="post-job.html" class="p-3 bg-blue-50/60 border border-blue-100 rounded-2xl text-center hover:bg-blue-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">➕</span>
+                    <h4 class="text-[11px] font-bold text-blue-900 leading-tight">Post Job</h4>
+                </a>
+                <a href="deposit.html" class="p-3 bg-amber-50/60 border border-amber-100 rounded-2xl text-center hover:bg-amber-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">💳</span>
+                    <h4 class="text-[11px] font-bold text-amber-900 leading-tight">Deposit</h4>
+                </a>
+                <a href="withdraw.html" class="p-3 bg-teal-50/60 border border-teal-100 rounded-2xl text-center hover:bg-teal-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">💸</span>
+                    <h4 class="text-[11px] font-bold text-teal-900 leading-tight">Withdraw</h4>
+                </a>
+                <a href="referral.html" class="p-3 bg-indigo-50/60 border border-indigo-100 rounded-2xl text-center hover:bg-indigo-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">👥</span>
+                    <h4 class="text-[11px] font-bold text-indigo-900 leading-tight">Referral</h4>
+                </a>
+                <a href="history.html" class="p-3 bg-rose-50/60 border border-rose-100 rounded-2xl text-center hover:bg-rose-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">📊</span>
+                    <h4 class="text-[11px] font-bold text-rose-900 leading-tight">History</h4>
+                </a>
+                <a href="transactions.html" class="p-3 bg-cyan-50/60 border border-cyan-100 rounded-2xl text-center hover:bg-cyan-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">📜</span>
+                    <h4 class="text-[11px] font-bold text-cyan-900 leading-tight">Transactions</h4>
+                </a>
+                <a href="task-complete.html" class="p-3 bg-violet-50/60 border border-violet-100 rounded-2xl text-center hover:bg-violet-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">✅</span>
+                    <h4 class="text-[11px] font-bold text-violet-900 leading-tight">Completed</h4>
+                </a>
+                <a href="task-pending.html" class="p-3 bg-orange-50/60 border border-orange-100 rounded-2xl text-center hover:bg-orange-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">⏳</span>
+                    <h4 class="text-[11px] font-bold text-orange-900 leading-tight">Pending</h4>
+                </a>
+                <a href="https://t.me/microjobspro" target="_blank" class="p-3 bg-sky-50/60 border border-sky-100 rounded-2xl text-center hover:bg-sky-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
+                    <span class="text-xl">🎧</span>
+                    <h4 class="text-[11px] font-bold text-sky-900 leading-tight">Support</h4>
+                </a>
             </div>
-
-            <!-- Quick Actions -->
-            <div class="section-title">Quick Actions</div>
-            <div class="actions-grid">
-                <a href="deposit.html" class="action-item">
-                    <i class="fa-solid fa-wallet"></i>
-                    <span>Deposit</span>
-                </a>
-                <a href="withdraw.html" class="action-item">
-                    <i class="fa-solid fa-money-bill-transfer"></i>
-                    <span>Withdraw</span>
-                </a>
-                <a href="referral.html" class="action-item">
-                    <i class="fa-solid fa-user-group"></i>
-                    <span>Referral</span>
-                </a>
-                <a href="history.html" class="action-item">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                    <span>History</span>
-                </a>
-            </div>
-
-            <!-- Task Banner -->
-            <div class="section-title">Make Money</div>
-            <a href="daily-jobs.html" class="banner-card">
-                <div class="banner-info">
-                    <h3>Available Daily Jobs</h3>
-                    <p>ছোট ছোট কাজ করে প্রতিদিন আয় করুন আনলিমিটেড টাকা।</p>
-                </div>
-                <div class="banner-btn">Start Now</div>
-            </a>
         </main>
 
         <!-- Animated Bottom Navigation Bar -->
@@ -243,26 +225,54 @@
         window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
 
-    <!-- Firebase Auth & User Data Script -->
+    <!-- Firebase & Auth Script -->
     <script type="module">
+        import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
+        import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((userData) => {
-            if (userData) {
-                // ইউজারের নাম এবং প্রথম অক্ষর সেট করা
-                const name = userData.fullName || userData.displayName || "User";
-                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
-                document.getElementById('userNameDisplay').innerText = name;
-
-                // ব্যালেন্স আপডেট করা
-                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
-                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
-            } else {
-                // লগইন না থাকলে লগইন পেইজে রিডাইরেক্ট হবে
+        observeAuthState(async (user) => {
+            if (!user) {
                 window.location.href = 'login.html';
+                return;
             }
+
+            // নাম এবং ছবি সেট করা
+            const name = user.fullName || user.displayName || "User";
+            document.getElementById('userNameDisplay').innerText = name;
+
+            const profileImgTag = document.getElementById('profileImage');
+            const profileInitialTag = document.getElementById('profileInitial');
+
+            if (user.photoURL) {
+                profileImgTag.src = user.photoURL;
+                profileImgTag.classList.remove('hidden');
+                profileInitialTag.classList.add('hidden');
+            } else {
+                profileInitialTag.innerText = name.charAt(0).toUpperCase();
+                profileInitialTag.classList.remove('hidden');
+                profileImgTag.classList.add('hidden');
+            }
+
+            // ফায়ারবেজ থেকে রিয়েল-টাইমে ব্যালেন্স লোড করা
+            const userDocRef = doc(db, "users", user.uid);
+            
+            onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    let balance = 0;
+                    if (data.balances && typeof data.balances.main !== 'undefined') {
+                        balance = data.balances.main;
+                    } else if (typeof data.mainBalance !== 'undefined') {
+                        balance = data.mainBalance;
+                    } else if (typeof data.balance !== 'undefined') {
+                        balance = data.balance;
+                    }
+                    document.getElementById('mainBalance').innerText = Number(balance).toFixed(2);
+                }
+            }, (error) => {
+                console.error("Error fetching balance:", error);
+            });
         });
     </script>
 </body>
