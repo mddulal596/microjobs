@@ -28,6 +28,7 @@
 
         .btn-claim { width: 100%; background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: #ffffff; border: none; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(22,163,74,0.3); transition: 0.2s; }
         .btn-claim:hover { opacity: 0.9; }
+        .btn-claim:disabled { background: #9ca3af; cursor: not-allowed; box-shadow: none; }
 
         /* Bottom Nav */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
@@ -89,17 +90,75 @@
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { observeAuthState } from '../firebase/auth.js';
+        import { getFirestore, doc, getDoc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const db = getFirestore();
+        let currentUserUid = null;
 
         observeAuthState((userData) => {
             if (!userData) {
                 window.location.href = 'login.html';
+                return;
             }
+            currentUserUid = userData.uid;
+            checkBonusStatus(userData);
         });
 
-        window.claimBonus = function() {
-            // এখানে ডাটাবেজে বোনাস যোগ করার লজিক যুক্ত হবে
-            alert('অভিনন্দন! আপনি সফলভাবে ডেইলি বোনাস ক্লেইম করেছেন।');
-            window.location.href = 'dashboard.html';
+        function checkBonusStatus(userData) {
+            if (userData.lastBonusTime) {
+                const lastBonusDate = userData.lastBonusTime.toDate();
+                const now = new Date();
+                const diffHours = (now - lastBonusDate) / (1000 * 60 * 60);
+
+                if (diffHours < 24) {
+                    const btn = document.querySelector('.btn-claim');
+                    const remainingHours = Math.ceil(24 - diffHours);
+                    btn.innerText = `Already Claimed (Wait ${remainingHours}h)`;
+                    btn.disabled = true;
+                }
+            }
+        }
+
+        window.claimBonus = async function() {
+            if (!currentUserUid) return;
+
+            const btn = document.querySelector('.btn-claim');
+            btn.disabled = true;
+            btn.innerText = 'Processing...';
+
+            try {
+                const userRef = doc(db, "users", currentUserUid);
+                const userSnap = await getDoc(userRef);
+
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    
+                    if (userData.lastBonusTime) {
+                        const lastBonusDate = userData.lastBonusTime.toDate();
+                        const now = new Date();
+                        if ((now - lastBonusDate) / (1000 * 60 * 60) < 24) {
+                            alert('আপনি ইতিমধ্যে আজ ডেইলি বোনাস ক্লেইম করেছেন!');
+                            window.location.reload();
+                            return;
+                        }
+                    }
+
+                    const bonusAmount = 5.00; // ডেইলি বোনাসের পরিমাণ
+
+                    await updateDoc(userRef, {
+                        mainBalance: increment(bonusAmount),
+                        lastBonusTime: serverTimestamp()
+                    });
+
+                    alert(`অভিনন্দন! আপনি সফলভাবে ৳${bonusAmount} ডেইলি বোনাস ক্লেইম করেছেন।`);
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (error) {
+                console.error("Error claiming bonus: ", error);
+                alert('দুঃখিত, বোনাস ক্লেইম করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                btn.disabled = false;
+                btn.innerText = 'Claim Daily Bonus';
+            }
         }
     </script>
 </body>
