@@ -20,18 +20,18 @@
 
         /* Main Content */
         main { padding: 16px; flex-grow: 1; overflow-y: auto; }
-        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
+        .section-title { font-size: 11px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
 
         /* Job List Box */
         .job-list { display: flex; flex-direction: column; gap: 10px; }
         .job-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
         .job-info h4 { font-size: 12px; font-weight: 700; color: #1f2937; margin-bottom: 2px; }
-        .job-info p { font-size: 10px; color: #6b7280; margin-bottom: 6px; line-height: 1.4; }
-        .job-reward { font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 6px; border-radius: 6px; display: inline-block; }
+        .job-info p { font-size: 10px; color: #6b7280; line-height: 1.4; }
+        .job-reward { font-size: 11px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 6px; border-radius: 6px; display: inline-block; margin-top: 4px; }
 
         .card-actions { display: flex; gap: 6px; }
         .btn-approve { background: #dcfce7; color: #15803d; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
-        .btn-delete { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .btn-reject { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
 
         /* Bottom Nav */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
@@ -50,38 +50,38 @@
                     <div class="profile-icon">A</div>
                     <span>Admin Control</span>
                 </a>
-                <a href="dashboard.html" class="home-link">Home</a>
+                <a href="admin.html" class="home-link">Home</a>
             </div>
-            <p class="header-title">Pending Jobs Moderation</p>
+            <p class="header-title">Pending Job Approvals</p>
         </header>
 
         <!-- Main Content Area -->
         <main>
-            <h2 class="section-title">Review User Job Posts</h2>
+            <h2 class="section-title">Review User Posted Jobs</h2>
 
             <!-- Job List Container -->
             <div class="job-list" id="jobListContainer">
                 <div class="job-card" id="job-1">
                     <div class="job-info">
-                        <h4>YouTube Video Watch & Subscribe</h4>
-                        <p>Employer: Rakib Hasan • Workers: 100<br>Desc: Watch full video and subscribe channel.</p>
-                        <span class="job-reward">Reward: ৳ 0.15</span>
+                        <h4>YouTube Full Video Watch & Subscribe</h4>
+                        <p>By: Tanvir Hossain<br>Workers Needed: 50 | Per Task: ৳0.15</p>
+                        <span class="job-reward">Total Budget: ৳ 7.50</span>
                     </div>
                     <div class="card-actions">
-                        <button onclick="handleJobAction('job-1', 'YouTube Video Watch & Subscribe', 'approved')" class="btn-approve">Approve</button>
-                        <button onclick="handleJobAction('job-1', 'YouTube Video Watch & Subscribe', 'deleted')" class="btn-delete">Delete</button>
+                        <button onclick="handleJobAction('job-1', 'YouTube Full Video Watch & Subscribe', 'approved')" class="btn-approve">Approve</button>
+                        <button onclick="handleJobAction('job-1', 'YouTube Full Video Watch & Subscribe', 'rejected')" class="btn-reject">Reject</button>
                     </div>
                 </div>
 
                 <div class="job-card" id="job-2">
                     <div class="job-info">
-                        <h4>Facebook Page Follow Task</h4>
-                        <p>Employer: Sumaiya Akter • Workers: 50<br>Desc: Like and follow our official page.</p>
-                        <span class="job-reward">Reward: ৳ 0.15</span>
+                        <h4>Facebook Page Follow & Share</h4>
+                        <p>By: Sumaiya Akter<br>Workers Needed: 30 | Per Task: ৳0.20</p>
+                        <span class="job-reward">Total Budget: ৳ 6.00</span>
                     </div>
                     <div class="card-actions">
-                        <button onclick="handleJobAction('job-2', 'Facebook Page Follow Task', 'approved')" class="btn-approve">Approve</button>
-                        <button onclick="handleJobAction('job-2', 'Facebook Page Follow Task', 'deleted')" class="btn-delete">Delete</button>
+                        <button onclick="handleJobAction('job-2', 'Facebook Page Follow & Share', 'approved')" class="btn-approve">Approve</button>
+                        <button onclick="handleJobAction('job-2', 'Facebook Page Follow & Share', 'rejected')" class="btn-reject">Reject</button>
                     </div>
                 </div>
             </div>
@@ -97,7 +97,7 @@
                 <span style="font-size: 16px;">👛</span>
                 <span>Wallet</span>
             </a>
-            <a href="dashboard.html" class="nav-item">
+            <a href="admin.html" class="nav-item">
                 <div class="nav-icon-circle">🏠</div>
                 <span style="font-weight: 500;">Home</span>
             </a>
@@ -125,9 +125,9 @@
         window.handleJobAction = function(cardId, jobTitle, status) {
             const cardElement = document.getElementById(cardId);
             if (status === 'approved') {
-                alert(`"${jobTitle}" জবটি সফলভাবে অ্যাপ্রুভ করা হয়েছে এবং ডেইলি জব লিস্টে পাবলিশ করা হয়েছে!`);
+                alert(`"${jobTitle" jobটি সফলভাবে অ্যাপ্রুভ করা হয়েছে এবং লাইভ করা হয়েছে!`);
             } else {
-                alert(`"${jobTitle}" জবটি ডিলিট বা বাতিল করা হয়েছে।`);
+                alert(`"${jobTitle}" jobটি রিজেক্ট করা হয়েছে এবং বাজেট রিফান্ড করা হয়েছে।`);
             }
             if (cardElement) {
                 cardElement.remove();
