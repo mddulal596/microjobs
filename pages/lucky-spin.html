@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucky Spin & Win</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * {
             margin: 0;
@@ -116,13 +117,24 @@
             min-height: 30px;
             color: #2ed573;
         }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #a4b0be;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .back-link:hover {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Lucky Spin</h1>
-        <div class="balance-box">Balance: <span id="balance-amount">0</span> Taka</div>
+        <div class="balance-box">Balance: ৳ <span id="balance-amount">0.00</span></div>
         <p class="instructions">Spin the wheel to win 1 to 5 Taka!</p>
         
         <div class="wheel-container">
@@ -130,20 +142,25 @@
             <canvas id="wheel" width="500" height="500"></canvas>
         </div>
 
-        <button id="spin-btn">SPIN NOW</button>
+        <button id="spin-btn" disabled>Loading...</button>
         <div id="result-display"></div>
+        <a href="../dashboard.html" class="back-link">← Back to Dashboard</a>
     </div>
 
-    <script>
+    <!-- Firebase & Spin Logic Integration -->
+    <script type="module">
+        import { db } from '../firebase/firebase-config.js';
+        import { observeAuthState } from '../firebase/auth.js';
+        import { doc, onSnapshot, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
         const canvas = document.getElementById('wheel');
         const ctx = canvas.getContext('2d');
         const spinBtn = document.getElementById('spin-btn');
         const resultDisplay = document.getElementById('result-display');
         const balanceAmountElem = document.getElementById('balance-amount');
 
-        // ব্যালেন্স লোড করা (লোকাল স্টোরেজ থেকে)
-        let userBalance = parseFloat(localStorage.getItem('userBalance')) || 0;
-        balanceAmountElem.textContent = userBalance;
+        let currentUser = null;
+        let currentBalance = 0;
 
         // Wheel Segments
         const prizes = [
@@ -202,10 +219,41 @@
             ctx.stroke();
         }
 
+        // Authentication & Real-time Balance Fetching from Firebase
+        observeAuthState((user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = user;
+
+            const userDocRef = doc(db, "users", user.uid);
+            
+            onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.balances && typeof data.balances.main !== 'undefined') {
+                        currentBalance = data.balances.main;
+                    } else if (typeof data.balance !== 'undefined') {
+                        currentBalance = data.balance;
+                    }
+                    balanceAmountElem.textContent = Number(currentBalance).toFixed(2);
+                    
+                    if (!isSpinning) {
+                        spinBtn.disabled = false;
+                        spinBtn.textContent = "SPIN NOW";
+                    }
+                }
+            }, (error) => {
+                console.error("Error fetching balance:", error);
+            });
+        });
+
         function spinWheel() {
-            if (isSpinning) return;
+            if (isSpinning || !currentUser) return;
             isSpinning = true;
             spinBtn.disabled = true;
+            spinBtn.textContent = "SPINNING...";
             resultDisplay.textContent = "";
 
             let randomSpinAngle = Math.random() * 2000 + 3000; 
@@ -231,26 +279,34 @@
             rotateStep();
         }
 
-        function stopRotation(randomSpinAngle) {
+        async function stopRotation(randomSpinAngle) {
             currentAngle = (currentAngle + randomSpinAngle * Math.PI / 180) % (2 * Math.PI);
-            isSpinning = false;
-            spinBtn.disabled = false;
 
-            // চাকা কোন ঘরে থেমেছে তার নিখুঁত হিসাব
             let degrees = (currentAngle * 180) / Math.PI;
             let arcd = (360 / numSegments);
             let index = Math.floor((360 - degrees % 360 + 270) % 360 / arcd) % numSegments;
 
-            // উইনিং টেক্সট এবং অ্যামাউন্ট আলাদা করা
             let winningText = prizes[index].text;
             let wonAmount = parseInt(winningText); 
 
-            // ব্যালেন্স আপডেট করা
-            userBalance += wonAmount;
-            localStorage.setItem('userBalance', userBalance);
-            balanceAmountElem.textContent = userBalance;
+            try {
+                // Firebase Database আপডেট করা
+                const userDocRef = doc(db, "users", currentUser.uid);
+                
+                // আপনার ডাটাবেজ স্ট্রাকচারে ব্যালেন্স যে ফিল্ডে সেভ হয় (balances.main অথবা balance)
+                await updateDoc(userDocRef, {
+                    "balances.main": increment(wonAmount)
+                });
 
-            resultDisplay.textContent = `🎉 Congratulations! You won: ${winningText}`;
+                resultDisplay.textContent = `🎉 Congratulations! You won: ${winningText}`;
+            } catch (error) {
+                console.error("Error updating balance in Firebase:", error);
+                resultDisplay.textContent = "Error updating balance. Try again.";
+            }
+
+            isSpinning = false;
+            spinBtn.disabled = false;
+            spinBtn.textContent = "SPIN NOW";
         }
 
         drawWheel();
