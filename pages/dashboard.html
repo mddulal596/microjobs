@@ -9,33 +9,26 @@
         body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
         
-        /* Top Header */
-        .header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .app-title { font-size: 18px; font-weight: 800; }
-        .user-badge-area { display: flex; gap: 8px; align-items: center; }
-        .user-role { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
-        .logout-btn { background: #ef4444; color: #fff; border: none; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: none; }
+        /* Top Balance Cards Header */
+        header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); display: flex; gap: 12px; }
+        .balance-card { flex: 1; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); padding: 14px; border-radius: 16px; color: #fff; }
+        .balance-title { font-size: 11px; color: #e0e7ff; margin-bottom: 4px; font-weight: 600; }
+        .balance-amount { font-size: 18px; font-weight: 900; }
 
-        /* Balance Cards */
-        .balance-container { display: flex; gap: 10px; }
-        .balance-card { flex: 1; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); }
-        .balance-title { font-size: 11px; color: #e0e7ff; margin-bottom: 4px; }
-        .balance-amount { font-size: 18px; font-weight: 900; color: #ffffff; }
+        /* Main Content */
+        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
+        
+        /* Menu Grid (4 columns) */
+        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+        .menu-item { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 12px 6px; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #374151; font-size: 11px; font-weight: 700; gap: 6px; text-align: center; transition: 0.2s; }
+        .menu-item:hover { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; }
+        .menu-icon { font-size: 20px; }
 
-        /* Main Content & 12 Buttons Grid */
-        main { padding: 16px; flex-grow: 1; }
-        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-        .menu-btn { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px 4px; display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #374151; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .menu-btn:hover { background: #f3f4f6; border-color: #cbd5e1; transform: translateY(-2px); }
-        .menu-icon { font-size: 20px; margin-bottom: 6px; }
-        .menu-text { font-size: 10px; font-weight: 700; text-align: center; }
-
-        /* Activation Box */
-        .activation-box { background: #fffbeb; border: 1px solid #fef3c7; border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 20px; }
-        .activation-box h4 { font-size: 13px; font-weight: 800; color: #b45309; margin-bottom: 6px; }
-        .activation-box p { font-size: 11px; color: #92400e; margin-bottom: 12px; line-height: 1.4; }
-        .active-btn { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: #fff; border: none; padding: 10px 20px; border-radius: 50px; font-size: 12px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 4px 12px rgba(236,72,153,0.3); }
+        /* Notice Banner */
+        .notice-banner { background: #fffbeb; border: 1px solid #fef3c7; border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 16px; }
+        .notice-banner h4 { font-size: 13px; font-weight: 800; color: #b45309; margin-bottom: 6px; }
+        .notice-banner p { font-size: 11px; color: #92400e; line-height: 1.5; margin-bottom: 12px; }
+        .btn-active { background: linear-gradient(135deg, #db2777 0%, #be185d 100%); color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: bold; display: inline-block; box-shadow: 0 4px 12px rgba(219,39,119,0.3); }
 
         /* Bottom Nav */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
@@ -47,97 +40,81 @@
 <body>
     <div class="container">
         
-        <!-- Top Header & Balance -->
-        <div class="header">
-            <div class="header-top">
-                <span class="app-title">Micro Job Pro</span>
-                <div class="user-badge-area">
-                    <span class="user-role" id="userRoleText">User</span>
-                    <a href="login.html" class="logout-btn">Logout</a>
-                </div>
+        <!-- Top Balance Section -->
+        <header>
+            <div class="balance-card">
+                <div class="balance-title">Main Balance</div>
+                <div class="balance-amount" id="mainBalance">৳ 10.00</div>
             </div>
-            <div class="balance-container">
-                <div class="balance-card">
-                    <div class="balance-title">Main Balance</div>
-                    <div class="balance-amount" id="mainBalance">৳ 10.00</div>
-                </div>
-                <div class="balance-card">
-                    <div class="balance-title">Deposit Balance</div>
-                    <div class="balance-amount" id="depositBalance">৳ 0.00</div>
-                </div>
+            <div class="balance-card">
+                <div class="balance-title">Deposit Balance</div>
+                <div class="balance-amount" id="depositBalance">৳ 0.00</div>
             </div>
-        </div>
+        </header>
 
-        <!-- Main Dashboard 12 Buttons Grid -->
+        <!-- Main Content Area -->
         <main>
+            <!-- Feature Menu Grid -->
             <div class="menu-grid">
-                <!-- 1. Daily Job -->
-                <a href="daily-job.html" class="menu-btn">
+                <a href="daily-job.html" class="menu-item">
                     <span class="menu-icon">💼</span>
-                    <span class="menu-text">Daily Job</span>
+                    <span>Daily Job</span>
                 </a>
-                <!-- 2. Recharge -->
-                <a href="recharge.html" class="menu-btn">
+                <a href="recharge.html" class="menu-item">
                     <span class="menu-icon">📱</span>
-                    <span class="menu-text">Recharge</span>
+                    <span>Recharge</span>
                 </a>
-                <!-- 3. Withdraw -->
-                <a href="withdraw.html" class="menu-btn">
+                <a href="withdraw.html" class="menu-item">
                     <span class="menu-icon">💳</span>
-                    <span class="menu-text">Withdraw</span>
+                    <span>Withdraw</span>
                 </a>
-                <!-- 4. Drive Offer -->
-                <a href="drive-offer.html" class="menu-btn">
+                <a href="drive-offer.html" class="menu-item">
                     <span class="menu-icon">🎁</span>
-                    <span class="menu-text">Drive Offer</span>
+                    <span>Drive Offer</span>
                 </a>
-                <!-- 5. Add Money -->
-                <a href="wallet.html" class="menu-btn">
+
+                <a href="wallet.html" class="menu-item">
                     <span class="menu-icon">👛</span>
-                    <span class="menu-text">Add Money</span>
+                    <span>Add Money</span>
                 </a>
-                <!-- 6. History -->
-                <a href="history.html" class="menu-btn">
+                <a href="history.html" class="menu-item">
                     <span class="menu-icon">⏰</span>
-                    <span class="menu-text">History</span>
+                    <span>History</span>
                 </a>
-                <!-- 7. Leaderboard -->
-                <a href="leaderboard.html" class="menu-btn">
+                <a href="leaderboard.html" class="menu-item">
                     <span class="menu-icon">🏆</span>
-                    <span class="menu-text">Leaderboard</span>
+                    <span>Leaderboard</span>
                 </a>
-                <!-- 8. Microjobs -->
-                <a href="microjobs.html" class="menu-btn">
+                <a href="microjobs.html" class="menu-item">
                     <span class="menu-icon">📋</span>
-                    <span class="menu-text">Microjobs</span>
+                    <span>Microjobs</span>
                 </a>
-                <!-- 9. Post Job -->
-                <a href="post-job.html" class="menu-btn">
+
+                <a href="post-job.html" class="menu-item">
                     <span class="menu-icon">➕</span>
-                    <span class="menu-text">Post Job</span>
+                    <span>Post Job</span>
                 </a>
-                <!-- 10. My Team -->
-                <a href="referral.html" class="menu-btn">
+                <a href="referral.html" class="menu-item">
                     <span class="menu-icon">👥</span>
-                    <span class="menu-text">My Team</span>
+                    <span>My Team</span>
                 </a>
-                <!-- 11. Support -->
-                <a href="support.html" class="menu-btn">
-                    <span class="menu-icon">🎧</span>
-                    <span class="menu-text">Support</span>
+                <!-- Spin বাটন যুক্ত করা হলো -->
+                <a href="spin.html" class="menu-item">
+                    <span class="menu-icon">🎡</span>
+                    <span>Spin</span>
                 </a>
-                <!-- 12. Profile -->
-                <a href="profile.html" class="menu-btn">
-                    <span class="menu-icon">👤</span>
-                    <span class="menu-text">Profile</span>
+                <!-- বোনাস বাটন যুক্ত করা হলো -->
+                <a href="bonus.html" class="menu-item">
+                    <span class="menu-icon">🎉</span>
+                    <span>বোনাস</span>
                 </a>
             </div>
 
-            <!-- Account Activation Notice Box -->
-            <div class="activation-box">
+            <!-- Notice Banner -->
+            <div class="notice-banner">
                 <h4>⚠️ আপনার অ্যাকাউন্টটি একটিভ নেই</h4>
                 <p>ইনকাম শুরু করতে এবং সকল প্রিমিয়াম সুবিধা পেতে এখনি আপনার অ্যাকাউন্টটি নির্দিষ্ট ফি দিয়ে একটিভ করুন।</p>
-                <a href="activate.html" class="active-btn">Active Now →</a>
+                <a href="activate.html" class="btn-active">Active Now →</a>
             </div>
         </main>
 
@@ -165,5 +142,23 @@
             </a>
         </nav>
     </div>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { observeAuthState } from '../firebase/auth.js';
+
+        observeAuthState((userData) => {
+            if (!userData) {
+                window.location.href = 'login.html';
+                return;
+            }
+            if (userData.mainBalance !== undefined) {
+                document.getElementById('mainBalance').innerText = `৳ ${userData.mainBalance.toFixed(2)}`;
+            }
+            if (userData.depositBalance !== undefined) {
+                document.getElementById('depositBalance').innerText = `৳ ${userData.depositBalance.toFixed(2)}`;
+            }
+        });
+    </script>
 </body>
 </html>
