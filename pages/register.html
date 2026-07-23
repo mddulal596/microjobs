@@ -55,6 +55,15 @@
         import { doc, setDoc, getDocs, collection, query, where, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { auth } from '../firebase/auth.js';
 
+        // URL থেকে সরাসরি ?ref=CODE রিসিভ করার অটো কোড (যদি কেউ রেফার লিংকে ক্লিক করে আসে)
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refFromUrl = urlParams.get('ref');
+            if (refFromUrl) {
+                document.getElementById('refCode').value = refFromUrl.toUpperCase();
+            }
+        });
+
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const fullName = document.getElementById('fullName').value.trim();
@@ -77,6 +86,7 @@
                 
                 let initialBonus = 0.00;
                 let validReferrerUid = null;
+                const referralBonusAmount = 10.00; // রেফার করার জন্য নির্ধারিত বোনাস (১০ টাকা)
 
                 // 3. Verify Referral Code in Firestore
                 if (inputRefCode) {
@@ -88,13 +98,13 @@
                         querySnapshot.forEach((docSnap) => {
                             validReferrerUid = docSnap.id;
                         });
-                        initialBonus = 10.00; // New user gets ৳10 bonus if valid referral code is entered
+                        initialBonus = 10.00; // নতুন ইউজার জয়েন করার জন্য বোনাস পাবে
                     } else {
                         alert('সতর্কতা: ভুল রেফার কোড দেওয়া হয়েছে! কোনো বোনাস যোগ হবে না, তবে একাউন্ট তৈরি হবে।');
                     }
                 }
 
-                // 4. Save user data to Firestore matching mainBalance & depositBalance structure
+                // 4. Save user data to Firestore
                 await setDoc(doc(db, "users", user.uid), {
                     uid: user.uid,
                     fullName: fullName,
@@ -102,16 +112,19 @@
                     referralCode: myShortRef,
                     mainBalance: initialBonus,
                     depositBalance: 0.00,
+                    referralEarnings: 0.00, // নতুন ইউজারের নিজের রেফার অর্নিং
                     referredBy: validReferrerUid || null,
                     totalReferred: 0,
                     createdAt: serverTimestamp()
                 });
 
-                // 5. Update Referrer's Team Count if valid
+                // 5. Update Referrer's Data (Team Count + Main Balance + Referral Earnings)
                 if (validReferrerUid) {
                     const referrerRef = doc(db, "users", validReferrerUid);
                     await updateDoc(referrerRef, {
-                        totalReferred: increment(1)
+                        totalReferred: increment(1),                // টিম কাউন্ট ১ বাড়বে
+                        mainBalance: increment(referralBonusAmount), // মেইন ব্যালেন্সে ১০ টাকা যোগ হবে
+                        referralEarnings: increment(referralBonusAmount) // রেফার অর্নিংয়েও ১০ টাকা যোগ হবে
                     });
                 }
 
