@@ -1,227 +1,197 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Details - Micro Job Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#0B0F19',
-                        cardbg: '#111827',
-                        primary: '#3B82F6',
-                    }
-                }
-            }
-        }
-    </script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #1e293b; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.3); position: relative; padding-bottom: 30px; }
+        
+        /* Header */
+        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
+        .back-link { color: #38bdf8; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .profile-img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid #38bdf8; }
+
+        /* Main Content */
+        main { padding: 20px; flex-grow: 1; overflow-y: auto; }
+        .task-card { background: #0f172a; border: 1px solid #334155; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+        .task-title { font-size: 15px; font-weight: 700; color: #f8fafc; margin-bottom: 8px; }
+        .task-reward { font-size: 14px; font-weight: 800; color: #4ade80; margin-bottom: 12px; display: inline-block; background: rgba(74, 222, 128, 0.1); padding: 4px 10px; border-radius: 8px; }
+        .section-heading { font-size: 12px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-top: 14px; margin-bottom: 6px; }
+        .task-desc { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
+        
+        .proof-box { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+        .proof-input { width: 100%; padding: 10px 14px; background: #1e293b; border: 1px solid #475569; border-radius: 10px; color: #fff; font-size: 12px; outline: none; }
+        .proof-input:focus { border-color: #38bdf8; }
+        
+        .btn-submit { width: 100%; background: #2563eb; color: #ffffff; border: none; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; margin-top: 16px; transition: 0.2s; }
+        .btn-submit:hover { background: #1d4ed8; }
+
+        .error-box { text-align: center; padding: 40px 20px; color: #94a3b8; font-size: 13px; }
+        
+        /* Footer */
+        footer { text-align: center; font-size: 10px; color: #64748b; padding-top: 10px; }
+    </style>
 </head>
-<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col">
-    
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden"></div>
+<body>
+    <div class="container">
+        <div>
+            <!-- Header -->
+            <header>
+                <a href="microjobs.html" class="back-link">← Back to Tasks</a>
+                <div id="userAvatar">
+                    <img src="https://via.placeholder.com/32" alt="Profile" class="profile-img" id="profileImg">
+                </div>
+            </header>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-cardbg border-r border-slate-800/80 flex flex-col justify-between transform -translate-x-full transition-transform duration-300 shrink-0 shadow-2xl">
-        <div class="p-6">
-            <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-black bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">MicroJobPro</h1>
-                <button id="closeSidebar" class="text-slate-400 hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            <nav class="mt-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Dashboard</a>
-                <a href="tasks.html" class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25">Tasks Marketplace</a>
-                <a href="post-task.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Post New Job</a>
-                <a href="wallet.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Wallet</a>
-                <a href="withdraw.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Withdraw</a>
-                <a href="referral.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/60 hover:text-white rounded-xl font-semibold transition-all">Referrals</a>
-            </nav>
+            <!-- Main Content Area -->
+            <main id="mainContent">
+                <div class="error-box">টাস্ক লোড হচ্ছে...</div>
+            </main>
         </div>
-        <div class="p-6 border-t border-slate-800/80">
-            <button id="logoutBtnSidebar" class="w-full bg-red-500/10 text-red-400 hover:bg-red-600 hover:text-white py-3 rounded-xl font-bold transition-all shadow-sm">Logout</button>
-        </div>
-    </aside>
 
-    <div class="flex-1 flex flex-col min-w-0 w-full">
-        <header class="h-20 bg-cardbg/80 backdrop-blur-md border-b border-slate-800/80 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 gap-4 shadow-md">
-            <div class="flex items-center gap-3">
-                <button id="menuBtn" class="p-2.5 bg-slate-800/70 hover:bg-slate-700 text-slate-200 rounded-xl transition-all shadow-sm shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-                <a href="tasks.html" class="text-xs md:text-sm font-semibold text-blue-400 hover:underline">&larr; Back to Tasks</a>
-            </div>
-            
-            <div class="flex items-center gap-3 shrink-0">
-                <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500/40 shadow-md">
-                <div class="hidden sm:block text-left">
-                    <p id="userName" class="text-sm font-bold text-white">Loading...</p>
-                    <p id="userEmail" class="text-xs text-slate-400">Loading...</p>
-                </div>
-            </div>
-        </header>
-
-        <main class="flex-1 p-4 md:p-8 max-w-4xl w-full mx-auto space-y-6">
-            <div class="p-6 md:p-8 bg-cardbg border border-slate-800/80 rounded-3xl shadow-xl space-y-6">
-                
-                <div id="taskDetailsContainer" class="space-y-4">
-                    <div class="text-center py-10 text-slate-400 text-sm">Loading task information...</div>
-                </div>
-
-                <!-- Proof Submission Form -->
-                <div id="submissionSection" class="pt-6 border-t border-slate-800/80 space-y-4 hidden">
-                    <h3 class="text-lg font-bold text-white">Submit Your Proof</h3>
-                    <form id="proofForm" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-2">Proof Details (Link, Username, or Text Proof)</label>
-                            <textarea id="proofText" rows="3" required placeholder="Write details or provide screenshot link here..." class="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500"></textarea>
-                        </div>
-                        <button type="submit" id="submitProofBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-blue-500/25">Submit Proof for Review</button>
-                    </form>
-                </div>
-
-            </div>
-        </main>
-
-        <footer class="bg-cardbg border-t border-slate-800/80 py-6 px-8 mt-auto">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-                <p>&copy; 2026 MicroJobPro. All rights reserved.</p>
-                <div class="flex items-center gap-6 font-medium">
-                    <a href="#" class="hover:text-white transition-all">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-all">Terms of Service</a>
-                </div>
-            </div>
+        <footer>
+            &copy; 2026 MicroJobPro. All rights reserved.
         </footer>
     </div>
 
+    <!-- Firebase & Logic Script -->
     <script type="module">
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
-        import { db } from '../firebase/firebase-config.js';
-        import { doc, getDoc, updateDoc, arrayUnion, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { observeAuthState } from '../firebase/auth.js';
+        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const menuBtn = document.getElementById('menuBtn');
-        const closeSidebar = document.getElementById('closeSidebar');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const db = getFirestore();
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('-translate-x-full');
-            sidebarOverlay.classList.toggle('hidden');
-        }
-        menuBtn.addEventListener('click', toggleSidebar);
-        closeSidebar.addEventListener('click', toggleSidebar);
-        sidebarOverlay.addEventListener('click', toggleSidebar);
+        // স্ট্যাটিক টাস্ক ডাটা (যদি ফায়ারবেজে আইডি না থাকে তবে এটি কাজ করবে)
+        const staticTasks = {
+            "1": {
+                title: "YouTube Video Watch & Subscribe",
+                reward: "+৳ 0.15",
+                amountValue: 0.15,
+                description: "1. Watch the full video without skipping.\n2. Like the video and subscribe to the channel permanently.\n3. Drop a positive comment.",
+                proofNote: "Submit your YouTube channel username / profile link and comment screenshot text."
+            },
+            "2": {
+                title: "Facebook Page Follow & Share",
+                reward: "+৳ 0.15",
+                amountValue: 0.15,
+                description: "1. Follow our official Facebook page.\n2. Share the pinned post on your personal timeline publicly.",
+                proofNote: "Submit your Facebook profile link and your share link."
+            },
+            "3": {
+                title: "Website Visit & Click Ads",
+                reward: "+৳ 0.25",
+                amountValue: 0.25,
+                description: "1. Browse our target website for at least 2 minutes.\n2. Click on any one banner advertisement on the site.",
+                proofNote: "Submit the visited page URL or proof of ad click."
+            }
+        };
 
+        let currentUser = null;
         const urlParams = new URLSearchParams(window.location.search);
         const taskId = urlParams.get('id');
 
-        let currentTaskData = null;
-        let loggedInUser = null;
+        observeAuthState(async (userData) => {
+            if (userData) {
+                currentUser = userData;
+                const name = userData.fullName || userData.displayName || "U";
+                if(userData.photoURL) {
+                    document.getElementById('profileImg').src = userData.photoURL;
+                }
 
-        async function loadTaskDetails() {
-            const container = document.getElementById('taskDetailsContainer');
-            
-            if (!taskId) {
-                container.innerHTML = `
-                    <div class="text-center py-10 space-y-3">
-                        <p class="text-red-400 text-sm font-semibold">কোনো টাস্ক আইডি পাওয়া যায়নি!</p>
-                        <a href="tasks.html" class="inline-block px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl mt-2">Go to Marketplace</a>
-                    </div>
-                `;
+                await loadTaskDetails(taskId);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        async function loadTaskDetails(id) {
+            const mainContent = document.getElementById('mainContent');
+            if (!id) {
+                mainContent.innerHTML = `<div class="error-box">টাস্ক আইডি পাওয়া যায়নি! <br><br> <a href="microjobs.html" class="back-link">Back to Tasks</a></div>`;
                 return;
             }
 
-            try {
-                const docRef = doc(db, "tasks", taskId);
-                const docSnap = await getDoc(docRef);
+            let taskData = null;
 
-                if (!docSnap.exists()) {
-                    container.innerHTML = `
-                        <div class="text-center py-10 space-y-3">
-                            <p class="text-slate-400 text-sm font-semibold">টাস্কটি খুঁজে পাওয়া যায়নি অথবা মুছে ফেলা হয়েছে।</p>
-                            <a href="tasks.html" class="inline-block px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl mt-2">Back to Tasks</a>
-                        </div>
-                    `;
+            // প্রথমে চেক করবো স্ট্যাটিক লিস্টে আছে কি না
+            if (staticTasks[id]) {
+                taskData = staticTasks[id];
+            } else {
+                // যদি ফায়ারবেজ থেকে আনতে হয়
+                try {
+                    const docRef = doc(db, "microjobs", id);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        taskData = docSnap.data();
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+
+            if (!taskData) {
+                mainContent.innerHTML = `
+                    <div class="error-box">
+                        টাস্কটি খুঁজে পাওয়া যায়নি অথবা মুছে ফেলা হয়েছে।<br><br>
+                        <a href="microjobs.html" class="back-link" style="display:inline-block; background:#2563eb; color:#fff; padding:8px 16px; border-radius:8px;">Back to Tasks</a>
+                    </div>`;
+                return;
+            }
+
+            // রেন্ডার টাস্ক ডিটেইলস ফরম
+            mainContent.innerHTML = `
+                <div class="task-card">
+                    <h2 class="task-title">${taskData.title}</h2>
+                    <div class="task-reward">${taskData.reward || ('+৳ ' + taskData.amountValue)}</div>
+                    
+                    <div class="section-heading">Task Description</div>
+                    <p class="task-desc" style="white-space: pre-line;">${taskData.description}</p>
+
+                    <div class="section-heading">Required Proof Submission</div>
+                    <p class="task-desc">${taskData.proofNote || 'Submit your work proof below:'}</p>
+
+                    <div class="proof-box">
+                        <input type="text" id="proofText" class="proof-input" placeholder="Enter your proof details (e.g. username / link)..." required>
+                        <button id="submitProofBtn" class="btn-submit">Submit Proof</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('submitProofBtn').addEventListener('click', async () => {
+                const proofVal = document.getElementById('proofText').value.trim();
+                if (!proofVal) {
+                    alert('দয়া করে প্রুফ বা প্রমাণ লিখুন।');
                     return;
                 }
 
-                currentTaskData = docSnap.data();
-                
-                container.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-semibold rounded-full">${currentTaskData.category || 'General'}</span>
-                        <span class="text-emerald-400 font-bold text-base">Reward: ৳ ${Number(currentTaskData.reward || 0).toFixed(2)}</span>
-                    </div>
-                    <h2 class="text-2xl font-bold text-white mt-2">${currentTaskData.title}</h2>
-                    <div class="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl space-y-2">
-                        <h4 class="text-xs font-bold text-slate-400 uppercase">Task Description / Instructions:</h4>
-                        <p class="text-sm text-slate-200 whitespace-pre-line">${currentTaskData.description}</p>
-                    </div>
-                `;
-                document.getElementById('submissionSection').classList.remove('hidden');
-            } catch (error) {
-                console.error("Error fetching task details:", error);
-                container.innerHTML = `<div class="text-center py-10 text-red-400 text-sm">ডেটা লোড করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।</div>`;
-            }
+                const btn = document.getElementById('submitProofBtn');
+                btn.disabled = true;
+                btn.innerText = 'Submitting...';
+
+                try {
+                    await addDoc(collection(db, "task_submissions"), {
+                        taskId: id,
+                        taskTitle: taskData.title,
+                        userId: currentUser.uid,
+                        userName: currentUser.fullName || currentUser.displayName || 'User',
+                        proof: proofVal,
+                        status: 'pending',
+                        timestamp: serverTimestamp()
+                    });
+
+                    alert('টাস্ক প্রুফ সফলভাবে জমা হয়েছে!');
+                    window.location.href = 'microjobs.html';
+                } catch (error) {
+                    console.error(error);
+                    alert('প্রুফ জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                    btn.disabled = false;
+                    btn.innerText = 'Submit Proof';
+                }
+            });
         }
-
-        document.getElementById('proofForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!loggedInUser || !currentTaskData) return;
-
-            const proofText = document.getElementById('proofText').value;
-            const btn = document.getElementById('submitProofBtn');
-            btn.innerText = "Submitting...";
-            btn.disabled = true;
-
-            try {
-                // ১. সাবমিশন সেভ করা
-                await addDoc(collection(db, "submissions"), {
-                    taskId: taskId,
-                    taskTitle: currentTaskData.title,
-                    reward: currentTaskData.reward,
-                    workerId: loggedInUser.uid,
-                    workerEmail: loggedInUser.email,
-                    proof: proofText,
-                    status: 'pending',
-                    createdAt: serverTimestamp()
-                });
-
-                // ২. টাস্কে ইউজারের আইডি অ্যাড করা যাতে মার্কেটপ্লেস থেকে হাইড হয়
-                await updateDoc(doc(db, "tasks", taskId), {
-                    completedWorkers: arrayUnion(loggedInUser.uid)
-                });
-
-                alert("Proof submitted successfully! Awaiting admin review.");
-                window.location.href = 'tasks.html';
-            } catch (error) {
-                console.error("Error submitting proof:", error);
-                alert("Failed to submit proof. Try again.");
-                btn.innerText = "Submit Proof for Review";
-                btn.disabled = false;
-            }
-        });
-
-        observeAuthState(async (user) => {
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
-            loggedInUser = user;
-            document.getElementById('userName').innerText = user.displayName || user.email.split('@')[0];
-            document.getElementById('userEmail').innerText = user.email;
-            if(user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
-
-            loadTaskDetails();
-        });
-
-        document.getElementById('logoutBtnSidebar').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
-        });
     </script>
 </body>
 </html>
