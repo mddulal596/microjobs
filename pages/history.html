@@ -31,7 +31,7 @@
         .tab-btn.active { background: #4f46e5; color: #ffffff; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
 
         /* History List Box */
-        .history-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 12px; }
+        .history-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 12px; min-height: 150px; }
         .history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; border-bottom: 1px solid #e5e7eb; }
         .history-item:last-child { border-bottom: none; }
         .history-info h4 { font-size: 12px; font-weight: 700; color: #1f2937; }
@@ -41,7 +41,8 @@
         .text-danger { color: #dc2626; }
         .status-badge { display: inline-block; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 4px; margin-top: 2px; }
         .status-pending { background: #fef3c7; color: #d97706; }
-        .status-approved { background: #dcfce7; color: #15803d; }
+        .status-approved, .status-completed { background: #dcfce7; color: #15803d; }
+        .no-data { text-align: center; font-size: 12px; color: #6b7280; padding: 30px 0; }
 
         /* Bottom Nav */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
@@ -88,38 +89,7 @@
 
             <!-- History Items Container -->
             <div class="history-box" id="historyList">
-                <div class="history-item" data-type="earning">
-                    <div class="history-info">
-                        <h4>Task Reward Earned</h4>
-                        <p>24 Jul 2026, 10:30 AM</p>
-                        <span class="status-badge status-approved">Approved</span>
-                    </div>
-                    <div>
-                        <div class="history-amount text-success">+৳ 5.00</div>
-                    </div>
-                </div>
-
-                <div class="history-item" data-type="deposit">
-                    <div class="history-info">
-                        <h4>Deposit via bKash</h4>
-                        <p>Trx: 9H7K3... • 22 Jul 2026</p>
-                        <span class="status-badge status-approved">Completed</span>
-                    </div>
-                    <div>
-                        <div class="history-amount text-success">+৳ 200.00</div>
-                    </div>
-                </div>
-
-                <div class="history-item" data-type="withdraw">
-                    <div class="history-info">
-                        <h4>Withdrawal via Nagad</h4>
-                        <p>A/C: 019XXXXXXXX • 20 Jul 2026</p>
-                        <span class="status-badge status-pending">Pending</span>
-                    </div>
-                    <div>
-                        <div class="history-amount text-danger">-৳ 500.00</div>
-                    </div>
-                </div>
+                <div class="no-data">Loading transactions...</div>
             </div>
         </main>
 
@@ -151,9 +121,15 @@
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { observeAuthState } from '../firebase/auth.js';
+        import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((userData) => {
+        const db = getFirestore();
+        let allTransactions = [];
+        let currentFilter = 'all';
+
+        observeAuthState(async (userData) => {
             if (userData) {
+                const uid = userData.uid;
                 const name = userData.fullName || userData.displayName || "User";
                 document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
                 document.getElementById('userNameDisplay').innerText = name;
@@ -162,25 +138,125 @@
                 const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+
+                // Fetch Transactions from Firestore
+                await fetchUserTransactions(uid);
             } else {
                 window.location.href = 'login.html';
             }
         });
 
+        async function fetchUserTransactions(uid) {
+            const historyContainer = document.getElementById('historyList');
+            allTransactions = [];
+
+            try {
+                // ১. ফেচ ডিপোজিট হিস্ট্রি
+                const depositRef = collection(db, "deposits");
+                const qDeposit = query(depositRef, where("userId", "==", uid));
+                const depositSnapshot = await getDocs(qDeposit);
+                depositSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    allTransactions.push({
+                        type: 'deposit',
+                        title: `Deposit via ${data.gateway || 'Mobile'}`,
+                        subtitle: `Trx: ${data.trxId || 'N/A'}`,
+                        amount: `+৳ ${Number(data.amount || 0).toFixed(2)}`,
+                        status: data.status || 'pending',
+                        amountClass: 'text-success',
+                        timestamp: data.timestamp?.toDate() || new Date()
+                    });
+                });
+
+                // ২. ফেচ উইথড্র হিস্ট্রি
+                const withdrawRef = collection(db, "withdrawals");
+                const qWithdraw = query(withdrawRef, where("userId", "==", uid));
+                const withdrawSnapshot = await getDocs(qWithdraw);
+                withdrawSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    allTransactions.push({
+                        type: 'withdraw',
+                        title: `Withdrawal via ${data.method || 'Method'}`,
+                        subtitle: `A/C: ${data.accountNumber || 'N/A'}`,
+                        amount: `-৳ ${Number(data.amount || 0).toFixed(2)}`,
+                        status: data.status || 'pending',
+                        amountClass: 'text-danger',
+                        timestamp: data.timestamp?.toDate() || new Date()
+                    });
+                });
+
+                // ৩. ফেচ আর্নিং বা টাস্ক হিস্ট্রি (যদি কালেকশন থাকে)
+                const earningRef = collection(db, "earnings");
+                const qEarning = query(earningRef, where("userId", "==", uid));
+                const earningSnapshot = await getDocs(qEarning);
+                earningSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    allTransactions.push({
+                        type: 'earning',
+                        title: data.title || 'Task Reward Earned',
+                        subtitle: 'Task Completion Bonus',
+                        amount: `+৳ ${Number(data.amount || 0).toFixed(2)}`,
+                        status: data.status || 'approved',
+                        amountClass: 'text-success',
+                        timestamp: data.timestamp?.toDate() || new Date()
+                    });
+                });
+
+                // তারিখ অনুযায়ী রিসেন্ট ট্রানজেকশন উপরে সাজানো (Descending)
+                allTransactions.sort((a, b) => b.timestamp - a.timestamp);
+
+                renderTransactions(currentFilter);
+
+            } catch (error) {
+                console.error("Error fetching transactions: ", error);
+                historyContainer.innerHTML = `<div class="no-data" style="color: #dc2626;">ট্রানজেকশন লোড করতে সমস্যা হয়েছে।</div>`;
+            }
+        }
+
+        function renderTransactions(filter) {
+            const historyContainer = document.getElementById('historyList');
+            const filtered = filter === 'all' ? allTransactions : allTransactions.filter(item => item.type === filter);
+
+            if (filtered.length === 0) {
+                historyContainer.innerHTML = `<div class="no-data">কোনো ট্রানজেকশন পাওয়া যায়নি।</div>`;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(tx => {
+                const dateStr = tx.timestamp.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                
+                let badgeClass = 'status-pending';
+                let statusText = tx.status.charAt(0).toUpperCase() + tx.status.slice(1);
+                if (tx.status === 'approved' || tx.status === 'completed') {
+                    badgeClass = 'status-approved';
+                }
+
+                html += `
+                    <div class="history-item" data-type="${tx.type}">
+                        <div class="history-info">
+                            <h4>${tx.title}</h4>
+                            <p>${tx.subtitle} • ${dateStr}</p>
+                            <span class="status-badge ${badgeClass}">${statusText}</span>
+                        </div>
+                        <div>
+                            <div class="history-amount ${tx.amountClass}">${tx.amount}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            historyContainer.innerHTML = html;
+        }
+
         window.filterHistory = function(type, btnElement) {
+            currentFilter = type;
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             btnElement.classList.add('active');
 
-            const items = document.querySelectorAll('.history-item');
-            items.forEach(item => {
-                if (type === 'all' || item.getAttribute('data-type') === type) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+            renderTransactions(currentFilter);
         }
     </script>
 </body>
