@@ -32,6 +32,7 @@
         .card-actions { display: flex; gap: 6px; }
         .btn-approve { background: #dcfce7; color: #15803d; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
         .btn-reject { background: #fee2e2; color: #b91c1c; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .no-data { text-align: center; color: #6b7280; font-size: 12px; margin-top: 30px; }
 
         /* Bottom Nav */
         nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #ffffff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
@@ -61,29 +62,7 @@
 
             <!-- Job List Container -->
             <div class="job-list" id="jobListContainer">
-                <div class="job-card" id="job-1">
-                    <div class="job-info">
-                        <h4>YouTube Full Video Watch & Subscribe</h4>
-                        <p>By: Tanvir Hossain<br>Workers Needed: 50 | Per Task: ৳0.15</p>
-                        <span class="job-reward">Total Budget: ৳ 7.50</span>
-                    </div>
-                    <div class="card-actions">
-                        <button onclick="handleJobAction('job-1', 'YouTube Full Video Watch & Subscribe', 'approved')" class="btn-approve">Approve</button>
-                        <button onclick="handleJobAction('job-1', 'YouTube Full Video Watch & Subscribe', 'rejected')" class="btn-reject">Reject</button>
-                    </div>
-                </div>
-
-                <div class="job-card" id="job-2">
-                    <div class="job-info">
-                        <h4>Facebook Page Follow & Share</h4>
-                        <p>By: Sumaiya Akter<br>Workers Needed: 30 | Per Task: ৳0.20</p>
-                        <span class="job-reward">Total Budget: ৳ 6.00</span>
-                    </div>
-                    <div class="card-actions">
-                        <button onclick="handleJobAction('job-2', 'Facebook Page Follow & Share', 'approved')" class="btn-approve">Approve</button>
-                        <button onclick="handleJobAction('job-2', 'Facebook Page Follow & Share', 'rejected')" class="btn-reject">Reject</button>
-                    </div>
-                </div>
+                <div class="no-data">Loading pending jobs...</div>
             </div>
         </main>
 
@@ -115,22 +94,81 @@
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { observeAuthState } from '../firebase/auth.js';
+        import { db } from '../firebase/firebase-config.js';
+        import { collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((userData) => {
+        observeAuthState(async (userData) => {
             if (!userData) {
                 window.location.href = 'login.html';
+                return;
             }
+            await loadPendingJobs();
         });
 
-        window.handleJobAction = function(cardId, jobTitle, status) {
-            const cardElement = document.getElementById(cardId);
-            if (status === 'approved') {
-                alert(`"${jobTitle" jobটি সফলভাবে অ্যাপ্রুভ করা হয়েছে এবং লাইভ করা হয়েছে!`);
-            } else {
-                alert(`"${jobTitle}" jobটি রিজেক্ট করা হয়েছে এবং বাজেট রিফান্ড করা হয়েছে।`);
+        async function loadPendingJobs() {
+            const container = document.getElementById('jobListContainer');
+            try {
+                const q = query(collection(db, "tasks"), where("status", "==", "pending"));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = `<div class="no-data">কোনো পেন্ডিং জব অ্যাপ্রুভালের জন্য নেই।</div>`;
+                    return;
+                }
+
+                container.innerHTML = "";
+                querySnapshot.forEach((document) => {
+                    const data = document.data();
+                    const docId = document.id;
+                    const totalBudget = (data.slots || 0) * (data.reward || 0);
+
+                    const card = document.createElement('div');
+                    card.className = 'job-card';
+                    card.id = docId;
+                    card.innerHTML = `
+                        <div class="job-info">
+                            <h4>${data.title || 'Untitled Job'}</h4>
+                            <p>By: ${data.userName || 'User'}<br>Workers Needed: ${data.slots || 0} | Per Task: ৳${data.reward || 0}</p>
+                            <span class="job-reward">Total Budget: ৳ ${totalBudget.toFixed(2)}</span>
+                        </div>
+                        <div class="card-actions">
+                            <button onclick="handleJobAction('${docId}', '${data.title || 'Job'}', 'approved')" class="btn-approve">Approve</button>
+                            <button onclick="handleJobAction('${docId}', '${data.title || 'Job'}', 'rejected')" class="btn-reject">Reject</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error loading jobs: ", error);
+                container.innerHTML = `<div class="no-data" style="color: red;">জব ডেটা লোড করতে সমস্যা হয়েছে।</div>`;
             }
-            if (cardElement) {
-                cardElement.remove();
+        }
+
+        window.handleJobAction = async function(jobId, jobTitle, status) {
+            if (!confirm(`আপনি কি "${jobTitle}" জবটি ${status === 'approved' ? 'অ্যাপ্রুভ ও লাইভ' : 'বাতিল'} করতে চান?`)) return;
+
+            try {
+                const jobRef = doc(db, "tasks", jobId);
+
+                if (status === 'approved') {
+                    await updateDoc(jobRef, { status: 'active' });
+                    alert(`"${jobTitle}" জবটি সফলভাবে অ্যাপ্রুভ করা হয়েছে এবং লাইভ করা হয়েছে!`);
+                } else {
+                    await updateDoc(jobRef, { status: 'rejected' });
+                    alert(`"${jobTitle}" জবটি রিজেক্ট করা হয়েছে।`);
+                }
+
+                // UI থেকে কার্ড রিমুভ করা
+                const cardElement = document.getElementById(jobId);
+                if (cardElement) cardElement.remove();
+
+                if (document.getElementById('jobListContainer').children.length === 0) {
+                    document.getElementById('jobListContainer').innerHTML = `<div class="no-data">কোনো পেন্ডিং জব অ্যাপ্রুভালের জন্য নেই।</div>`;
+                }
+
+            } catch (error) {
+                console.error("Error processing job action: ", error);
+                alert("অপারেশন সম্পন্ন করতে সমস্যা হয়েছে।");
             }
         }
     </script>
