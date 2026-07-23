@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Animated Bottom Nav Styles */
         .nav-container {  
             position: fixed;  
             bottom: 15px;  
@@ -28,7 +27,6 @@
             overflow: visible;  
             z-index: 100;
         }  
-          
         .nav-item-animated {  
             flex: 1;  
             text-decoration: none;  
@@ -37,27 +35,22 @@
             position: relative;  
             z-index: 2;  
         }  
-          
         .nav-item-animated i {  
             font-size: 22px;  
             transition: .35s;  
         }  
-          
         .nav-item-animated span {  
             display: block;  
             font-size: 11px;  
             margin-top: 4px;  
             transition: .35s;  
         }  
-          
         .nav-item-animated.active i {  
             transform: translateY(-10px);  
         }  
-          
         .nav-item-animated.active span {  
             font-weight: bold;  
         }  
-          
         .indicator {  
             position: absolute;  
             top: -15px;  
@@ -70,7 +63,6 @@
             box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
-          
         .indicator::before {  
             content: "";  
             position: absolute;  
@@ -79,7 +71,6 @@
             border: 2px solid rgba(49,46,129,.4);  
             animation: pulse 2s infinite;  
         }  
-          
         @keyframes pulse {  
             0% { transform: scale(1); opacity: 1; }  
             100% { transform: scale(1.4); opacity: 0; }  
@@ -96,10 +87,10 @@
                     <i class="fa-solid fa-arrow-left"></i> Back
                 </a>
                 <span class="text-xs font-bold tracking-wider uppercase text-purple-200">Account Profile</span>
-                <div class="w-12"></div> <!-- Spacer for alignment -->
+                <div class="w-12"></div>
             </div>
 
-            <!-- Profile Picture & Details -->
+            <!-- Profile Picture, Name & Email -->
             <div class="flex flex-col items-center mt-1">
                 <div class="w-16 h-16 rounded-full border-4 border-white/30 overflow-hidden bg-white text-purple-700 flex items-center justify-center font-extrabold text-xl shadow-xl">
                     <span id="profileInitial">U</span>
@@ -109,20 +100,24 @@
                 <p id="userEmailDisplay" class="text-[11px] text-purple-200">loading@gmail.com</p>
             </div>
 
-            <!-- Balances Cards inside Header -->
-            <div class="grid grid-cols-2 gap-3 mt-4">
-                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
-                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
-                    <h2 id="mainBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
+            <!-- Balances Cards (Main, Deposit & Total Balance) -->
+            <div class="grid grid-cols-3 gap-2 mt-4">
+                <div class="bg-purple-800/50 p-2.5 rounded-2xl backdrop-blur-sm border border-purple-400/30 text-center">
+                    <p class="text-[9px] text-purple-200 font-medium">Main Balance</p>
+                    <h2 id="mainBalance" class="text-xs font-extrabold mt-0.5">৳ 0.00</h2>
                 </div>
-                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
-                    <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
-                    <h2 id="depositBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
+                <div class="bg-purple-800/50 p-2.5 rounded-2xl backdrop-blur-sm border border-purple-400/30 text-center">
+                    <p class="text-[9px] text-purple-200 font-medium">Deposit Balance</p>
+                    <h2 id="depositBalance" class="text-xs font-extrabold mt-0.5">৳ 0.00</h2>
+                </div>
+                <div class="bg-indigo-900/70 p-2.5 rounded-2xl backdrop-blur-sm border border-indigo-400/40 text-center shadow">
+                    <p class="text-[9px] text-indigo-200 font-bold">Total Balance</p>
+                    <h2 id="totalBalance" class="text-xs font-extrabold mt-0.5 text-yellow-300">৳ 0.00</h2>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content Area (6 Buttons in 3 Rows) -->
+        <!-- Main Content Area (Action Buttons) -->
         <main class="p-4 flex-grow">
             <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Account Actions</h2>
             
@@ -139,88 +134,73 @@
                     <a id="activateBtn" href="activate-account.html" class="hidden bg-amber-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow hover:bg-amber-700 transition">Activate</a>
                 </div>
 
-                <!-- Row 1: Wallet & Referral -->
+                <!-- Row 1 -->
                 <div class="grid grid-cols-2 gap-2.5">
                     <a href="wallet.html" class="p-3.5 bg-purple-50/60 border border-purple-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-purple-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">💳</span>
                         <span class="text-xs font-bold text-purple-900 leading-tight">My Wallet & Balances</span>
                     </a>
-
                     <a href="referral.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-indigo-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">👥</span>
                         <span class="text-xs font-bold text-indigo-900 leading-tight">Referral Team</span>
                     </a>
                 </div>
 
-                <!-- Row 2: Task History & Support -->
+                <!-- Row 2 -->
                 <div class="grid grid-cols-2 gap-2.5">
                     <a href="history.html" class="p-3.5 bg-rose-50/60 border border-rose-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-rose-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">📊</span>
                         <span class="text-xs font-bold text-rose-900 leading-tight">Task History</span>
                     </a>
-
                     <a href="https://t.me/microjobspro" target="_blank" class="p-3.5 bg-sky-50/60 border border-sky-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-sky-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">🎧</span>
                         <span class="text-xs font-bold text-sky-900 leading-tight">Support & Help</span>
                     </a>
                 </div>
 
-                <!-- Row 3: Deposit/Withdraw & Leaderboard (Total 6 Action Buttons) -->
+                <!-- Row 3 -->
                 <div class="grid grid-cols-2 gap-2.5">
                     <a href="deposit.html" class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-emerald-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">💰</span>
                         <span class="text-xs font-bold text-emerald-900 leading-tight">Deposit Funds</span>
                     </a>
-
                     <a href="withdraw.html" class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-amber-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">💸</span>
                         <span class="text-xs font-bold text-amber-900 leading-tight">Withdraw Earnings</span>
                     </a>
                 </div>
 
-                <!-- Logout Button -->
+                <!-- Logout -->
                 <button id="logoutBtn" class="w-full mt-2 p-3.5 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 transition shadow-sm text-red-600 font-bold text-xs cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout Account
                 </button>
             </div>
         </main>
 
-        <!-- Animated Bottom Navigation Bar -->
+        <!-- Animated Bottom Navigation -->
         <div class="nav-container">  
             <div class="indicator"></div>  
-            
             <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
-                <i class="fa-solid fa-headset"></i>  
-                <span>Help</span>  
+                <i class="fa-solid fa-headset"></i><span>Help</span>  
             </a>  
-
             <a href="wallet.html" class="nav-item-animated">  
-                <i class="fa-solid fa-wallet"></i>  
-                <span>Wallet</span>  
+                <i class="fa-solid fa-wallet"></i><span>Wallet</span>  
             </a>  
-            
             <a href="dashboard.html" class="nav-item-animated">  
-                <i class="fa-solid fa-house"></i>  
-                <span>Home</span>  
+                <i class="fa-solid fa-house"></i><span>Home</span>  
             </a>  
-            
             <a href="referral.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user-group"></i>  
-                <span>Team</span>  
+                <i class="fa-solid fa-user-group"></i><span>Team</span>  
             </a>  
-            
             <a href="profile.html" class="nav-item-animated active">  
-                <i class="fa-solid fa-user"></i>  
-                <span>Profile</span>  
+                <i class="fa-solid fa-user"></i><span>Profile</span>  
             </a>  
         </div>  
     </div>
 
-    <!-- Navigation Animation Script -->
     <script>  
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
-          
         function moveIndicator(el){  
             if (!el) return;
             const left = el.offsetLeft + (el.offsetWidth / 2) - (indicator.offsetWidth / 2);  
@@ -228,18 +208,11 @@
             items.forEach(i => i.classList.remove("active"));  
             el.classList.add("active");  
         }  
-          
-        items.forEach(item => {  
-            item.addEventListener("click", () => {  
-                moveIndicator(item);  
-            });  
-        });  
-          
+        items.forEach(item => { item.addEventListener("click", () => moveIndicator(item)); });  
         window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
-        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
 
-    <!-- Firebase & Auth Script -->
+    <!-- Firebase Realtime Sync & Total Balance Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
@@ -273,17 +246,19 @@
                 profileImgTag.classList.add('hidden');
             }
 
-            // Real-time user data fetch (Balances & Status)
+            // Realtime Balances, Status & Total Balance Calculation
             const userDocRef = doc(db, "users", user.uid);
             onSnapshot(userDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    // Load Balances dynamically
-                    const mainBal = data.mainBalance ?? data.balances?.main ?? 0;
-                    const depositBal = data.depositBalance ?? data.balances?.deposit ?? 0;
-                    document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                    document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+                    const mainBal = Number(data.mainBalance ?? 0);
+                    const depositBal = Number(data.depositBalance ?? 0);
+                    const totalBal = mainBal + depositBal; // মোট ব্যালেন্স যোগ করা হলো
+                    
+                    document.getElementById('mainBalance').innerText = `৳ ${mainBal.toFixed(2)}`;
+                    document.getElementById('depositBalance').innerText = `৳ ${depositBal.toFixed(2)}`;
+                    document.getElementById('totalBalance').innerText = `৳ ${totalBal.toFixed(2)}`;
 
                     const statusText = document.getElementById('statusText');
                     const activateBtn = document.getElementById('activateBtn');
@@ -302,7 +277,6 @@
             });
         });
 
-        // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             if (confirm("আপনি কি নিশ্চিতভাবে অ্যাকাউন্ট থেকে বের হতে চান?")) {
                 try {
