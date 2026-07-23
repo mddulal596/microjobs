@@ -143,7 +143,7 @@
                         }
                     }
 
-                    const bonusAmount = 5.00; // ডেইলি বোনাসের পরিমাণ
+                    const bonusAmount = 5.00;
 
                     await updateDoc(userRef, {
                         mainBalance: increment(bonusAmount),
@@ -151,7 +151,9 @@
                     });
 
                     alert(`অভিনন্দন! আপনি সফলভাবে ৳${bonusAmount} ডেইলি বোনাস ক্লেইম করেছেন।`);
-                    window.location.href = 'dashboard.html';
+                    
+                    // সরাসরি dashboard.html পেইজে রিডাইরেক্ট হবে
+                    window.location.href = 'dashboard.html'; 
                 }
             } catch (error) {
                 console.error("Error claiming bonus: ", error);
