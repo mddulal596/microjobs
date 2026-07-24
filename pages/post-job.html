@@ -78,11 +78,18 @@
                 <div class="form-group">
                     <label class="form-label">Select Category</label>
                     <select id="jobCategory" class="form-select" required>
-                        <option value="YouTube">YouTube Video Watch & Like</option>
-                        <option value="Facebook">Facebook Page Follow</option>
-                        <option value="Telegram">Telegram Channel Join</option>
-                        <option value="Website">Website Visit & Browse</option>
-                        <option value="Custom">Custom Task</option>
+                        <option value="YouTube Video">YouTube Video</option>
+                        <option value="YouTube Comment & Like Shear">YouTube Comment & Like Shear</option>
+                        <option value="Facebook Video">Facebook Video</option>
+                        <option value="Facebook Page Follow">Facebook Page Follow</option>
+                        <option value="Facebook Like Comment & Shear">Facebook Like Comment & Shear</option>
+                        <option value="Telegram Channel Join">Telegram Channel Join</option>
+                        <option value="Telegram Bot Join">Telegram Bot Join</option>
+                        <option value="Telegram Group Join">Telegram Group Join</option>
+                        <option value="TiKTok Follow">TiKTok Follow</option>
+                        <option value="TiKTok Like Comment & Shear">TiKTok Like Comment & Shear</option>
+                        <option value="Website Visi">Website Visi</option>
+                        <option value="Custom Task">Custom Task</option>
                     </select>
                 </div>
 
@@ -182,8 +189,14 @@
             }
 
             alert(`আপনার জব পোস্ট সফলভাবে পাবলিশ হয়েছে! মোট বাজেট ৳${totalBudget.toFixed(2)} কেটে নেওয়া হয়েছে।`);
-            window.location.href = 'dashboard.html';
+
+            // ক্যাটাগরি অনুযায়ী রিডাইরেকশন লজিক
+            if (category === "YouTube Video") {
+                window.location.href = 'video.html';
+            } else {
+                window.location.href = 'daily-job.html';
+            }
         }
     </script>
 </body>
-  </html>
+</html>
