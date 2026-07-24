@@ -242,7 +242,8 @@
                 const totalRef = userData.totalReferred ?? userData.totalTeam ?? userData.referralCount ?? 0;
                 document.getElementById('totalTeam').innerText = totalRef;
 
-                const refEarnings = userData.referralEarnings ?? userData.referralBonus ?? userData.totalReferralIncome ?? 0;
+                // Fetching from balances.referral path as structured in Firestore
+                const refEarnings = userData.balances?.referral ?? userData.referralEarnings ?? userData.referralBonus ?? 0;
                 document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
             } else {
                 window.location.href = 'login.html';
