@@ -90,8 +90,8 @@
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
         
         <!-- Dashboard Header -->
-        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
-            <div class="flex justify-between items-center mb-4">
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg space-y-4">
+            <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
                     <!-- Profile Picture / First Letter Icon -->
                     <div id="profilePicContainer" class="w-12 h-12 rounded-full border-2 border-white overflow-hidden bg-white text-purple-700 flex items-center justify-center font-bold text-lg shadow-md flex-shrink-0">
@@ -103,16 +103,24 @@
                         <span class="text-xs text-purple-200">Welcome back!</span>
                     </div>
                 </div>
-                <a href="profile.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">Profile</a>
             </div>
 
-            <!-- Balance Card inside Header -->
-            <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 flex justify-between items-center">
-                <div>
-                    <p class="text-xs text-purple-200 font-medium">Main Balance</p>
-                    <h3 class="text-xl font-extrabold mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
+            <!-- Balance Cards inside Header -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 flex justify-between items-center">
+                    <div>
+                        <p class="text-[11px] text-purple-200 font-medium">Main Balance</p>
+                        <h3 class="text-lg font-extrabold mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
+                    </div>
+                    <a href="wallet.html" class="bg-white text-purple-700 px-3 py-1.5 rounded-xl text-xs font-bold shadow hover:bg-purple-50 transition">Wallet</a>
                 </div>
-                <a href="wallet.html" class="bg-white text-purple-700 px-4 py-2 rounded-xl text-xs font-bold shadow hover:bg-purple-50 transition">Wallet</a>
+                <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 flex justify-between items-center">
+                    <div>
+                        <p class="text-[11px] text-purple-200 font-medium">Deposit Balance</p>
+                        <h3 class="text-lg font-extrabold mt-0.5">৳ <span id="depositBalance">0.00</span></h3>
+                    </div>
+                    <a href="deposit.html" class="bg-white text-purple-700 px-3 py-1.5 rounded-xl text-xs font-bold shadow hover:bg-purple-50 transition">Add</a>
+                </div>
             </div>
         </header>
 
@@ -256,21 +264,32 @@
                 profileImgTag.classList.add('hidden');
             }
 
-            // ফায়ারবেজ থেকে রিয়েল-টাইমে ব্যালেন্স লোড করা
+            // ফায়ারবেজ থেকে রিয়েল-টাইমে মেইন ও ডিপোজিট ব্যালেন্স লোড করা
             const userDocRef = doc(db, "users", user.uid);
             
             onSnapshot(userDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    let balance = 0;
+                    
+                    // Main Balance
+                    let mainBalance = 0;
                     if (data.balances && typeof data.balances.main !== 'undefined') {
-                        balance = data.balances.main;
+                        mainBalance = data.balances.main;
                     } else if (typeof data.mainBalance !== 'undefined') {
-                        balance = data.mainBalance;
+                        mainBalance = data.mainBalance;
                     } else if (typeof data.balance !== 'undefined') {
-                        balance = data.balance;
+                        mainBalance = data.balance;
                     }
-                    document.getElementById('mainBalance').innerText = Number(balance).toFixed(2);
+                    document.getElementById('mainBalance').innerText = Number(mainBalance).toFixed(2);
+
+                    // Deposit Balance
+                    let depositBalance = 0;
+                    if (data.balances && typeof data.balances.deposit !== 'undefined') {
+                        depositBalance = data.balances.deposit;
+                    } else if (typeof data.depositBalance !== 'undefined') {
+                        depositBalance = data.depositBalance;
+                    }
+                    document.getElementById('depositBalance').innerText = Number(depositBalance).toFixed(2);
                 }
             }, (error) => {
                 console.error("Error fetching balance:", error);
@@ -278,4 +297,4 @@
         });
     </script>
 </body>
-    </html>
+</html>
