@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Animated Bottom Nav Styles - Fixed Position & Other pages matching color */
+        /* Animated Bottom Nav Styles - Fixed Position & Dashboard Matching */
         .nav-container {  
             position: fixed;  
             bottom: 15px;  
@@ -19,7 +19,7 @@
             width: 92%;  
             max-width: 440px;  
             height: 70px;  
-            background: #4f46e5; /* অন্যান্য পেজের মতো সঠিক কালার */
+            background: #4f46e5;  
             border-radius: 22px;  
             display: flex;  
             justify-content: space-around;  
@@ -63,7 +63,7 @@
             top: -15px;  
             width: 60px;  
             height: 60px;  
-            background: #312e81; /* ইন্ডিকেটর কালার ম্যাচিং */
+            background: #312e81;  
             border-radius: 50%;  
             border: 4px solid #fff;  
             transition: left .35s ease;  
@@ -81,41 +81,39 @@
         }  
           
         @keyframes pulse {  
-            0% {  
-                transform: scale(1);  
-                opacity: 1;  
-            }  
-            100% {  
-                transform: scale(1.4);  
-                opacity: 0;  
-            }  
+            0% { transform: scale(1); opacity: 1; }  
+            100% { transform: scale(1.4); opacity: 0; }  
         } 
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <!-- প্রপার প্যাডিং দেওয়া হয়েছে যাতে নেভবার কোনো কন্টেন্ট বা বাটন ঢেকে না ফেলে -->
+<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
+    <!-- প্রপার প্যাডিং যাতে নেভবার কন্টেন্ট ঢেকে না ফেলে -->
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-32 relative">
         
         <!-- Top Header & Balances -->
-        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
             <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center">
-                    <a href="profile.html" class="flex items-center gap-2 bg-indigo-700/80 hover:bg-indigo-700 border border-indigo-400/40 px-3 py-1.5 rounded-full shadow-inner transition">
-                        <div id="profileIconBtn" class="w-6 h-6 bg-white text-indigo-600 rounded-full flex items-center justify-center text-xs font-extrabold shadow">
-                            U
-                        </div>
-                        <span id="userNameDisplay" class="text-xs font-bold tracking-wide truncate max-w-[120px]">Loading...</span>
-                    </a>
+                <div class="flex items-center space-x-3">
+                    <div id="profileIconBtn" class="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-white text-purple-700 flex items-center justify-center font-bold text-base shadow-md flex-shrink-0">
+                        U
+                    </div>
+                    <div class="overflow-hidden">
+                        <h2 id="userNameDisplay" class="text-base font-bold truncate">Loading...</h2>
+                        <span class="text-xs text-purple-200">Referral Program</span>
+                    </div>
                 </div>
+                <a href="profile.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">Profile</a>
             </div>
-            <div class="grid grid-cols-2 gap-3 mt-2">
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
-                    <h2 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
+
+            <!-- Balance Cards inside Header -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20">
+                    <p class="text-[11px] text-purple-200 font-medium">Main Balance</p>
+                    <h3 class="text-base font-extrabold mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
                 </div>
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
-                    <h2 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
+                <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20">
+                    <p class="text-[11px] text-purple-200 font-medium">Deposit Balance</p>
+                    <h3 class="text-base font-extrabold mt-0.5">৳ <span id="depositBalance">0.00</span></h3>
                 </div>
             </div>
         </header>
@@ -124,16 +122,16 @@
         <main class="p-4 flex-grow space-y-4">
             
             <!-- Invite Banner Info -->
-            <div class="space-y-1">
-                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">INVITE FRIENDS & EARN COMMISSION</h2>
-                <p class="text-[11px] text-gray-500 leading-relaxed">
+            <div class="space-y-1 px-1">
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Invite Friends & Earn Commission</h2>
+                <p class="text-xs text-gray-500 leading-relaxed">
                     Share your unique referral code with friends. When they join using your code and complete tasks, you will earn lifetime bonuses!
                 </p>
             </div>
 
             <!-- Referral Code Card -->
             <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3 shadow-sm text-center">
-                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">YOUR REFERRAL CODE</p>
+                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">Your Referral Code</p>
                 <div class="py-1">
                     <input type="text" id="myReferralCode" readonly class="w-full bg-transparent text-center text-2xl font-extrabold text-indigo-600 tracking-widest focus:outline-none" value="Loading...">
                 </div>
@@ -146,11 +144,11 @@
             <!-- Stats Side-by-Side -->
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRED</p>
+                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Total Referred</p>
                     <h3 id="totalTeam" class="text-lg font-extrabold text-indigo-600">0</h3>
                 </div>
                 <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">REFERRAL EARNINGS</p>
+                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Referral Earnings</p>
                     <h3 id="referralEarnings" class="text-lg font-extrabold text-green-600">৳ 0.00</h3>
                 </div>
             </div>
@@ -221,30 +219,59 @@
 
     <!-- Firebase Script & Logic -->
     <script type="module">
+        import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((userData) => {
-            if (userData) {
-                const name = userData.fullName || userData.displayName || "User";
-                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
-                document.getElementById('userNameDisplay').innerText = name;
-
-                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
-                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
-
-                const refCode = userData.referralCode || "MCJVIP" + userData.uid.substring(0, 4).toUpperCase();
-                document.getElementById('myReferralCode').value = refCode;
-
-                const totalRef = userData.totalReferred ?? userData.totalTeam ?? 0;
-                document.getElementById('totalTeam').innerText = totalRef;
-
-                const refEarnings = userData.referralEarnings ?? userData.referralBonus ?? 0;
-                document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
-            } else {
+        observeAuthState(async (user) => {
+            if (!user) {
                 window.location.href = 'login.html';
+                return;
             }
+
+            const name = user.fullName || user.displayName || "User";
+            document.getElementById('userNameDisplay').innerText = name;
+            document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
+
+            // ফায়ারবেজ থেকে রিয়েল-টাইমে ডেটা লোড করা
+            const userDocRef = doc(db, "users", user.uid);
+            
+            onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // ব্যালেন্স হ্যান্ডলিং
+                    let mainBal = 0;
+                    if (data.balances && typeof data.balances.main !== 'undefined') {
+                        mainBal = data.balances.main;
+                    } else if (typeof data.mainBalance !== 'undefined') {
+                        mainBal = data.mainBalance;
+                    }
+
+                    let depositBal = 0;
+                    if (data.balances && typeof data.balances.deposit !== 'undefined') {
+                        depositBal = data.balances.deposit;
+                    } else if (typeof data.depositBalance !== 'undefined') {
+                        depositBal = data.depositBalance;
+                    }
+
+                    document.getElementById('mainBalance').innerText = Number(mainBal).toFixed(2);
+                    document.getElementById('depositBalance').innerText = Number(depositBal).toFixed(2);
+
+                    // রেফারেল কোড
+                    const refCode = data.referralCode || "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
+                    document.getElementById('myReferralCode').value = refCode;
+
+                    // টিম ও আর্নিংস
+                    const totalRef = data.totalReferred ?? data.totalTeam ?? 0;
+                    document.getElementById('totalTeam').innerText = totalRef;
+
+                    const refEarnings = data.referralEarnings ?? data.referralBonus ?? 0;
+                    document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
+                }
+            }, (error) => {
+                console.error("Error fetching referral data:", error);
+            });
         });
 
         window.copyReferralCode = function() {
