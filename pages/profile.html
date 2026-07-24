@@ -119,72 +119,65 @@
         <main class="p-4 flex-grow">
             <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Account Actions</h2>
             
-            <div class="flex flex-col gap-2.5">
-                <!-- Row 1: Leaderboard & Membership Status -->
-                <div class="grid grid-cols-2 gap-2.5">
-                    <a href="leaderboard.html" class="p-3.5 bg-indigo-50 border border-indigo-200 rounded-2xl flex items-center justify-between shadow-sm hover:bg-indigo-100 transition">
-                        <div class="flex items-center gap-2.5">
-                            <span class="text-xl">🏆</span>
-                            <div>
-                                <h4 class="text-xs font-bold text-indigo-900">Leaderboard</h4>
-                                <p class="text-[10px] text-indigo-700">Top Earners</p>
-                            </div>
-                        </div>
-                    </a>
+            <!-- সব বাটনগুলো ২ কলাম বিশিষ্ট গ্রিডে সমান সাইজে সাজানো হয়েছে -->
+            <div class="grid grid-cols-2 gap-2.5">
+                
+                <!-- ১. Leaderboard -->
+                <a href="leaderboard.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-indigo-100 transition shadow-sm gap-1.5">
+                    <span class="text-2xl">🏆</span>
+                    <span class="text-xs font-bold text-indigo-900 leading-tight">Leaderboard</span>
+                </a>
 
-                    <div id="accountStatusBox" class="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center shadow-sm">
-                        <div class="flex items-center gap-2.5 overflow-hidden">
-                            <span class="text-xl shrink-0">⭐</span>
-                            <div class="overflow-hidden">
-                                <h4 class="text-xs font-bold text-amber-900 truncate">Membership</h4>
-                                <p id="statusText" class="text-[10px] text-amber-700 truncate">Checking...</p>
-                            </div>
-                        </div>
-                        <a id="activateBtn" href="activate-account.html" class="hidden bg-amber-600 text-white px-2 py-1 rounded-lg text-[10px] font-bold shadow hover:bg-amber-700 transition shrink-0">Activate</a>
-                    </div>
+                <!-- ২. Membership -->
+                <div id="accountStatusBox" class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center shadow-sm gap-1.5 relative">
+                    <span class="text-2xl">⭐</span>
+                    <span class="text-xs font-bold text-amber-900 leading-tight">Membership</span>
+                    <p id="statusText" class="text-[10px] text-amber-700 font-medium">Checking...</p>
+                    <a id="activateBtn" href="activate-account.html" class="hidden absolute top-2 right-2 bg-amber-600 text-white px-2 py-0.5 rounded-lg text-[9px] font-bold shadow hover:bg-amber-700 transition">Activate</a>
                 </div>
 
-                <!-- Row 2 -->
-                <div class="grid grid-cols-2 gap-2.5">
-                    <a href="wallet.html" class="p-3.5 bg-purple-50/60 border border-purple-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-purple-100 transition shadow-sm gap-1.5">
-                        <span class="text-2xl">💳</span>
-                        <span class="text-xs font-bold text-purple-900 leading-tight">My Wallet & Balances</span>
-                    </a>
-                    <a href="referral.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-indigo-100 transition shadow-sm gap-1.5">
-                        <span class="text-2xl">👥</span>
-                        <span class="text-xs font-bold text-indigo-900 leading-tight">Referral Team</span>
-                    </a>
-                </div>
+                <!-- ৩. My Wallet & Balances -->
+                <a href="wallet.html" class="p-3.5 bg-purple-50/60 border border-purple-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-purple-100 transition shadow-sm gap-1.5">
+                    <span class="text-2xl">💳</span>
+                    <span class="text-xs font-bold text-purple-900 leading-tight">My Wallet & Balances</span>
+                </a>
 
-                <!-- Row 3 -->
-                <div class="grid grid-cols-2 gap-2.5">
-                    <a href="history.html" class="p-3.5 bg-rose-50/60 border border-rose-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-rose-100 transition shadow-sm gap-1.5">
-                        <span class="text-2xl">📊</span>
-                        <span class="text-xs font-bold text-rose-900 leading-tight">Task History</span>
-                    </a>
-                    <a href="https://t.me/microjobspro" target="_blank" class="p-3.5 bg-sky-50/60 border border-sky-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-sky-100 transition shadow-sm gap-1.5">
-                        <span class="text-2xl">🎧</span>
-                        <span class="text-xs font-bold text-sky-900 leading-tight">Support & Help</span>
-                    </a>
-                </div>
+                <!-- ৪. Referral Team -->
+                <a href="referral.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-indigo-100 transition shadow-sm gap-1.5">
+                    <span class="text-2xl">👥</span>
+                    <span class="text-xs font-bold text-indigo-900 leading-tight">Referral Team</span>
+                </a>
 
-                <!-- Row 4 -->
-                <div class="grid grid-cols-2 gap-2.5">
-                    <a href="task-complete.html" class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-emerald-100 transition shadow-sm gap-1.5">
-                        <span class="text-2xl">✅</span>
-                        <span class="text-xs font-bold text-emerald-900 leading-tight">Task Complete</span>
-                    </a>
-                    <a href="task-pending.html" class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-amber-100 transition shadow-sm gap-1.5">
-                        <span class="text-2xl">⏳</span>
-                        <span class="text-xs font-bold text-amber-900 leading-tight">Task Pending</span>
-                    </a>
-                </div>
+                <!-- ৫. Task History -->
+                <a href="history.html" class="p-3.5 bg-rose-50/60 border border-rose-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-rose-100 transition shadow-sm gap-1.5">
+                    <span class="text-2xl">📊</span>
+                    <span class="text-xs font-bold text-rose-900 leading-tight">Task History</span>
+                </a>
 
-                <!-- Logout -->
-                <button id="logoutBtn" class="w-full mt-2 p-3.5 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 transition shadow-sm text-red-600 font-bold text-xs cursor-pointer">
-                    <i class="fa-solid fa-right-from-bracket"></i> Logout Account
-                </button>
+                <!-- ৬. Support & Help -->
+                <a href="https://t.me/microjobspro" target="_blank" class="p-3.5 bg-sky-50/60 border border-sky-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-sky-100 transition shadow-sm gap-1.5">
+                    <span class="text-2xl">🎧</span>
+                    <span class="text-xs font-bold text-sky-900 leading-tight">Support & Help</span>
+                </a>
+
+                <!-- ৭. Task Complete -->
+                <a href="task-complete.html" class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-emerald-100 transition shadow-sm gap-1.5">
+                    <span class="text-2xl">✅</span>
+                    <span class="text-xs font-bold text-emerald-900 leading-tight">Task Complete</span>
+                </a>
+
+                <!-- ৮. Task Pending -->
+                <a href="task-pending.html" class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-amber-100 transition shadow-sm gap-1.5">
+                    <span class="text-2xl">⏳</span>
+                    <span class="text-xs font-bold text-amber-900 leading-tight">Task Pending</span>
+                </a>
+
             </div>
+
+            <!-- Logout Button -->
+            <button id="logoutBtn" class="w-full mt-3 p-3.5 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 transition shadow-sm text-red-600 font-bold text-xs cursor-pointer">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout Account
+            </button>
         </main>
 
         <!-- Animated Bottom Navigation -->
@@ -274,11 +267,11 @@
 
                     if (data.isActivated) {
                         statusText.innerText = "Active (Premium)";
-                        statusBox.className = "p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex justify-between items-center shadow-sm";
+                        statusBox.className = "p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col items-center text-center justify-center shadow-sm gap-1.5 relative";
                         activateBtn.classList.add('hidden');
                     } else {
                         statusText.innerText = "Unactivated";
-                        statusBox.className = "p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center shadow-sm";
+                        statusBox.className = "p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center shadow-sm gap-1.5 relative";
                         activateBtn.classList.remove('hidden');
                     }
                 }
