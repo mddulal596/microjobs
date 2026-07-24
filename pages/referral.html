@@ -10,10 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Animated Bottom Nav Styles */
+        /* Animated Bottom Nav Styles - Fixed Position */
         .nav-container {  
             position: fixed;  
-            bottom: 15px;  
+            bottom: 25px;  
             left: 50%;
             transform: translateX(-50%);
             width: 92%;  
@@ -93,7 +93,7 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24 relative">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28 relative">
         
         <!-- Top Header & Balances (Purple/Indigo Gradient) -->
         <header class="p-4 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
@@ -218,33 +218,46 @@
         window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
 
-    <!-- Firebase Script & Logic -->
+    <!-- Firebase Script & Logic Fixed -->
     <script type="module">
+        import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        observeAuthState((userData) => {
-            if (userData) {
-                const name = userData.fullName || userData.displayName || "User";
+        observeAuthState(async (user) => {
+            if (user) {
+                const name = user.fullName || user.displayName || "User";
                 document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
                 document.getElementById('userNameDisplay').innerText = name;
 
-                // Load Balances
-                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
-                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(userDocRef);
+                    
+                    if (docSnap.exists()) {
+                        const userData = docSnap.data();
 
-                // Referral Code Generation / Display
-                const refCode = userData.referralCode || "MCJVIP" + userData.uid.substring(0, 4).toUpperCase();
-                document.getElementById('myReferralCode').value = refCode;
+                        // Load Balances
+                        const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
+                        const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
+                        document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
+                        document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                // Stats mapping
-                const totalRef = userData.totalReferred ?? userData.totalTeam ?? userData.referralCount ?? 0;
-                document.getElementById('totalTeam').innerText = totalRef;
+                        // Unique Referral Code Fix using UID
+                        const refCode = userData.referralCode || "MCJVIP" + user.uid.substring(0, 5).toUpperCase();
+                        document.getElementById('myReferralCode').value = refCode;
 
-                // Fetching from balances.referral path as structured in Firestore
-                const refEarnings = userData.balances?.referral ?? userData.referralEarnings ?? userData.referralBonus ?? 0;
-                document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
+                        // Stats mapping
+                        const totalRef = userData.totalReferred ?? userData.totalTeam ?? userData.referralCount ?? 0;
+                        document.getElementById('totalTeam').innerText = totalRef;
+
+                        const refEarnings = userData.balances?.referral ?? userData.referralEarnings ?? userData.referralBonus ?? 0;
+                        document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
+                    }
+                } catch (error) {
+                    console.error("Error fetching referral data:", error);
+                }
+
             } else {
                 window.location.href = 'login.html';
             }
