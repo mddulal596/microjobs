@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Watch Video & Earn - Micro Job Pro</title>
+    <title>Watch Videos & Earn - Micro Job Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN for Icons -->
@@ -95,36 +95,38 @@
                 <a href="dashboard.html" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1.5">
                     <i class="fa-solid fa-arrow-left"></i> Back
                 </a>
-                <h1 class="text-base font-bold">Watch & Earn</h1>
+                <h1 class="text-base font-bold">Watch & Earn Tasks</h1>
                 <div class="w-12"></div>
             </div>
             <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20 text-center">
-                <p class="text-xs text-red-100">Watch the video completely until the timer ends to claim your reward.</p>
+                <p class="text-xs text-red-100">Select a video task, watch completely until the timer ends, and claim your reward!</p>
             </div>
         </header>
 
         <!-- Main Content Area -->
         <main class="p-4 flex-grow space-y-4">
-            <div class="flex justify-between items-center px-1">
-                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Video Task</h2>
-                <span id="timerDisplay" class="bg-red-50 text-red-600 text-xs font-extrabold px-3 py-1 rounded-full border border-red-100">
-                    <i class="fa-regular fa-clock"></i> 60s Remaining
-                </span>
-            </div>
-
-            <!-- Video Task Card -->
-            <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm space-y-3">
+            
+            <!-- Video Player & Timer Section (Hidden initially until a video is selected) -->
+            <div id="playerSection" class="hidden space-y-4 bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                 <div class="flex justify-between items-center">
-                    <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Reward: ৳ 2.50</span>
+                    <button onclick="backToList()" class="text-xs text-red-600 font-bold flex items-center gap-1 bg-red-50 px-3 py-1 rounded-full">
+                        <i class="fa-solid fa-arrow-left"></i> All Videos
+                    </button>
+                    <span id="timerDisplay" class="bg-red-50 text-red-600 text-xs font-extrabold px-3 py-1 rounded-full border border-red-100">
+                        <i class="fa-regular fa-clock"></i> 60s Remaining
+                    </span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <span id="activeRewardBadge" class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Reward: ৳ 2.50</span>
                     <span class="text-xs text-gray-400 font-medium">YouTube Video Task</span>
                 </div>
                 
-                <h3 class="text-sm font-bold text-gray-800">Complete Promotional Video Task #1</h3>
+                <h3 id="activeVideoTitle" class="text-sm font-bold text-gray-800">Task Title</h3>
                 
-                <!-- YouTube Iframe with Full Security Overlay -->
+                <!-- YouTube Iframe with Security Shield -->
                 <div class="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden relative shadow-inner">
-                    <iframe class="w-full h-full absolute inset-0 pointer-events-none" src="https://www.youtube.com/embed/TS2VUZ7tMzM?autoplay=1&mute=0&controls=0&disablekb=1&modestbranding=1&si=iGZ_nSetIPE7uzPS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                    <!-- Transparent Shield to block clicking and seeking completely -->
+                    <iframe id="youtubeIframe" class="w-full h-full absolute inset-0 pointer-events-none" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                     <div class="absolute inset-0 z-10 bg-transparent"></div>
                 </div>
 
@@ -134,60 +136,47 @@
                 </button>
             </div>
 
+            <!-- Video List Section -->
+            <div id="videoListSection" class="space-y-3">
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider px-1">Available Video Tasks (<span id="totalVideosCount">0</span>)</h2>
+                
+                <!-- Dynamic Video Cards Container -->
+                <div id="videoContainer" class="space-y-3">
+                    <!-- JavaScript will load video cards here dynamically -->
+                </div>
+            </div>
+
             <!-- Notice Box -->
             <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-800 space-y-1">
                 <p class="font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Important Notice:</p>
-                <p>Stay on this page until the timer finishes. Leaving early will result in losing your reward.</p>
+                <p>Do not skip or fast-forward the video. Complete the full timer to successfully collect your reward.</p>
             </div>
         </main>
 
         <!-- Animated Bottom Navigation Bar -->
         <div class="nav-container">  
             <div class="indicator"></div>  
-            
             <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
-                <i class="fa-solid fa-headset"></i>  
-                <span>Help</span>  
+                <i class="fa-solid fa-headset"></i><span>Help</span>  
             </a>  
-
             <a href="wallet.html" class="nav-item-animated">  
-                <i class="fa-solid fa-wallet"></i>  
-                <span>Wallet</span>  
+                <i class="fa-solid fa-wallet"></i><span>Wallet</span>  
             </a>  
-            
             <a href="dashboard.html" class="nav-item-animated active">  
-                <i class="fa-solid fa-house"></i>  
-                <span>Home</span>  
+                <i class="fa-solid fa-house"></i><span>Home</span>  
             </a>  
-            
             <a href="referral.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user-group"></i>  
-                <span>Team</span>  
+                <i class="fa-solid fa-user-group"></i><span>Team</span>  
             </a>  
-            
             <a href="profile.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user"></i>  
-                <span>Profile</span>  
+                <i class="fa-solid fa-user"></i><span>Profile</span>  
             </a>  
         </div>  
     </div>
 
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        // আপনার ফায়ারবেজ কনফিগারেশন এখানে নিশ্চিত করুন (যদি অন্য ফাইলে আলাদা থাকে তবে আপনার কনফিগ বসাতে পারেন)
-        const firebaseConfig = {
-            // আপনার প্রোজেক্টের ফায়ারবেজ কনফিগ এখানে দিন অথবা আপনার আগের কনফিগারেশন ব্যবহার করুন
-        };
-
-        // যদি আপনার প্রজেক্টে ফায়ারবেজ অলরেডি অন্য কোথাও ইনিশিয়ালাইজ করা থাকে, তবে সেখান থেকেও ইমপোর্ট করতে পারেন।
-    </script>
-
-    <!-- Navigation & Countdown Timer Script -->
+    <!-- Script for Multiple Videos & Timer Logic -->
     <script>  
+        // Navigation bar indicator script
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
           
@@ -198,83 +187,147 @@
             items.forEach(i => i.classList.remove("active"));  
             el.classList.add("active");  
         }  
-          
-        items.forEach(item => {  
-            item.addEventListener("click", () => {  
-                moveIndicator(item);  
-            });  
-        });  
-          
+        items.forEach(item => { item.addEventListener("click", () => moveIndicator(item)); });  
         window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
-        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
 
-        // Automatic Countdown Timer Logic
+        // একাধিক ভিডিওর লিস্ট (আপনি চাইলে এখানে ইচ্ছামমতো ভিডিও আইডি, টাইটেল এবং রিওয়ার্ড যুক্ত করতে পারেন)
+        const videoTasks = [
+            {
+                id: 1,
+                title: "Complete Promotional Video Task #1",
+                reward: 2.50,
+                videoId: "TS2VUZ7tMzM" // ইউটিউব ভিডিও আইডি
+            },
+            {
+                id: 2,
+                title: "Herbal Medicine & Health Care Review #2",
+                reward: 3.00,
+                videoId: "dQw4w9WgXcQ" // উদাহরণস্বরূপ অন্য ভিডিও আইডি
+            },
+            {
+                id: 3,
+                title: "Ayurvedic Treatment Guide & Tips #3",
+                reward: 2.00,
+                videoId: "3JZ_D3ELwOQ" // উদাহরণস্বরূপ অন্য ভিডিও আইডি
+            }
+        ];
+
+        const videoContainer = document.getElementById('videoContainer');
+        const totalVideosCount = document.getElementById('totalVideosCount');
+        const videoListSection = document.getElementById('videoListSection');
+        const playerSection = document.getElementById('playerSection');
+        const youtubeIframe = document.getElementById('youtubeIframe');
+        const activeVideoTitle = document.getElementById('activeVideoTitle');
+        const activeRewardBadge = document.getElementById('activeRewardBadge');
         const timerDisplay = document.getElementById('timerDisplay');
         const watchBtn = document.getElementById('watchBtn');
-        
-        let timeLeft = 60; // ৬০ সেকেন্ড সময়কাল
-        
-        const countdownTimer = setInterval(() => {
-            timeLeft--;
-            timerDisplay.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeLeft}s Remaining`;
 
-            if (timeLeft <= 0) {
-                clearInterval(countdownTimer);
-                timerDisplay.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Completed!`;
-                
-                // বাটন একটিভ করা
-                watchBtn.disabled = false;
-                watchBtn.className = "w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer flex items-center justify-center gap-2";
-                watchBtn.innerHTML = `<i class="fa-solid fa-gift"></i> <span>Claim Reward (৳ 2.50)</span>`;
-            }
-        }, 1000);
-    </script>
+        let currentSelectedReward = 2.50;
+        let countdownTimer = null;
 
-    <!-- Firebase Balance Update Logic -->
-    <script type="module">
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        // রেন্ডার ভিডিও লিস্ট
+        function renderVideoList() {
+            totalVideosCount.innerText = videoTasks.length;
+            videoContainer.innerHTML = "";
 
-        // ফায়ারবেজ ইন্সট্যান্স (আপনার প্রজেক্টের মেইন ফায়ারবেজ ফাইল থেকে ফেচ করতে পারেন)
-        // নিচে সরাসরি ফায়ারবেজ গ্লোবাল বা আপনার অ্যাপ থেকে ডাটা আপডেট করার ফাংশন লেখা হলো:
-        
+            videoTasks.forEach((task) => {
+                videoContainer.innerHTML += `
+                    <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                        <div class="space-y-1">
+                            <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Reward: ৳ ${task.reward.toFixed(2)}</span>
+                            <h3 class="text-xs font-bold text-gray-800">${task.title}</h3>
+                        </div>
+                        <button onclick="startVideoTask('${task.videoId}', '${task.title}', ${task.reward})" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-play"></i> Watch
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        // ভিডিও স্টার্ট করার ফাংশন
+        function startVideoTask(videoId, title, reward) {
+            videoListSection.classList.add('hidden');
+            playerSection.classList.remove('hidden');
+
+            activeVideoTitle.innerText = title;
+            activeRewardBadge.innerText = `Reward: ৳ ${reward.toFixed(2)}`;
+            currentSelectedReward = reward;
+
+            // ইউটিউব আইফ্রেম সোর্স সেট করা (অটো প্লে সহ)
+            youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=0&disablekb=1&modestbranding=1`;
+
+            // টাইমার রিসেট ও শুরু করা
+            let timeLeft = 60;
+            watchBtn.disabled = true;
+            watchBtn.className = "w-full py-3 bg-gray-300 text-gray-500 font-bold text-xs rounded-xl shadow transition cursor-not-allowed flex items-center justify-center gap-2";
+            watchBtn.innerHTML = `<i class="fa-solid fa-lock"></i><span>Please watch full video to claim</span>`;
+
+            if (countdownTimer) clearInterval(countdownTimer);
+
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeLeft}s Remaining`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    timerDisplay.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Completed!`;
+                    
+                    watchBtn.disabled = false;
+                    watchBtn.className = "w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer flex items-center justify-center gap-2";
+                    watchBtn.innerHTML = `<i class="fa-solid fa-gift"></i> <span>Claim Reward (৳ ${reward.toFixed(2)})</span>`;
+                }
+            }, 1000);
+        }
+
+        // ব্যাক টু লিস্ট বাটন
+        function backToList() {
+            if (countdownTimer) clearInterval(countdownTimer);
+            youtubeIframe.src = ""; // ভিডিও বন্ধ করা
+            playerSection.classList.add('hidden');
+            videoListSection.classList.remove('hidden');
+        }
+
+        // রিওয়ার্ড ক্লেইম করার ফাংশন (ফায়ারবেজ ডাটাবেজ আপডেট)
         window.claimReward = async function() {
-            const watchBtn = document.getElementById('watchBtn');
             watchBtn.disabled = true;
             watchBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
 
             try {
-                // উদাহরণস্বরূপ লোকাল স্টোরেজ বা সেশন থেকে ইউজারের ইউআইডি (UID) নেওয়া, 
-                // অথবা ফায়ারবেজ অথ থেকে ইউজার চেক করা:
-                const userId = localStorage.getItem('uid') || localStorage.getItem('user_uid'); // আপনার প্রজেক্টে যে নামে UID সেভ করা থাকে
-                
+                // ফায়ারবেজ মডিউল ইমপোর্ট করে ব্যালেন্স আপডেট
+                const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+                const { getFirestore, doc, updateDoc, increment } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+
+                const auth = getAuth();
+                const db = getFirestore();
+                const user = auth.currentUser;
+                const userId = user ? user.uid : localStorage.getItem('uid') || localStorage.getItem('user_uid');
+
                 if (!userId) {
-                    alert("User not logged in properly! Please login again.");
+                    alert("Please login first to claim your reward!");
                     window.location.href = "login.html";
                     return;
                 }
 
-                // আপনার ড্যাশবোর্ড পেজ যেভাবে ফায়ারবেজ থেকে ডাটা লোড করে, ঠিক সেইভাবে এখানে আপডেট করা হচ্ছে:
-                // ফায়ারবেজের ডাটাবেজ স্ট্রাকচারে আপনার ম্যাপ ফিল্ড 'balances.main' এবং রুট ফিল্ড 'mainBalance' উভয়টি আপডেট করার কোড:
-                
-                // যদি আপনার প্রোজেক্টে গেম বা ফায়ারবেজ ইনস্ট্যান্স গ্লোবালি থাকে:
-                // এখানে সরাসরি লোকাল স্টোরেজ এবং ফায়ারবেজ একসাথে সিনক করার কোড দেওয়া হলো:
-                let currentMain = parseFloat(localStorage.getItem('balance')) || 1280;
-                let newBalance = currentMain + 2.50;
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, {
+                    "balances.main": increment(currentSelectedReward),
+                    "mainBalance": increment(currentSelectedReward)
+                });
 
-                localStorage.setItem('balance', newBalance);
-                localStorage.setItem('user_balance', newBalance);
-
-                alert("Congratulations! ৳ 2.50 has been successfully added to your main balance.");
+                alert(`Congratulations! ৳ ${currentSelectedReward.toFixed(2)} has been successfully added to your main balance.`);
                 window.location.href = "dashboard.html";
 
             } catch (error) {
                 console.error("Error updating balance: ", error);
-                alert("Failed to claim reward. Please try again.");
+                alert("Failed to update balance. Please check your connection.");
                 watchBtn.disabled = false;
-                watchBtn.innerHTML = `<i class="fa-solid fa-gift"></i> <span>Claim Reward (৳ 2.50)</span>`;
+                watchBtn.innerHTML = `<i class="fa-solid fa-gift"></i> <span>Claim Reward</span>`;
             }
         }
+
+        // পেজ লোড হওয়ার সাথে লিস্ট রেন্ডার করা
+        renderVideoList();
     </script>
 </body>
-                    </html>
+</html>
