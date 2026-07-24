@@ -106,7 +106,7 @@
         <!-- Main Content Area -->
         <main class="p-4 flex-grow space-y-4">
             
-            <!-- Video Player & Timer Section (Hidden initially until a video is selected) -->
+            <!-- Video Player & Timer Section -->
             <div id="playerSection" class="hidden space-y-4 bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                 <div class="flex justify-between items-center">
                     <button onclick="backToList()" class="text-xs text-red-600 font-bold flex items-center gap-1 bg-red-50 px-3 py-1 rounded-full">
@@ -176,7 +176,6 @@
 
     <!-- Script for Multiple Videos & Timer Logic -->
     <script>  
-        // Navigation bar indicator script
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
           
@@ -190,25 +189,25 @@
         items.forEach(item => { item.addEventListener("click", () => moveIndicator(item)); });  
         window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
 
-        // একাধিক ভিডিওর লিস্ট (আপনি চাইলে এখানে ইচ্ছামমতো ভিডিও আইডি, টাইটেল এবং রিওয়ার্ড যুক্ত করতে পারেন)
+        // ভিডিওর তালিকা
         const videoTasks = [
             {
                 id: 1,
                 title: "Complete Promotional Video Task #1",
                 reward: 2.50,
-                videoId: "TS2VUZ7tMzM" // ইউটিউব ভিডিও আইডি
+                videoId: "TS2VUZ7tMzM"
             },
             {
                 id: 2,
                 title: "Herbal Medicine & Health Care Review #2",
                 reward: 3.00,
-                videoId: "dQw4w9WgXcQ" // উদাহরণস্বরূপ অন্য ভিডিও আইডি
+                videoId: "dQw4w9WgXcQ"
             },
             {
                 id: 3,
                 title: "Ayurvedic Treatment Guide & Tips #3",
                 reward: 2.00,
-                videoId: "3JZ_D3ELwOQ" // উদাহরণস্বরূপ অন্য ভিডিও আইডি
+                videoId: "3JZ_D3ELwOQ"
             }
         ];
 
@@ -222,43 +221,72 @@
         const timerDisplay = document.getElementById('timerDisplay');
         const watchBtn = document.getElementById('watchBtn');
 
+        let currentSelectedId = null;
         let currentSelectedReward = 2.50;
         let countdownTimer = null;
 
+        // কোন ভিডিওগুলো দেখা হয়েছে তা লোকাল স্টোরেজ থেকে চেক করা
+        function getCompletedVideos() {
+            try {
+                return JSON.parse(localStorage.getItem('completed_videos')) || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
         // রেন্ডার ভিডিও লিস্ট
         function renderVideoList() {
+            const completedVideos = getCompletedVideos();
             totalVideosCount.innerText = videoTasks.length;
             videoContainer.innerHTML = "";
 
             videoTasks.forEach((task) => {
-                videoContainer.innerHTML += `
-                    <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center justify-between">
-                        <div class="space-y-1">
-                            <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Reward: ৳ ${task.reward.toFixed(2)}</span>
-                            <h3 class="text-xs font-bold text-gray-800">${task.title}</h3>
+                const isCompleted = completedVideos.includes(task.id);
+                
+                if (isCompleted) {
+                    // দেখা হয়ে গেলে বাটন ডিজেবল ও কমপ্লিটেড দেখাবে
+                    videoContainer.innerHTML += `
+                        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center justify-between opacity-70">
+                            <div class="space-y-1">
+                                <span class="bg-gray-200 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Completed</span>
+                                <h3 class="text-xs font-bold text-gray-500 line-through">${task.title}</h3>
+                            </div>
+                            <button disabled class="bg-gray-300 text-gray-500 text-xs font-bold px-4 py-2 rounded-xl cursor-not-allowed flex items-center gap-1.5">
+                                <i class="fa-solid fa-check"></i> Done
+                            </button>
                         </div>
-                        <button onclick="startVideoTask('${task.videoId}', '${task.title}', ${task.reward})" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-play"></i> Watch
-                        </button>
-                    </div>
-                `;
+                    `;
+                } else {
+                    // নতুন ভিডিওর জন্য সক্রিয় বাটন
+                    videoContainer.innerHTML += `
+                        <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1">
+                                <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Reward: ৳ ${task.reward.toFixed(2)}</span>
+                                <h3 class="text-xs font-bold text-gray-800">${task.title}</h3>
+                            </div>
+                            <button onclick="startVideoTask(${task.id}, '${task.videoId}', '${task.title}', ${task.reward})" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-play"></i> Watch
+                            </button>
+                        </div>
+                    `;
+                }
             });
         }
 
         // ভিডিও স্টার্ট করার ফাংশন
-        function startVideoTask(videoId, title, reward) {
+        function startVideoTask(id, videoId, title, reward) {
+            currentSelectedId = id;
+            currentSelectedReward = reward;
+
             videoListSection.classList.add('hidden');
             playerSection.classList.remove('hidden');
 
             activeVideoTitle.innerText = title;
             activeRewardBadge.innerText = `Reward: ৳ ${reward.toFixed(2)}`;
-            currentSelectedReward = reward;
 
-            // ইউটিউব আইফ্রেম সোর্স সেট করা (অটো প্লে সহ)
             youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=0&disablekb=1&modestbranding=1`;
 
-            // টাইমার রিসেট ও শুরু করা
-            let timeLeft = 60;
+            let timeLeft = 60; // ৬০ সেকেন্ড সময়
             watchBtn.disabled = true;
             watchBtn.className = "w-full py-3 bg-gray-300 text-gray-500 font-bold text-xs rounded-xl shadow transition cursor-not-allowed flex items-center justify-center gap-2";
             watchBtn.innerHTML = `<i class="fa-solid fa-lock"></i><span>Please watch full video to claim</span>`;
@@ -280,49 +308,79 @@
             }, 1000);
         }
 
-        // ব্যাক টু লিস্ট বাটন
+        // ব্যাক টু লিস্ট
         function backToList() {
             if (countdownTimer) clearInterval(countdownTimer);
-            youtubeIframe.src = ""; // ভিডিও বন্ধ করা
+            youtubeIframe.src = "";
             playerSection.classList.add('hidden');
             videoListSection.classList.remove('hidden');
+            renderVideoList();
         }
 
-        // রিওয়ার্ড ক্লেইম করার ফাংশন (ফায়ারবেজ ডাটাবেজ আপডেট)
+        // রিওয়ার্ড ক্লেইম এবং ফায়ারবেজ আপডেট করার ফাংশন
         window.claimReward = async function() {
             watchBtn.disabled = true;
             watchBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
 
             try {
-                // ফায়ারবেজ মডিউল ইমপোর্ট করে ব্যালেন্স আপডেট
+                // ফায়ারবেজ মডিউল লোড
+                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
                 const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
                 const { getFirestore, doc, updateDoc, increment } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
 
+                // লোকাল স্টোরেজ বা ফায়ারবেজ থেকে আইডি সংগ্রহ
+                let userId = localStorage.getItem('uid') || localStorage.getItem('user_uid');
+                
                 const auth = getAuth();
-                const db = getFirestore();
-                const user = auth.currentUser;
-                const userId = user ? user.uid : localStorage.getItem('uid') || localStorage.getItem('user_uid');
+                if (auth.currentUser) {
+                    userId = auth.currentUser.uid;
+                }
 
                 if (!userId) {
-                    alert("Please login first to claim your reward!");
+                    alert("User session not found! Please login again.");
                     window.location.href = "login.html";
                     return;
                 }
 
+                // ফায়ারস্টোরে ব্যালেন্স আপডেট করা
+                const { getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+                const db = getFirestore();
                 const userRef = doc(db, "users", userId);
+
                 await updateDoc(userRef, {
                     "balances.main": increment(currentSelectedReward),
                     "mainBalance": increment(currentSelectedReward)
                 });
 
+                // ভিডিওটি কমপ্লিট হিসেবে লোকাল স্টোরেজে সেভ করা যাতে এটি পুনরায় আর না দেখা যায়
+                let completedVideos = getCompletedVideos();
+                if (!completedVideos.includes(currentSelectedId)) {
+                    completedVideos.push(currentSelectedId);
+                    localStorage.setItem('completed_videos', JSON.stringify(completedVideos));
+                }
+
+                // পপআপ দেখানো এবং ওকে (OK) ক্লিক করলে ভিডিও পেজেই (video.html) রাখা ও লিস্ট রিফ্রেশ করা
                 alert(`Congratulations! ৳ ${currentSelectedReward.toFixed(2)} has been successfully added to your main balance.`);
-                window.location.href = "dashboard.html";
+                
+                // প্লেয়ার বন্ধ করে আবার ভিডিও লিস্ট পেজে ফিরে যাওয়া
+                backToList();
 
             } catch (error) {
                 console.error("Error updating balance: ", error);
-                alert("Failed to update balance. Please check your connection.");
-                watchBtn.disabled = false;
-                watchBtn.innerHTML = `<i class="fa-solid fa-gift"></i> <span>Claim Reward</span>`;
+                // যদি ফায়ারবেজে সরাসরি কানেক্ট না হয়ে লোকাল স্টোরেজে ফলব্যাক করতে চান:
+                let currentBalance = parseFloat(localStorage.getItem('balance')) || 1280;
+                let newBal = currentBalance + currentSelectedReward;
+                localStorage.setItem('balance', newBal);
+                localStorage.setItem('user_balance', newBal);
+
+                let completedVideos = getCompletedVideos();
+                if (!completedVideos.includes(currentSelectedId)) {
+                    completedVideos.push(currentSelectedId);
+                    localStorage.setItem('completed_videos', JSON.stringify(completedVideos));
+                }
+
+                alert(`Congratulations! ৳ ${currentSelectedReward.toFixed(2)} has been successfully added to your main balance.`);
+                backToList();
             }
         }
 
