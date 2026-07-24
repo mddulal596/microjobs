@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Animated Bottom Nav Styles */
         .nav-container {  
             position: fixed;  
             bottom: 15px;  
@@ -28,7 +27,6 @@
             overflow: visible;  
             z-index: 100;
         }  
-          
         .nav-item-animated {  
             flex: 1;  
             text-decoration: none;  
@@ -37,27 +35,10 @@
             position: relative;  
             z-index: 2;  
         }  
-          
-        .nav-item-animated i {  
-            font-size: 22px;  
-            transition: .35s;  
-        }  
-          
-        .nav-item-animated span {  
-            display: block;  
-            font-size: 11px;  
-            margin-top: 4px;  
-            transition: .35s;  
-        }  
-          
-        .nav-item-animated.active i {  
-            transform: translateY(-10px);  
-        }  
-          
-        .nav-item-animated.active span {  
-            font-weight: bold;  
-        }  
-          
+        .nav-item-animated i { font-size: 22px; transition: .35s; }  
+        .nav-item-animated span { display: block; font-size: 11px; margin-top: 4px; transition: .35s; }  
+        .nav-item-animated.active i { transform: translateY(-10px); }  
+        .nav-item-animated.active span { font-weight: bold; }  
         .indicator {  
             position: absolute;  
             top: -15px;  
@@ -70,20 +51,6 @@
             box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
-          
-        .indicator::before {  
-            content: "";  
-            position: absolute;  
-            inset: -6px;  
-            border-radius: 50%;  
-            border: 2px solid rgba(49,46,129,.4);  
-            animation: pulse 2s infinite;  
-        }  
-          
-        @keyframes pulse {  
-            0% { transform: scale(1); opacity: 1; }  
-            100% { transform: scale(1.4); opacity: 0; }  
-        } 
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased">
@@ -109,7 +76,7 @@
             <!-- Video Player & Timer Section -->
             <div id="playerSection" class="hidden space-y-4 bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                 <div class="flex justify-between items-center">
-                    <button onclick="backToList()" class="text-xs text-red-600 font-bold flex items-center gap-1 bg-red-50 px-3 py-1 rounded-full">
+                    <button onclick="backToList()" class="text-xs text-red-600 font-bold flex items-center gap-1 bg-red-50 px-3 py-1 rounded-full cursor-pointer">
                         <i class="fa-solid fa-arrow-left"></i> All Videos
                     </button>
                     <span id="timerDisplay" class="bg-red-50 text-red-600 text-xs font-extrabold px-3 py-1 rounded-full border border-red-100">
@@ -118,13 +85,12 @@
                 </div>
 
                 <div class="flex justify-between items-center">
-                    <span id="activeRewardBadge" class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Reward: ৳ 2.50</span>
+                    <span id="activeRewardBadge" class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Reward: ৳ 0.00</span>
                     <span class="text-xs text-gray-400 font-medium">YouTube Video Task</span>
                 </div>
                 
                 <h3 id="activeVideoTitle" class="text-sm font-bold text-gray-800">Task Title</h3>
                 
-                <!-- YouTube Iframe with Security Shield -->
                 <div class="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden relative shadow-inner">
                     <iframe id="youtubeIframe" class="w-full h-full absolute inset-0 pointer-events-none" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                     <div class="absolute inset-0 z-10 bg-transparent"></div>
@@ -139,10 +105,8 @@
             <!-- Video List Section -->
             <div id="videoListSection" class="space-y-3">
                 <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider px-1">Available Video Tasks (<span id="totalVideosCount">0</span>)</h2>
-                
-                <!-- Dynamic Video Cards Container -->
                 <div id="videoContainer" class="space-y-3">
-                    <!-- JavaScript will load video cards here dynamically -->
+                    <!-- Dynamic Video Cards -->
                 </div>
             </div>
 
@@ -153,7 +117,7 @@
             </div>
         </main>
 
-        <!-- Animated Bottom Navigation Bar -->
+        <!-- Bottom Navigation Bar -->
         <div class="nav-container">  
             <div class="indicator"></div>  
             <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
@@ -174,11 +138,11 @@
         </div>  
     </div>
 
-    <!-- Script for Multiple Videos, Timer & Dashboard Matched Firebase Logic -->
+    <!-- Firebase Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, updateDoc, increment, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
@@ -193,28 +157,6 @@
         items.forEach(item => { item.addEventListener("click", () => moveIndicator(item)); });  
         window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
 
-        // ভিডিওর তালিকা
-        const videoTasks = [
-            {
-                id: 1,
-                title: "Complete Promotional Video Task #1",
-                reward: 2.50,
-                videoId: "TS2VUZ7tMzM"
-            },
-            {
-                id: 2,
-                title: "Herbal Medicine & Health Care Review #2",
-                reward: 3.00,
-                videoId: "dQw4w9WgXcQ"
-            },
-            {
-                id: 3,
-                title: "Ayurvedic Treatment Guide & Tips #3",
-                reward: 2.00,
-                videoId: "3JZ_D3ELwOQ"
-            }
-        ];
-
         const videoContainer = document.getElementById('videoContainer');
         const totalVideosCount = document.getElementById('totalVideosCount');
         const videoListSection = document.getElementById('videoListSection');
@@ -225,21 +167,20 @@
         const timerDisplay = document.getElementById('timerDisplay');
         const watchBtn = document.getElementById('watchBtn');
 
-        let currentSelectedId = null;
-        let currentSelectedReward = 2.50;
+        let currentSelectedTaskId = null;
+        let currentSelectedReward = 0;
         let countdownTimer = null;
         let loggedInUser = null;
 
-        // অথেন্টিকেশন স্টেট ট্র্যাক করা যাতে সবসময় সঠিক ইউজার আইডি পাওয়া যায়
         observeAuthState((user) => {
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
             loggedInUser = user;
+            fetchTasksFromFirestore();
         });
 
-        // কোন ভিডিওগুলো দেখা হয়েছে তা লোকাল স্টোরেজ থেকে চেক করা
         function getCompletedVideos() {
             try {
                 return JSON.parse(localStorage.getItem('completed_videos')) || [];
@@ -248,21 +189,50 @@
             }
         }
 
-        // রেন্ডার ভিডিও লিস্ট
-        window.renderVideoList = function() {
+        // ফায়ারস্টোর থেকে টাস্কগুলো ফেচ করা
+        async function fetchTasksFromFirestore() {
+            try {
+                videoContainer.innerHTML = `<p class="text-xs text-center text-gray-400 py-4">Loading tasks...</p>`;
+                
+                // আপনার ডাটাবেজের 'tasks' কালেকশন থেকে ডাটা আনছে
+                const q = query(collection(db, "tasks"));
+                const querySnapshot = await getDocs(q);
+                
+                let tasks = [];
+                querySnapshot.forEach((docSnap) => {
+                    tasks.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                renderVideoList(tasks);
+            } catch (error) {
+                console.error("Error fetching tasks:", error);
+                videoContainer.innerHTML = `<p class="text-xs text-center text-red-500 py-4">Failed to load tasks.</p>`;
+            }
+        }
+
+        window.renderVideoList = function(tasks) {
             const completedVideos = getCompletedVideos();
-            totalVideosCount.innerText = videoTasks.length;
+            totalVideosCount.innerText = tasks.length;
             videoContainer.innerHTML = "";
 
-            videoTasks.forEach((task) => {
+            if (tasks.length === 0) {
+                videoContainer.innerHTML = `<p class="text-xs text-center text-gray-400 py-4">No tasks available right now.</p>`;
+                return;
+            }
+
+            tasks.forEach((task) => {
                 const isCompleted = completedVideos.includes(task.id);
-                
+                // ভিডিও আইডি বা ডিফল্ট একটি ভিডিও আইডি ব্যবহারের জন্য
+                const videoId = task.videoId || "TS2VUZ7tMzM"; 
+                const reward = Number(task.reward) || 0.10;
+                const title = task.title || "YouTube Video Task";
+
                 if (isCompleted) {
                     videoContainer.innerHTML += `
                         <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center justify-between opacity-70">
                             <div class="space-y-1">
                                 <span class="bg-gray-200 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Completed</span>
-                                <h3 class="text-xs font-bold text-gray-500 line-through">${task.title}</h3>
+                                <h3 class="text-xs font-bold text-gray-500 line-through">${title}</h3>
                             </div>
                             <button disabled class="bg-gray-300 text-gray-500 text-xs font-bold px-4 py-2 rounded-xl cursor-not-allowed flex items-center gap-1.5">
                                 <i class="fa-solid fa-check"></i> Done
@@ -273,10 +243,10 @@
                     videoContainer.innerHTML += `
                         <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center justify-between">
                             <div class="space-y-1">
-                                <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Reward: ৳ ${task.reward.toFixed(2)}</span>
-                                <h3 class="text-xs font-bold text-gray-800">${task.title}</h3>
+                                <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Reward: ৳ ${reward.toFixed(2)}</span>
+                                <h3 class="text-xs font-bold text-gray-800">${title}</h3>
                             </div>
-                            <button onclick="startVideoTask(${task.id}, '${task.videoId}', '${task.title}', ${task.reward})" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
+                            <button onclick="startVideoTask('${task.id}', '${videoId}', '${title.replace(/'/g, "\\'")}', ${reward})" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer">
                                 <i class="fa-solid fa-play"></i> Watch
                             </button>
                         </div>
@@ -285,9 +255,8 @@
             });
         }
 
-        // ভিডিও স্টার্ট করার ফাংশন
-        window.startVideoTask = function(id, videoId, title, reward) {
-            currentSelectedId = id;
+        window.startVideoTask = function(taskId, videoId, title, reward) {
+            currentSelectedTaskId = taskId;
             currentSelectedReward = reward;
 
             videoListSection.classList.add('hidden');
@@ -298,7 +267,7 @@
 
             youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=0&disablekb=1&modestbranding=1`;
 
-            let timeLeft = 60; // ৬০ সেকেন্ড সময়
+            let timeLeft = 60; 
             watchBtn.disabled = true;
             watchBtn.className = "w-full py-3 bg-gray-300 text-gray-500 font-bold text-xs rounded-xl shadow transition cursor-not-allowed flex items-center justify-center gap-2";
             watchBtn.innerHTML = `<i class="fa-solid fa-lock"></i><span>Please watch full video to claim</span>`;
@@ -320,16 +289,14 @@
             }, 1000);
         }
 
-        // ব্যাক টু লিস্ট
         window.backToList = function() {
             if (countdownTimer) clearInterval(countdownTimer);
             youtubeIframe.src = "";
             playerSection.classList.add('hidden');
             videoListSection.classList.remove('hidden');
-            renderVideoList();
+            fetchTasksFromFirestore();
         }
 
-        // রিওয়ার্ড ক্লেইম এবং ফায়ারবেজ আপডেট করার ফাংশন
         window.claimReward = async function() {
             if (!loggedInUser || !loggedInUser.uid) {
                 alert("User session not found! Please login again.");
@@ -343,16 +310,14 @@
             try {
                 const userRef = doc(db, "users", loggedInUser.uid);
 
-                // ড্যাশবোর্ডের ব্যালেন্স ফিল্ডের সাথে মিলিয়ে একই সাথে ডাটাবেজ আপডেট করা
+                // সিকিউরিটি রুলসের সাথে মিলিয়ে শুধুমাত্র mainBalance আপডেট করা হলো
                 await updateDoc(userRef, {
-                    "balances.main": increment(currentSelectedReward),
                     "mainBalance": increment(currentSelectedReward)
                 });
 
-                // ভিডিওটি কমপ্লিট হিসেবে লোকাল স্টোরেজে সেভ করা
                 let completedVideos = getCompletedVideos();
-                if (!completedVideos.includes(currentSelectedId)) {
-                    completedVideos.push(currentSelectedId);
+                if (!completedVideos.includes(currentSelectedTaskId)) {
+                    completedVideos.push(currentSelectedTaskId);
                     localStorage.setItem('completed_videos', JSON.stringify(completedVideos));
                 }
 
@@ -366,9 +331,6 @@
                 watchBtn.innerHTML = `<i class="fa-solid fa-gift"></i> <span>Claim Reward (৳ ${currentSelectedReward.toFixed(2)})</span>`;
             }
         }
-
-        // পেজ লোড হওয়ার সাথে লিস্ট রেন্ডার করা
-        renderVideoList();
     </script>
 </body>
 </html>
