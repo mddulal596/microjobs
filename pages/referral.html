@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="transform-gpu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Animated Bottom Nav Styles - Fixed Position & Dashboard Matching */
+        /* Animated Bottom Nav Styles - Fixed Position */
         .nav-container {  
             position: fixed;  
             bottom: 15px;  
@@ -26,7 +26,7 @@
             align-items: center;  
             box-shadow: 0 10px 25px rgba(0,0,0,.2);  
             overflow: visible;  
-            z-index: 1000;
+            z-index: 100;
         }  
           
         .nav-item-animated {  
@@ -86,9 +86,9 @@
         } 
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
-    <!-- প্রপার প্যাডিং যাতে নেভবার কন্টেন্ট ঢেকে না ফেলে -->
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-32 relative">
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <!-- প্রপার প্যাডিং নিশ্চিত করা হয়েছে যাতে নেভবার ঠিক জায়গায় থাকে -->
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
         
         <!-- Top Header & Balances -->
         <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
@@ -153,14 +153,6 @@
                 </div>
             </div>
 
-            <!-- Logout Button -->
-            <div class="pt-2">
-                <button id="logoutBtn" class="w-full py-3.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs rounded-2xl border border-red-200 shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
-                    <span>🚪</span>
-                    <span>Logout Account</span>
-                </button>
-            </div>
-
         </main>
 
         <!-- Animated Bottom Navigation Bar -->
@@ -220,7 +212,7 @@
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
+        import { observeAuthState } from '../firebase/auth.js';
         import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         observeAuthState(async (user) => {
@@ -240,7 +232,6 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    // ব্যালেন্স হ্যান্ডলিং
                     let mainBal = 0;
                     if (data.balances && typeof data.balances.main !== 'undefined') {
                         mainBal = data.balances.main;
@@ -258,11 +249,9 @@
                     document.getElementById('mainBalance').innerText = Number(mainBal).toFixed(2);
                     document.getElementById('depositBalance').innerText = Number(depositBal).toFixed(2);
 
-                    // রেফারেল কোড
                     const refCode = data.referralCode || "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
                     document.getElementById('myReferralCode').value = refCode;
 
-                    // টিম ও আর্নিংস
                     const totalRef = data.totalReferred ?? data.totalTeam ?? 0;
                     document.getElementById('totalTeam').innerText = totalRef;
 
@@ -281,11 +270,6 @@
             navigator.clipboard.writeText(copyText.value);
             alert('Referral code copied successfully!');
         }
-
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
-        });
     </script>
 </body>
 </html>
