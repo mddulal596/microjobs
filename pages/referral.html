@@ -2,7 +2,7 @@
 <html lang="en" class="transform-gpu">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Referral Program - Micro Job Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -10,21 +10,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Animated Bottom Nav Styles - Fixed Position */
+        /* Body & Wrapper Fix for Scroll Issues */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f9fafb;
+        }
+
+        .app-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 440px;
+            height: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 10px 25px rgba(0,0,0,.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 100px; /* নেভিগেশনের জন্য নিচের জায়গা ফাঁকা রাখা */
+        }
+
+        /* Fixed Bottom Nav Styles */
         .nav-container {  
-            position: fixed;  
-            bottom: 25px;  
+            position: absolute;  
+            bottom: 20px;  
             left: 50%;
             transform: translateX(-50%);
             width: 92%;  
-            max-width: 440px;  
+            max-width: 400px;  
             height: 70px;  
             background: #4f46e5;  
             border-radius: 22px;  
             display: flex;  
             justify-content: space-around;  
             align-items: center;  
-            box-shadow: 0 10px 25px rgba(0,0,0,.2);  
+            box-shadow: 0 10px 25px rgba(0,0,0,.25);  
             overflow: visible;  
             z-index: 100;
         }  
@@ -92,11 +120,11 @@
         } 
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28 relative">
+<body class="text-gray-800 antialiased transform-gpu">
+    <div class="app-wrapper">
         
         <!-- Top Header & Balances (Purple/Indigo Gradient) -->
-        <header class="p-4 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
+        <header class="p-4 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg flex-shrink-0">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center">
                     <a href="profile.html" class="flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 px-3 py-1.5 rounded-full shadow-inner transition">
@@ -119,8 +147,8 @@
             </div>
         </header>
 
-        <!-- Main Content Area -->
-        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
+        <!-- Main Scrollable Content Area -->
+        <main class="scrollable-content p-4 space-y-4">
             
             <!-- Invite Banner Info -->
             <div class="space-y-1">
@@ -164,7 +192,7 @@
 
         </main>
 
-        <!-- Animated Bottom Navigation Bar -->
+        <!-- Animated Bottom Navigation Bar (Fixed Inside App Wrapper) -->
         <div class="nav-container">  
             <div class="indicator"></div>  
             
@@ -218,7 +246,7 @@
         window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
 
-    <!-- Firebase Script & Logic Fixed -->
+    <!-- Firebase Script & Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState, logoutUser } from '../firebase/auth.js';
@@ -237,17 +265,14 @@
                     if (docSnap.exists()) {
                         const userData = docSnap.data();
 
-                        // Load Balances
                         const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
                         const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
                         document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                         document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                        // Unique Referral Code Fix using UID
                         const refCode = userData.referralCode || "MCJVIP" + user.uid.substring(0, 5).toUpperCase();
                         document.getElementById('myReferralCode').value = refCode;
 
-                        // Stats mapping
                         const totalRef = userData.totalReferred ?? userData.totalTeam ?? userData.referralCount ?? 0;
                         document.getElementById('totalTeam').innerText = totalRef;
 
@@ -264,7 +289,7 @@
         });
 
         window.copyReferralCode = function() {
-            const copyText = document.getElementById('myReferralCode');
+            const copyText = document.getElementById('myReferlayoutCode') || document.getElementById('myReferralCode');
             copyText.select();
             copyText.setSelectionRange(0, 99999);
             
