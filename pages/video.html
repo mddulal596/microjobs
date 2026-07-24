@@ -174,8 +174,12 @@
         </div>  
     </div>
 
-    <!-- Script for Multiple Videos & Timer Logic -->
-    <script>  
+    <!-- Script for Multiple Videos, Timer & Dashboard Matched Firebase Logic -->
+    <script type="module">
+        import { db } from '../firebase/firebase-config.js';
+        import { observeAuthState } from '../firebase/auth.js';
+        import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
           
@@ -224,6 +228,16 @@
         let currentSelectedId = null;
         let currentSelectedReward = 2.50;
         let countdownTimer = null;
+        let loggedInUser = null;
+
+        // অথেন্টিকেশন স্টেট ট্র্যাক করা যাতে সবসময় সঠিক ইউজার আইডি পাওয়া যায়
+        observeAuthState((user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loggedInUser = user;
+        });
 
         // কোন ভিডিওগুলো দেখা হয়েছে তা লোকাল স্টোরেজ থেকে চেক করা
         function getCompletedVideos() {
@@ -235,7 +249,7 @@
         }
 
         // রেন্ডার ভিডিও লিস্ট
-        function renderVideoList() {
+        window.renderVideoList = function() {
             const completedVideos = getCompletedVideos();
             totalVideosCount.innerText = videoTasks.length;
             videoContainer.innerHTML = "";
@@ -244,7 +258,6 @@
                 const isCompleted = completedVideos.includes(task.id);
                 
                 if (isCompleted) {
-                    // দেখা হয়ে গেলে বাটন ডিজেবল ও কমপ্লিটেড দেখাবে
                     videoContainer.innerHTML += `
                         <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center justify-between opacity-70">
                             <div class="space-y-1">
@@ -257,7 +270,6 @@
                         </div>
                     `;
                 } else {
-                    // নতুন ভিডিওর জন্য সক্রিয় বাটন
                     videoContainer.innerHTML += `
                         <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center justify-between">
                             <div class="space-y-1">
@@ -274,7 +286,7 @@
         }
 
         // ভিডিও স্টার্ট করার ফাংশন
-        function startVideoTask(id, videoId, title, reward) {
+        window.startVideoTask = function(id, videoId, title, reward) {
             currentSelectedId = id;
             currentSelectedReward = reward;
 
@@ -309,7 +321,7 @@
         }
 
         // ব্যাক টু লিস্ট
-        function backToList() {
+        window.backToList = function() {
             if (countdownTimer) clearInterval(countdownTimer);
             youtubeIframe.src = "";
             playerSection.classList.add('hidden');
@@ -319,68 +331,39 @@
 
         // রিওয়ার্ড ক্লেইম এবং ফায়ারবেজ আপডেট করার ফাংশন
         window.claimReward = async function() {
+            if (!loggedInUser || !loggedInUser.uid) {
+                alert("User session not found! Please login again.");
+                window.location.href = "login.html";
+                return;
+            }
+
             watchBtn.disabled = true;
             watchBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
 
             try {
-                // ফায়ারবেজ মডিউল লোড
-                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
-                const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
-                const { getFirestore, doc, updateDoc, increment } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+                const userRef = doc(db, "users", loggedInUser.uid);
 
-                // লোকাল স্টোরেজ বা ফায়ারবেজ থেকে আইডি সংগ্রহ
-                let userId = localStorage.getItem('uid') || localStorage.getItem('user_uid');
-                
-                const auth = getAuth();
-                if (auth.currentUser) {
-                    userId = auth.currentUser.uid;
-                }
-
-                if (!userId) {
-                    alert("User session not found! Please login again.");
-                    window.location.href = "login.html";
-                    return;
-                }
-
-                // ফায়ারস্টোরে ব্যালেন্স আপডেট করা
-                const { getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-                const db = getFirestore();
-                const userRef = doc(db, "users", userId);
-
+                // ড্যাশবোর্ডের ব্যালেন্স ফিল্ডের সাথে মিলিয়ে একই সাথে ডাটাবেজ আপডেট করা
                 await updateDoc(userRef, {
                     "balances.main": increment(currentSelectedReward),
                     "mainBalance": increment(currentSelectedReward)
                 });
 
-                // ভিডিওটি কমপ্লিট হিসেবে লোকাল স্টোরেজে সেভ করা যাতে এটি পুনরায় আর না দেখা যায়
+                // ভিডিওটি কমপ্লিট হিসেবে লোকাল স্টোরেজে সেভ করা
                 let completedVideos = getCompletedVideos();
                 if (!completedVideos.includes(currentSelectedId)) {
                     completedVideos.push(currentSelectedId);
                     localStorage.setItem('completed_videos', JSON.stringify(completedVideos));
                 }
 
-                // পপআপ দেখানো এবং ওকে (OK) ক্লিক করলে ভিডিও পেজেই (video.html) রাখা ও লিস্ট রিফ্রেশ করা
                 alert(`Congratulations! ৳ ${currentSelectedReward.toFixed(2)} has been successfully added to your main balance.`);
-                
-                // প্লেয়ার বন্ধ করে আবার ভিডিও লিস্ট পেজে ফিরে যাওয়া
                 backToList();
 
             } catch (error) {
-                console.error("Error updating balance: ", error);
-                // যদি ফায়ারবেজে সরাসরি কানেক্ট না হয়ে লোকাল স্টোরেজে ফলব্যাক করতে চান:
-                let currentBalance = parseFloat(localStorage.getItem('balance')) || 1280;
-                let newBal = currentBalance + currentSelectedReward;
-                localStorage.setItem('balance', newBal);
-                localStorage.setItem('user_balance', newBal);
-
-                let completedVideos = getCompletedVideos();
-                if (!completedVideos.includes(currentSelectedId)) {
-                    completedVideos.push(currentSelectedId);
-                    localStorage.setItem('completed_videos', JSON.stringify(completedVideos));
-                }
-
-                alert(`Congratulations! ৳ ${currentSelectedReward.toFixed(2)} has been successfully added to your main balance.`);
-                backToList();
+                console.error("Error updating balance in Firebase: ", error);
+                alert("Failed to update balance. Please check your internet connection.");
+                watchBtn.disabled = false;
+                watchBtn.innerHTML = `<i class="fa-solid fa-gift"></i> <span>Claim Reward (৳ ${currentSelectedReward.toFixed(2)})</span>`;
             }
         }
 
