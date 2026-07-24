@@ -19,7 +19,7 @@
             width: 92%;  
             max-width: 440px;  
             height: 70px;  
-            background: #16a34a;  
+            background: #4f46e5;  
             border-radius: 22px;  
             display: flex;  
             justify-content: space-around;  
@@ -63,11 +63,11 @@
             top: -15px;  
             width: 60px;  
             height: 60px;  
-            background: #2196f3;  
+            background: #312e81;  
             border-radius: 50%;  
             border: 4px solid #fff;  
             transition: left .35s ease;  
-            box-shadow: 0 0 20px rgba(33,150,243,.5);  
+            box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
           
@@ -76,7 +76,7 @@
             position: absolute;  
             inset: -6px;  
             border-radius: 50%;  
-            border: 2px solid rgba(33,150,243,.4);  
+            border: 2px solid rgba(49,46,129,.4);  
             animation: pulse 2s infinite;  
         }  
           
@@ -92,15 +92,15 @@
         } 
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
+<body class="bg-gray-50 text-gray-800 antialiased transform-gpu">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24 relative">
         
-        <!-- Top Header & Balances -->
-        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
+        <!-- Top Header & Balances (Purple/Indigo Gradient) -->
+        <header class="p-4 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center">
-                    <a href="profile.html" class="flex items-center gap-2 bg-indigo-700/80 hover:bg-indigo-700 border border-indigo-400/40 px-3 py-1.5 rounded-full shadow-inner transition">
-                        <div id="profileIconBtn" class="w-6 h-6 bg-white text-indigo-600 rounded-full flex items-center justify-center text-xs font-extrabold shadow">
+                    <a href="profile.html" class="flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 px-3 py-1.5 rounded-full shadow-inner transition">
+                        <div id="profileIconBtn" class="w-6 h-6 bg-white text-purple-700 rounded-full flex items-center justify-center text-xs font-extrabold shadow">
                             U
                         </div>
                         <span id="userNameDisplay" class="text-xs font-bold tracking-wide truncate max-w-[120px]">Loading...</span>
@@ -108,12 +108,12 @@
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3 mt-2">
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[11px] text-purple-200 font-medium">Main Balance</p>
                     <h2 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
                 </div>
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[11px] text-purple-200 font-medium">Deposit Balance</p>
                     <h2 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
                 </div>
             </div>
@@ -131,12 +131,12 @@
             </div>
 
             <!-- Referral Code Card -->
-            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3 shadow-sm text-center">
-                <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">YOUR REFERRAL CODE</p>
+            <div class="bg-purple-50/50 border border-purple-100 p-5 rounded-2xl space-y-3 shadow-sm text-center">
+                <p class="text-[11px] font-bold text-purple-700 tracking-wider uppercase">YOUR REFERRAL CODE</p>
                 <div class="py-1">
-                    <input type="text" id="myReferralCode" readonly class="w-full bg-transparent text-center text-2xl font-extrabold text-indigo-600 tracking-widest focus:outline-none" value="Loading...">
+                    <input type="text" id="myReferralCode" readonly class="w-full bg-transparent text-center text-2xl font-extrabold text-purple-700 tracking-widest focus:outline-none" value="Loading...">
                 </div>
-                <button onclick="copyReferralCode()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                <button onclick="copyReferralCode()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
                     <span class="text-base">📋</span>
                     <span>Copy Code</span>
                 </button>
@@ -144,13 +144,13 @@
 
             <!-- Stats Side-by-Side -->
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">TOTAL REFERRED</p>
-                    <h3 id="totalTeam" class="text-lg font-extrabold text-indigo-600">0</h3>
+                <div class="bg-purple-50/60 border border-purple-100 p-4 rounded-2xl space-y-1 shadow-sm">
+                    <p class="text-[10px] font-bold text-purple-800 tracking-wider uppercase">TOTAL REFERRED</p>
+                    <h3 id="totalTeam" class="text-lg font-extrabold text-purple-900">0</h3>
                 </div>
-                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">REFERRAL EARNINGS</p>
-                    <h3 id="referralEarnings" class="text-lg font-extrabold text-green-600">৳ 0.00</h3>
+                <div class="bg-emerald-50/60 border border-emerald-100 p-4 rounded-2xl space-y-1 shadow-sm">
+                    <p class="text-[10px] font-bold text-emerald-800 tracking-wider uppercase">REFERRAL EARNINGS</p>
+                    <h3 id="referralEarnings" class="text-lg font-extrabold text-emerald-600">৳ 0.00</h3>
                 </div>
             </div>
 
@@ -238,7 +238,7 @@
                 const refCode = userData.referralCode || "MCJVIP" + userData.uid.substring(0, 4).toUpperCase();
                 document.getElementById('myReferralCode').value = refCode;
 
-                // Stats mapping (সবগুলো পসিবল ফিল্ড নেম চেক করা হয়েছে)
+                // Stats mapping
                 const totalRef = userData.totalReferred ?? userData.totalTeam ?? userData.referralCount ?? 0;
                 document.getElementById('totalTeam').innerText = totalRef;
 
@@ -254,7 +254,6 @@
             copyText.select();
             copyText.setSelectionRange(0, 99999);
             
-            // আধুনিক ক্লিপবোর্ড এপিআই ব্যবহার (ফলব্যাক সহ)
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(copyText.value).then(() => {
                     alert('Referral code copied successfully!');
