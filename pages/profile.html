@@ -120,19 +120,31 @@
             <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Account Actions</h2>
             
             <div class="flex flex-col gap-2.5">
-                <!-- Account Status -->
-                <div id="accountStatusBox" class="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center shadow-sm">
-                    <div class="flex items-center gap-3">
-                        <span class="text-xl">⭐</span>
-                        <div>
-                            <h4 class="text-xs font-bold text-amber-900">Membership Status</h4>
-                            <p id="statusText" class="text-[11px] text-amber-700">Checking status...</p>
+                <!-- Row 1: Leaderboard & Membership Status -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <a href="leaderboard.html" class="p-3.5 bg-indigo-50 border border-indigo-200 rounded-2xl flex items-center justify-between shadow-sm hover:bg-indigo-100 transition">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-xl">🏆</span>
+                            <div>
+                                <h4 class="text-xs font-bold text-indigo-900">Leaderboard</h4>
+                                <p class="text-[10px] text-indigo-700">Top Earners</p>
+                            </div>
                         </div>
+                    </a>
+
+                    <div id="accountStatusBox" class="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center shadow-sm">
+                        <div class="flex items-center gap-2.5 overflow-hidden">
+                            <span class="text-xl shrink-0">⭐</span>
+                            <div class="overflow-hidden">
+                                <h4 class="text-xs font-bold text-amber-900 truncate">Membership</h4>
+                                <p id="statusText" class="text-[10px] text-amber-700 truncate">Checking...</p>
+                            </div>
+                        </div>
+                        <a id="activateBtn" href="activate-account.html" class="hidden bg-amber-600 text-white px-2 py-1 rounded-lg text-[10px] font-bold shadow hover:bg-amber-700 transition shrink-0">Activate</a>
                     </div>
-                    <a id="activateBtn" href="activate-account.html" class="hidden bg-amber-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow hover:bg-amber-700 transition">Activate</a>
                 </div>
 
-                <!-- Row 1 -->
+                <!-- Row 2 -->
                 <div class="grid grid-cols-2 gap-2.5">
                     <a href="wallet.html" class="p-3.5 bg-purple-50/60 border border-purple-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-purple-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">💳</span>
@@ -144,7 +156,7 @@
                     </a>
                 </div>
 
-                <!-- Row 2 -->
+                <!-- Row 3 -->
                 <div class="grid grid-cols-2 gap-2.5">
                     <a href="history.html" class="p-3.5 bg-rose-50/60 border border-rose-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-rose-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">📊</span>
@@ -156,7 +168,7 @@
                     </a>
                 </div>
 
-                <!-- Row 3 (Replaced with Task Complete & Task Pending) -->
+                <!-- Row 4 -->
                 <div class="grid grid-cols-2 gap-2.5">
                     <a href="task-complete.html" class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-emerald-100 transition shadow-sm gap-1.5">
                         <span class="text-2xl">✅</span>
@@ -261,11 +273,11 @@
                     const statusBox = document.getElementById('accountStatusBox');
 
                     if (data.isActivated) {
-                        statusText.innerText = "Account is Active (Premium)";
+                        statusText.innerText = "Active (Premium)";
                         statusBox.className = "p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl flex justify-between items-center shadow-sm";
                         activateBtn.classList.add('hidden');
                     } else {
-                        statusText.innerText = "Account is Unactivated";
+                        statusText.innerText = "Unactivated";
                         statusBox.className = "p-3.5 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center shadow-sm";
                         activateBtn.classList.remove('hidden');
                     }
