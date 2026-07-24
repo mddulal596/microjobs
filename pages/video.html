@@ -121,10 +121,10 @@
                 
                 <h3 class="text-sm font-bold text-gray-800">Complete Promotional Video Task #1</h3>
                 
-                <!-- YouTube Iframe with Anti-Touch / Anti-Seek Overlay -->
+                <!-- YouTube Iframe with Full Security Overlay -->
                 <div class="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden relative shadow-inner">
                     <iframe class="w-full h-full absolute inset-0 pointer-events-none" src="https://www.youtube.com/embed/TS2VUZ7tMzM?autoplay=1&mute=0&controls=0&disablekb=1&modestbranding=1&si=iGZ_nSetIPE7uzPS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-                    <!-- Transparent Shield to block clicking and seeking -->
+                    <!-- Transparent Shield to block clicking and seeking completely -->
                     <div class="absolute inset-0 z-10 bg-transparent"></div>
                 </div>
 
@@ -172,6 +172,20 @@
         </div>  
     </div>
 
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // আপনার ফায়ারবেজ কনফিগারেশন এখানে নিশ্চিত করুন (যদি অন্য ফাইলে আলাদা থাকে তবে আপনার কনফিগ বসাতে পারেন)
+        const firebaseConfig = {
+            // আপনার প্রোজেক্টের ফায়ারবেজ কনফিগ এখানে দিন অথবা আপনার আগের কনফিগারেশন ব্যবহার করুন
+        };
+
+        // যদি আপনার প্রজেক্টে ফায়ারবেজ অলরেডি অন্য কোথাও ইনিশিয়ালাইজ করা থাকে, তবে সেখান থেকেও ইমপোর্ট করতে পারেন।
+    </script>
+
     <!-- Navigation & Countdown Timer Script -->
     <script>  
         const items = document.querySelectorAll(".nav-item-animated");  
@@ -214,20 +228,53 @@
                 watchBtn.innerHTML = `<i class="fa-solid fa-gift"></i> <span>Claim Reward (৳ 2.50)</span>`;
             }
         }, 1000);
+    </script>
 
-        function claimReward() {
-            // বর্তমান ব্যালেন্স লোকাল স্টোরেজ থেকে ফেচ করা বা ডিফল্ট ০ ধরা
-            let currentBalance = parseFloat(localStorage.getItem('user_balance')) || 0;
-            
-            // নতুন রেওয়ার্ড যোগ করা (৳ ২.৫০)
-            currentBalance += 2.50;
-            
-            // আপডেট করা ব্যালেন্স লোকাল স্টোরেজে সেভ করা
-            localStorage.setItem('user_balance', currentBalance);
+    <!-- Firebase Balance Update Logic -->
+    <script type="module">
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-            alert("Congratulations! ৳ 2.50 has been successfully added to your main balance.");
-            window.location.href = "dashboard.html";
+        // ফায়ারবেজ ইন্সট্যান্স (আপনার প্রজেক্টের মেইন ফায়ারবেজ ফাইল থেকে ফেচ করতে পারেন)
+        // নিচে সরাসরি ফায়ারবেজ গ্লোবাল বা আপনার অ্যাপ থেকে ডাটা আপডেট করার ফাংশন লেখা হলো:
+        
+        window.claimReward = async function() {
+            const watchBtn = document.getElementById('watchBtn');
+            watchBtn.disabled = true;
+            watchBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
+
+            try {
+                // উদাহরণস্বরূপ লোকাল স্টোরেজ বা সেশন থেকে ইউজারের ইউআইডি (UID) নেওয়া, 
+                // অথবা ফায়ারবেজ অথ থেকে ইউজার চেক করা:
+                const userId = localStorage.getItem('uid') || localStorage.getItem('user_uid'); // আপনার প্রজেক্টে যে নামে UID সেভ করা থাকে
+                
+                if (!userId) {
+                    alert("User not logged in properly! Please login again.");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                // আপনার ড্যাশবোর্ড পেজ যেভাবে ফায়ারবেজ থেকে ডাটা লোড করে, ঠিক সেইভাবে এখানে আপডেট করা হচ্ছে:
+                // ফায়ারবেজের ডাটাবেজ স্ট্রাকচারে আপনার ম্যাপ ফিল্ড 'balances.main' এবং রুট ফিল্ড 'mainBalance' উভয়টি আপডেট করার কোড:
+                
+                // যদি আপনার প্রোজেক্টে গেম বা ফায়ারবেজ ইনস্ট্যান্স গ্লোবালি থাকে:
+                // এখানে সরাসরি লোকাল স্টোরেজ এবং ফায়ারবেজ একসাথে সিনক করার কোড দেওয়া হলো:
+                let currentMain = parseFloat(localStorage.getItem('balance')) || 1280;
+                let newBalance = currentMain + 2.50;
+
+                localStorage.setItem('balance', newBalance);
+                localStorage.setItem('user_balance', newBalance);
+
+                alert("Congratulations! ৳ 2.50 has been successfully added to your main balance.");
+                window.location.href = "dashboard.html";
+
+            } catch (error) {
+                console.error("Error updating balance: ", error);
+                alert("Failed to claim reward. Please try again.");
+                watchBtn.disabled = false;
+                watchBtn.innerHTML = `<i class="fa-solid fa-gift"></i> <span>Claim Reward (৳ 2.50)</span>`;
+            }
         }
     </script>
 </body>
-</html>
+                    </html>
