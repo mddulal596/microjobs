@@ -96,41 +96,50 @@
                     <i class="fa-solid fa-arrow-left"></i> Back
                 </a>
                 <h1 class="text-base font-bold">Watch & Earn</h1>
-                <div class="w-12"></div> <!-- Spacer -->
+                <div class="w-12"></div>
             </div>
             <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20 text-center">
-                <p class="text-xs text-red-100">Watch videos completely and earn rewards directly to your main balance.</p>
+                <p class="text-xs text-red-100">Watch the video completely. Timer will start automatically.</p>
             </div>
         </header>
 
         <!-- Main Content Area -->
         <main class="p-4 flex-grow space-y-4">
-            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider px-1">Available Videos</h2>
+            <div class="flex justify-between items-center px-1">
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Video Task</h2>
+                <span id="timerDisplay" class="bg-red-50 text-red-600 text-xs font-extrabold px-3 py-1 rounded-full border border-red-100">
+                    <i class="fa-regular fa-clock"></i> 60s Remaining
+                </span>
+            </div>
 
             <!-- Video Task Card -->
             <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm space-y-3">
                 <div class="flex justify-between items-center">
-                    <span class="bg-red-50 text-red-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Reward: ৳ 2.50</span>
-                    <span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> 60 Seconds</span>
+                    <span class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Reward: ৳ 2.50</span>
+                    <span class="text-xs text-gray-400 font-medium">Ayurvedic Promotional Video</span>
                 </div>
                 
                 <h3 class="text-sm font-bold text-gray-800">Complete Promotional Video Task #1</h3>
                 
-                <!-- YouTube Video Embedded Container -->
+                <!-- HTML5 Video Player (Autoplay & Anti-Skip enabled) -->
                 <div class="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden relative shadow-inner">
-                    <iframe class="w-full h-full absolute inset-0" src="https://www.youtube.com/embed/TS2VUZ7tMzM?si=iGZ_nSetIPE7uzPS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <video id="earnVideo" class="w-full h-full object-cover" autoplay playsinline controls controlsList="nodownload nofullscreen noremoteplayback">
+                        <!-- আপনার ভিডিও ফাইলের লিংক এখানে দিন (MP4 ফরম্যাট) -->
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
 
-                <button onclick="startVideoTask()" id="watchBtn" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-circle-play"></i>
-                    <span>Claim Reward</span>
+                <button onclick="claimReward()" id="watchBtn" disabled class="w-full py-3 bg-gray-300 text-gray-500 font-bold text-xs rounded-xl shadow transition cursor-not-allowed flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>Please watch full video to claim</span>
                 </button>
             </div>
 
             <!-- Notice Box -->
             <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-800 space-y-1">
                 <p class="font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Important Notice:</p>
-                <p>Do not skip or close the video before watching completely, otherwise your reward will not be added to your balance.</p>
+                <p>Do not try to skip or fast-forward the video. The timer will pause if you pause the video.</p>
             </div>
         </main>
 
@@ -165,7 +174,7 @@
         </div>  
     </div>
 
-    <!-- Navigation Animation Script -->
+    <!-- Navigation & Video Logic Script -->
     <script>  
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
@@ -187,9 +196,55 @@
         window.onload = () => moveIndicator(document.querySelector(".nav-item-animated"));  
         window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated"));  
 
-        // Task Completion Script Placeholder
-        function startVideoTask() {
-            alert("Please watch the video fully and click claim reward!");
+        // Anti-Skip & Timer Logic for Video
+        const video = document.getElementById('earnVideo');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const watchBtn = document.getElementById('watchBtn');
+        
+        let totalSeconds = 60; // ভিডিওর সময়কাল (সেকেন্ডে)
+        let timeLeft = totalSeconds;
+        let timerInterval = null;
+        let lastValidTime = 0;
+
+        // ইউজার যেন ভিডিও টেনে সামনে নিতে না পারে (Anti-Forward Seek)
+        video.addEventListener('timeupdate', () => {
+            if (video.currentTime > lastValidTime + 1.5) {
+                video.currentTime = lastValidTime; // সামনে টানলে আগের জায়গায় ফিরিয়ে দেবে
+            } else {
+                lastValidTime = video.currentTime;
+            }
+        });
+
+        // ভিডিও প্লে হলে কাউন্টডাউন শুরু হবে
+        video.addEventListener('play', () => {
+            if (!timerInterval && timeLeft > 0) {
+                timerInterval = setInterval(() => {
+                    if (!video.paused && !video.ended) {
+                        timeLeft--;
+                        timerDisplay.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeLeft}s Remaining`;
+
+                        if (timeLeft <= 0) {
+                            clearInterval(timerInterval);
+                            timerDisplay.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Completed!`;
+                            
+                            // বাটন একটিভ করা
+                            watchBtn.disabled = false;
+                            watchBtn.className = "w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer flex items-center justify-center gap-2";
+                            watchBtn.innerHTML = `<i class="fa-solid fa-gift"></i> <span>Claim Reward (৳ 2.50)</span>`;
+                        }
+                    }
+                }, 1000);
+            }
+        });
+
+        // ভিডিও পজ করলে কাউন্টডাউন থেমে যাবে
+        video.addEventListener('pause', () => {
+            // চাইলে এখানে ইন্টারভাল ক্লিয়ার রাখতে পারেন যাতে পজ করলে সময় না কমে
+        });
+
+        function claimReward() {
+            alert("Congratulations! ৳ 2.50 has been successfully added to your main balance.");
+            window.location.href = "dashboard.html";
         }
     </script>
 </body>
