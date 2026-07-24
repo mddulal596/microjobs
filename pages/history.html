@@ -80,35 +80,42 @@
 <body class="bg-gray-50 text-gray-800 antialiased">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
         
-        <!-- Header -->
+        <!-- Top Header & Balances -->
         <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg relative">
-            <div class="flex justify-between items-center mb-3">
-                <a href="dashboard.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
-                    <i class="fa-solid fa-arrow-left"></i> Back
+            <div class="flex justify-between items-center mb-4">
+                <a href="profile.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
+                    <div id="profileIconBtn" class="w-5 h-5 bg-white text-purple-700 rounded-full flex items-center justify-center font-extrabold text-[10px]">U</div>
+                    <span id="userNameDisplay">Loading...</span>
                 </a>
-                <span class="text-xs font-bold tracking-wider uppercase text-purple-200">Transaction History</span>
-                <div class="w-12"></div>
+                <a href="dashboard.html" class="text-xs bg-white/25 px-3.5 py-1.5 rounded-full font-bold hover:bg-white/40 transition">Home</a>
             </div>
-            <div class="text-center py-2">
-                <h1 class="text-lg font-extrabold">All Activities</h1>
-                <p class="text-xs text-purple-200">Track your earnings, deposits & withdrawals</p>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
+                    <h2 id="mainBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
+                </div>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
+                    <h2 id="depositBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
+                </div>
             </div>
         </header>
 
-        <!-- Filter Tabs -->
-        <div class="px-4 mt-4">
-            <div class="flex bg-gray-100 p-1 rounded-2xl text-xs font-bold text-gray-600 shadow-inner">
-                <button onclick="filterTransactions('all')" id="tab-all" class="flex-1 py-2 rounded-xl bg-indigo-600 text-white transition shadow">All</button>
-                <button onclick="filterTransactions('deposit')" id="tab-deposit" class="flex-1 py-2 rounded-xl transition hover:text-indigo-600">Deposit</button>
-                <button onclick="filterTransactions('withdraw')" id="tab-withdraw" class="flex-1 py-2 rounded-xl transition hover:text-indigo-600">Withdraw</button>
-                <button onclick="filterTransactions('earning')" id="tab-earning" class="flex-1 py-2 rounded-xl transition hover:text-indigo-600">Earning</button>
-            </div>
-        </div>
-
-        <!-- Main Content (Transaction List) -->
+        <!-- Main Content Area -->
         <main class="p-4 flex-grow">
-            <div id="transactionList" class="flex flex-col gap-3">
-                <!-- Loading State -->
+            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Transaction History</h2>
+
+            <!-- Filter Tabs -->
+            <div class="flex bg-gray-100 p-1 rounded-2xl text-xs font-bold text-gray-600 shadow-inner mb-4">
+                <button onclick="filterHistory('all', this)" class="tab-btn flex-1 py-2 rounded-xl bg-indigo-600 text-white transition shadow">All</button>
+                <button onclick="filterHistory('deposit', this)" class="tab-btn flex-1 py-2 rounded-xl transition hover:text-indigo-600 text-gray-600">Deposit</button>
+                <button onclick="filterHistory('withdraw', this)" class="tab-btn flex-1 py-2 rounded-xl transition hover:text-indigo-600 text-gray-600">Withdraw</button>
+                <button onclick="filterHistory('earning', this)" class="tab-btn flex-1 py-2 rounded-xl transition hover:text-indigo-600 text-gray-600">Earning</button>
+            </div>
+
+            <!-- History Items Container -->
+            <div class="bg-gray-50 border border-gray-100 rounded-2xl p-3 min-h-[180px] shadow-sm" id="historyList">
                 <div class="text-center py-10 text-gray-400 text-xs">
                     <i class="fa-solid fa-spinner fa-spin text-xl mb-2"></i>
                     <p>Loading transactions...</p>
@@ -151,120 +158,144 @@
         window.onload = () => moveIndicator(document.querySelector(".nav-item-animated"));  
     </script>
 
-    <!-- Firebase Logic -->
+    <!-- Firebase Script & Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { collection, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         let allTransactions = [];
+        let currentFilter = 'all';
 
-        observeAuthState(async (user) => {
-            if (!user) {
+        observeAuthState(async (userData) => {
+            if (userData) {
+                const uid = userData.uid;
+                const name = userData.fullName || userData.displayName || "User";
+                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
+                document.getElementById('userNameDisplay').innerText = name;
+
+                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
+                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
+                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
+                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+
+                // Fetch Transactions from Firestore
+                await fetchUserTransactions(uid);
+            } else {
                 window.location.href = 'login.html';
-                return;
-            }
-
-            try {
-                // Fetching transactions from Firestore (assuming a 'transactions' collection linked with user uid)
-                const q = query(
-                    collection(db, "transactions"), 
-                    where("uid", "==", user.uid),
-                    orderBy("createdAt", "desc")
-                );
-                
-                const querySnapshot = await getDocs(q);
-                allTransactions = [];
-
-                querySnapshot.forEach((doc) => {
-                    allTransactions.push({ id: doc.id, ...doc.data() });
-                });
-
-                renderTransactions(allTransactions);
-
-            } catch (error) {
-                console.error("Error fetching transactions:", error);
-                document.getElementById('transactionList').innerHTML = `
-                    <div class="text-center py-10 text-red-400 text-xs">
-                        <i class="fa-solid fa-triangle-exclamation text-xl mb-2"></i>
-                        <p>Failed to load transaction history or collection is empty.</p>
-                    </div>
-                `;
             }
         });
 
-        window.renderTransactions = function(data) {
-            const container = document.getElementById('transactionList');
-            if (data.length === 0) {
-                container.innerHTML = `
+        async function fetchUserTransactions(uid) {
+            const historyContainer = document.getElementById('historyList');
+            allTransactions = [];
+
+            try {
+                // ১. ডিপোজিট হিস্ট্রি ফেচ করা
+                const depositSnapshot = await getDocs(query(collection(db, "deposits"), where("userId", "==", uid)));
+                depositSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    allTransactions.push({
+                        type: 'deposit',
+                        title: `Deposit via ${data.gateway || 'Mobile'}`,
+                        subtitle: `Trx: ${data.trxId || 'N/A'}`,
+                        amount: `+৳ ${Number(data.amount || 0).toFixed(2)}`,
+                        status: data.status || 'pending',
+                        amountClass: 'text-emerald-600',
+                        timestamp: data.timestamp?.toDate() || new Date()
+                    });
+                });
+
+                // ২. উইথড্রাল হিস্ট্রি ফেচ করা
+                const withdrawSnapshot = await getDocs(query(collection(db, "withdrawals"), where("userId", "==", uid)));
+                withdrawSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    allTransactions.push({
+                        type: 'withdraw',
+                        title: `Withdrawal via ${data.method || 'Method'}`,
+                        subtitle: `A/C: ${data.accountNumber || 'N/A'}`,
+                        amount: `-৳ ${Number(data.amount || 0).toFixed(2)}`,
+                        status: data.status || 'pending',
+                        amountClass: 'text-amber-600',
+                        timestamp: data.timestamp?.toDate() || new Date()
+                    });
+                });
+
+                // ৩. আর্নিং হিস্ট্রি ফেচ করা
+                const earningSnapshot = await getDocs(query(collection(db, "earnings"), where("userId", "==", uid)));
+                earningSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    allTransactions.push({
+                        type: 'earning',
+                        title: data.title || 'Task Reward Earned',
+                        subtitle: 'Task Completion Bonus',
+                        amount: `+৳ ${Number(data.amount || 0).toFixed(2)}`,
+                        status: data.status || 'approved',
+                        amountClass: 'text-emerald-600',
+                        timestamp: data.timestamp?.toDate() || new Date()
+                    });
+                });
+
+                // তারিখ অনুযায়ী রিসেন্ট ট্রানজেকশন উপরে সাজানো (Descending)
+                allTransactions.sort((a, b) => b.timestamp - a.timestamp);
+
+                renderTransactions(currentFilter);
+
+            } catch (error) {
+                console.error("Error fetching transactions: ", error);
+                historyContainer.innerHTML = `<div class="text-center py-10 text-red-500 text-xs font-semibold">ট্রানজেকশন লোড করতে সমস্যা হয়েছে।</div>`;
+            }
+        }
+
+        function renderTransactions(filter) {
+            const historyContainer = document.getElementById('historyList');
+            const filtered = filter === 'all' ? allTransactions : allTransactions.filter(item => item.type === filter);
+
+            if (filtered.length === 0) {
+                historyContainer.innerHTML = `
                     <div class="text-center py-12 text-gray-400 text-xs">
                         <i class="fa-solid fa-box-open text-3xl mb-2 text-gray-300"></i>
-                        <p>No transaction history found!</p>
+                        <p>কোনো ট্রানজেকশন পাওয়া যায়নি।</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = data.map(item => {
-                let icon = 'fa-exchange-alt';
-                let colorClass = 'bg-purple-100 text-purple-600';
-                let sign = '+';
+            let html = '';
+            filtered.forEach(tx => {
+                const dateStr = tx.timestamp.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
                 
-                if (item.type === 'deposit') {
-                    icon = 'fa-arrow-down';
-                    colorClass = 'bg-emerald-100 text-emerald-600';
-                } else if (item.type === 'withdraw') {
-                    icon = 'fa-arrow-up';
-                    colorClass = 'bg-amber-100 text-amber-600';
-                    sign = '-';
-                } else if (item.type === 'earning') {
-                    icon = 'fa-wallet';
-                    colorClass = 'bg-indigo-100 text-indigo-600';
+                let badgeClass = 'bg-amber-100 text-amber-700';
+                let statusText = tx.status.charAt(0).toUpperCase() + tx.status.slice(1);
+                if (tx.status === 'approved' || tx.status === 'completed' || tx.status === 'success') {
+                    badgeClass = 'bg-emerald-100 text-emerald-700';
                 }
 
-                // Date formatting safely
-                let dateStr = 'Recently';
-                if (item.createdAt && item.createdAt.seconds) {
-                    dateStr = new Date(item.createdAt.seconds * 1000).toLocaleString();
-                }
-
-                return `
-                    <div class="p-3.5 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-between shadow-sm">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl ${colorClass} flex items-center justify-center font-bold">
-                                <i class="fa-solid ${icon}"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold text-gray-800 capitalize">${item.title || item.type || 'Transaction'}</h4>
-                                <p class="text-[10px] text-gray-400">${dateStr}</p>
-                            </div>
+                html += `
+                    <div class="flex justify-between items-center p-3 border-b border-gray-100 last:border-none">
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-800">${tx.title}</h4>
+                            <p class="text-[10px] text-gray-400 mt-0.5">${tx.subtitle} • ${dateStr}</p>
+                            <span class="inline-block text-[9px] font-bold px-2 py-0.5 rounded uppercase mt-1 ${badgeClass}">${statusText}</span>
                         </div>
                         <div class="text-right">
-                            <span class="text-xs font-extrabold ${sign === '+' ? 'text-emerald-600' : 'text-amber-600'}">${sign} ৳ ${item.amount || 0}</span>
-                            <span class="block text-[9px] px-2 py-0.5 mt-1 rounded-full uppercase font-bold ${item.status === 'success' || item.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${item.status || 'Pending'}</span>
+                            <div class="text-xs font-extrabold ${tx.amountClass}">${tx.amount}</div>
                         </div>
                     </div>
                 `;
-            }).join('');
-        }
-
-        window.filterTransactions = function(type) {
-            // Update Tab Active Classes
-            ['all', 'deposit', 'withdraw', 'earning'].forEach(t => {
-                const btn = document.getElementById(`tab-${t}`);
-                if (t === type) {
-                    btn.className = "flex-1 py-2 rounded-xl bg-indigo-600 text-white transition shadow";
-                } else {
-                    btn.className = "flex-1 py-2 rounded-xl transition hover:text-indigo-600 text-gray-600";
-                }
             });
 
-            if (type === 'all') {
-                renderTransactions(allTransactions);
-            } else {
-                const filtered = allTransactions.filter(item => item.type === type);
-                renderTransactions(filtered);
-            }
+            historyContainer.innerHTML = html;
+        }
+
+        window.filterHistory = function(type, btnElement) {
+            currentFilter = type;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn flex-1 py-2 rounded-xl transition hover:text-indigo-600 text-gray-600";
+            });
+            btnElement.className = "tab-btn flex-1 py-2 rounded-xl bg-indigo-600 text-white transition shadow";
+
+            renderTransactions(currentFilter);
         }
     </script>
 </body>
