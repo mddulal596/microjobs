@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between">
+        
+        <!-- Header Section -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="dashboard.html" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/35 flex items-center justify-center transition">
+                    <i class="fa-solid fa-arrow-left text-base"></i>
+                </a>
+                <h1 class="text-lg font-bold">Notifications</h1>
+            </div>
+            <span class="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Updates</span>
+        </header>
+
+        <!-- Main Notification Content Area -->
+        <main class="p-4 flex-grow space-y-3 overflow-y-auto">
+            
+            <!-- Notification Item 1 -->
+            <div class="p-4 bg-indigo-50/70 border border-indigo-100 rounded-2xl shadow-sm flex items-start space-x-3 transition hover:bg-indigo-50">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm mt-0.5">
+                    <i class="fa-solid fa-bullhorn text-sm"></i>
+                </div>
+                <div class="flex-grow">
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-xs font-bold text-indigo-900">Platform Update</h3>
+                        <span class="text-[10px] text-gray-400">Just Now</span>
+                    </div>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Micro Job Pro-তে স্বাগতম! নিয়মিত কাজ করুন এবং প্রতিদিন আকর্ষণীয় বোনাস ও পেমেন্ট নিন।
+                    </p>
+                </div>
+            </div>
+
+            <!-- Notification Item 2 -->
+            <div class="p-4 bg-amber-50/70 border border-amber-100 rounded-2xl shadow-sm flex items-start space-x-3 transition hover:bg-amber-50">
+                <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0 shadow-sm mt-0.5">
+                    <i class="fa-solid fa-gift text-sm"></i>
+                </div>
+                <div class="flex-grow">
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-xs font-bold text-amber-900">Daily Bonus Available</h3>
+                        <span class="text-[10px] text-gray-400">2 hours ago</span>
+                    </div>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        আপনার আজকের ডেইলি বোনাস ক্লাইম করতে হোম পেজ থেকে Daily Bonus অপশনে ভিজিট করুন।
+                    </p>
+                </div>
+            </div>
+
+            <!-- Notification Item 3 -->
+            <div class="p-4 bg-emerald-50/70 border border-emerald-100 rounded-2xl shadow-sm flex items-start space-x-3 transition hover:bg-emerald-50">
+                <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm mt-0.5">
+                    <i class="fa-solid fa-wallet text-sm"></i>
+                </div>
+                <div class="flex-grow">
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-xs font-bold text-emerald-900">Withdrawal Successful</h3>
+                        <span class="text-[10px] text-gray-400">Yesterday</span>
+                    </div>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        আপনার উইথড্র রিকোয়েস্ট সফলভাবে সম্পন্ন হয়েছে। আপনার ওয়ালেট চেক করুন।
+                    </p>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer / Back to Home -->
+        <footer class="p-4 bg-white border-t border-gray-100 text-center">
+            <a href="dashboard.html" class="block w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow transition">
+                Back to Dashboard
+            </a>
+        </footer>
+    </div>
+</body>
+</html>
