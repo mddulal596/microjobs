@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Animated Bottom Nav Styles */
+        /* Animated Bottom Nav Styles - Fixed Position & Other pages matching color */
         .nav-container {  
             position: fixed;  
             bottom: 15px;  
@@ -19,14 +19,14 @@
             width: 92%;  
             max-width: 440px;  
             height: 70px;  
-            background: #16a34a;  
+            background: #4f46e5; /* অন্যান্য পেজের মতো সঠিক কালার */
             border-radius: 22px;  
             display: flex;  
             justify-content: space-around;  
             align-items: center;  
             box-shadow: 0 10px 25px rgba(0,0,0,.2);  
             overflow: visible;  
-            z-index: 100;
+            z-index: 1000;
         }  
           
         .nav-item-animated {  
@@ -63,11 +63,11 @@
             top: -15px;  
             width: 60px;  
             height: 60px;  
-            background: #2196f3;  
+            background: #312e81; /* ইন্ডিকেটর কালার ম্যাচিং */
             border-radius: 50%;  
             border: 4px solid #fff;  
             transition: left .35s ease;  
-            box-shadow: 0 0 20px rgba(33,150,243,.5);  
+            box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
           
@@ -76,7 +76,7 @@
             position: absolute;  
             inset: -6px;  
             border-radius: 50%;  
-            border: 2px solid rgba(33,150,243,.4);  
+            border: 2px solid rgba(49,46,129,.4);  
             animation: pulse 2s infinite;  
         }  
           
@@ -93,7 +93,8 @@
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24 relative">
+    <!-- প্রপার প্যাডিং দেওয়া হয়েছে যাতে নেভবার কোনো কন্টেন্ট বা বাটন ঢেকে না ফেলে -->
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-32 relative">
         
         <!-- Top Header & Balances -->
         <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
@@ -120,7 +121,7 @@
         </header>
 
         <!-- Main Content Area -->
-        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
+        <main class="p-4 flex-grow space-y-4">
             
             <!-- Invite Banner Info -->
             <div class="space-y-1">
@@ -183,7 +184,6 @@
                 <span>Home</span>  
             </a>  
             
-            <!-- Team ট্যাবে active ক্লাস নিশ্চিত করা হয়েছে যাতে সার্কেল বা ইন্ডিকেটর ঠিক জায়গায় থাকে -->
             <a href="referral.html" class="nav-item-animated active">  
                 <i class="fa-solid fa-user-group"></i>  
                 <span>Team</span>  
@@ -229,17 +229,14 @@
                 document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
                 document.getElementById('userNameDisplay').innerText = name;
 
-                // Load Balances correctly supporting both field formats
                 const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
                 const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                // Referral Code fallback to MCJVIP format
                 const refCode = userData.referralCode || "MCJVIP" + userData.uid.substring(0, 4).toUpperCase();
                 document.getElementById('myReferralCode').value = refCode;
 
-                // Stats mapping
                 const totalRef = userData.totalReferred ?? userData.totalTeam ?? 0;
                 document.getElementById('totalTeam').innerText = totalRef;
 
