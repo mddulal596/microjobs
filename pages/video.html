@@ -216,6 +216,15 @@
         }, 1000);
 
         function claimReward() {
+            // বর্তমান ব্যালেন্স লোকাল স্টোরেজ থেকে ফেচ করা বা ডিফল্ট ০ ধরা
+            let currentBalance = parseFloat(localStorage.getItem('user_balance')) || 0;
+            
+            // নতুন রেওয়ার্ড যোগ করা (৳ ২.৫০)
+            currentBalance += 2.50;
+            
+            // আপডেট করা ব্যালেন্স লোকাল স্টোরেজে সেভ করা
+            localStorage.setItem('user_balance', currentBalance);
+
             alert("Congratulations! ৳ 2.50 has been successfully added to your main balance.");
             window.location.href = "dashboard.html";
         }
