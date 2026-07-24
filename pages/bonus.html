@@ -4,35 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Bonus - Micro Job Pro</title>
-    <!-- FontAwesome CDN for Navigation Icons -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
+    
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
-        
-        /* Top Header */
-        header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
-        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        
-        .header-title { font-size: 16px; font-weight: 800; }
-
-        /* Main Content */
-        main { padding: 16px; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        
-        .bonus-card { background: #f0fdf4; border: 1px solid #dcfce7; border-radius: 20px; padding: 24px; width: 100%; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.05); margin-bottom: 20px; }
-        .bonus-icon { font-size: 48px; margin-bottom: 12px; display: block; }
-        .bonus-card h3 { font-size: 18px; font-weight: 800; color: #15803d; margin-bottom: 8px; }
-        .bonus-card p { font-size: 12px; color: #166534; line-height: 1.6; margin-bottom: 16px; }
-
-        .btn-claim { width: 100%; background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: #ffffff; border: none; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(22,163,74,0.3); transition: 0.2s; }
-        .btn-claim:hover { opacity: 0.9; }
-        .btn-claim:disabled { background: #9ca3af; cursor: not-allowed; box-shadow: none; }
-
-        /* Animated Bottom Nav Styles */
         .nav-container {  
             position: fixed;  
             bottom: 15px;  
@@ -41,7 +18,7 @@
             width: 92%;  
             max-width: 440px;  
             height: 70px;  
-            background: #16a34a;  
+            background: #4f46e5;  
             border-radius: 22px;  
             display: flex;  
             justify-content: space-around;  
@@ -50,7 +27,6 @@
             overflow: visible;  
             z-index: 100;
         }  
-          
         .nav-item-animated {  
             flex: 1;  
             text-decoration: none;  
@@ -59,122 +35,107 @@
             position: relative;  
             z-index: 2;  
         }  
-          
         .nav-item-animated i {  
             font-size: 22px;  
             transition: .35s;  
         }  
-          
         .nav-item-animated span {  
             display: block;  
             font-size: 11px;  
             margin-top: 4px;  
             transition: .35s;  
         }  
-          
         .nav-item-animated.active i {  
             transform: translateY(-10px);  
         }  
-          
         .nav-item-animated.active span {  
             font-weight: bold;  
         }  
-          
         .indicator {  
             position: absolute;  
-            top: -15px; /* এটি অ্যাডজাস্ট করে মাঝামাঝি করা হয়েছে */ 
+            top: -15px;  
             width: 60px;  
             height: 60px;  
-            background: #2196f3;  
+            background: #312e81;  
             border-radius: 50%;  
             border: 4px solid #fff;  
             transition: left .35s ease;  
-            box-shadow: 0 0 20px rgba(33,150,243,.5);  
+            box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
-          
         .indicator::before {  
             content: "";  
             position: absolute;  
             inset: -6px;  
             border-radius: 50%;  
-            border: 2px solid rgba(33,150,243,.4);  
+            border: 2px solid rgba(49,46,129,.4);  
             animation: pulse 2s infinite;  
         }  
-          
         @keyframes pulse {  
-            0% {  
-                transform: scale(1);  
-                opacity: 1;  
-            }  
-            100% {  
-                transform: scale(1.4);  
-                opacity: 0;  
-            }  
+            0% { transform: scale(1); opacity: 1; }  
+            100% { transform: scale(1.4); opacity: 0; }  
         } 
     </style>
 </head>
-<body>
-    <div class="container">
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
         
-        <!-- Top Header -->
-        <header>
-            <div class="header-top">
-                <a href="dashboard.html" class="profile-btn">
-                    <div class="profile-icon">M</div>
-                    <span>Micro Job Pro</span>
+        <!-- Header -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg relative">
+            <div class="flex justify-between items-center mb-2">
+                <a href="dashboard.html" class="text-xs bg-white/25 px-3.5 py-1.5 rounded-full font-bold hover:bg-white/40 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left"></i> Back
                 </a>
-                <a href="dashboard.html" class="home-link">Home</a>
+                <h1 class="text-sm font-extrabold uppercase tracking-wide">Daily Bonus</h1>
+                <div class="w-10"></div>
             </div>
-            <div class="header-title">Daily Bonus</div>
         </header>
 
-        <!-- Main Content Area -->
-        <main>
-            <div class="bonus-card">
-                <span class="bonus-icon">🎉</span>
-                <h3>ডেইলি বোনাস সংগ্রহ করুন</h3>
-                <p>প্রতি ২৪ ঘণ্টায় একবার ফ্রি বোনাস ক্লেইম করে আপনার মেইন ব্যালেন্সে টাকা যোগ করে নিন।</p>
-                <button class="btn-claim" onclick="claimBonus()">Claim Daily Bonus</button>
+        <!-- Main Content -->
+        <main class="p-5 flex-grow flex flex-col items-center justify-center text-center">
+            <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-3xl mb-4 shadow-inner">
+                <i class="fa-solid fa-gift animate-bounce"></i>
             </div>
+            
+            <h2 class="text-lg font-extrabold text-gray-800 mb-1">Claim Your Daily Reward</h2>
+            <p class="text-xs text-gray-500 mb-6 max-w-xs">Collect your free bonus every 24 hours and boost your main balance instantly!</p>
+
+            <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-2xl w-full mb-6">
+                <p class="text-xs text-indigo-600 font-semibold mb-1">Today's Bonus Amount</p>
+                <h3 class="text-2xl font-black text-indigo-700">৳ 5.00</h3>
+            </div>
+
+            <button id="claimBtn" onclick="claimBonus()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition text-sm">
+                Claim Bonus Now
+            </button>
+
+            <div id="bonusMessage" class="mt-4 text-xs font-semibold"></div>
         </main>
 
-        <!-- Animated Bottom Navigation Bar -->
+        <!-- Animated Bottom Navigation -->
         <div class="nav-container">  
             <div class="indicator"></div>  
-            
             <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
-                <i class="fa-solid fa-headset"></i>  
-                <span>Help</span>  
+                <i class="fa-solid fa-headset"></i><span>Help</span>  
             </a>  
-
             <a href="wallet.html" class="nav-item-animated">  
-                <i class="fa-solid fa-wallet"></i>  
-                <span>Wallet</span>  
+                <i class="fa-solid fa-wallet"></i><span>Wallet</span>  
             </a>  
-            
             <a href="dashboard.html" class="nav-item-animated">  
-                <i class="fa-solid fa-house"></i>  
-                <span>Home</span>  
+                <i class="fa-solid fa-house"></i><span>Home</span>  
             </a>  
-            
             <a href="referral.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user-group"></i>  
-                <span>Team</span>  
+                <i class="fa-solid fa-user-group"></i><span>Team</span>  
             </a>  
-            
             <a href="profile.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user"></i>  
-                <span>Profile</span>  
+                <i class="fa-solid fa-user"></i><span>Profile</span>  
             </a>  
         </div>  
     </div>
 
-    <!-- Navigation Animation Script -->
     <script>  
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
-          
         function moveIndicator(el){  
             if (!el) return;
             const left = el.offsetLeft + (el.offsetWidth / 2) - (indicator.offsetWidth / 2);  
@@ -182,92 +143,86 @@
             items.forEach(i => i.classList.remove("active"));  
             el.classList.add("active");  
         }  
-          
-        items.forEach(item => {  
-            item.addEventListener("click", () => {  
-                moveIndicator(item);  
-            });  
-        });  
-          
-        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
-        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
+        items.forEach(item => { item.addEventListener("click", () => moveIndicator(item)); });  
+        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated"));  
     </script>
 
     <!-- Firebase Script & Logic -->
     <script type="module">
+        import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { getFirestore, doc, getDoc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const db = getFirestore();
         let currentUserUid = null;
 
-        observeAuthState((userData) => {
-            if (!userData) {
+        observeAuthState(async (userData) => {
+            if (userData) {
+                currentUserUid = userData.uid;
+                checkLastBonus(currentUserUid);
+            } else {
                 window.location.href = 'login.html';
-                return;
             }
-            currentUserUid = userData.uid;
-            checkBonusStatus(userData);
         });
 
-        function checkBonusStatus(userData) {
-            if (userData.lastBonusTime) {
-                const lastBonusDate = userData.lastBonusTime.toDate();
-                const now = new Date();
-                const diffHours = (now - lastBonusDate) / (1000 * 60 * 60);
-
-                if (diffHours < 24) {
-                    const btn = document.querySelector('.btn-claim');
-                    const remainingHours = Math.ceil(24 - diffHours);
-                    btn.innerText = `Already Claimed (Wait ${remainingHours}h)`;
-                    btn.disabled = true;
+        async function checkLastBonus(uid) {
+            try {
+                const userRef = doc(db, "users", uid);
+                const userDoc = await getDoc(userRef);
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    const lastBonusTime = data.lastBonus?.toDate();
+                    if (lastBonusTime) {
+                        const now = new Date();
+                        const diffHours = (now - lastBonusTime) / (1000 * 60 * 60);
+                        if (diffHours < 24) {
+                            const remainingHours = Math.ceil(24 - diffHours);
+                            const btn = document.getElementById('claimBtn');
+                            btn.disabled = true;
+                            btn.classList.add('opacity-50', 'cursor-not-allowed');
+                            document.getElementById('bonusMessage').innerHTML = `<span class="text-amber-600">You already claimed today's bonus! Next bonus available in ${remainingHours} hours.</span>`;
+                        }
+                    }
                 }
+            } catch (error) {
+                console.error("Error checking bonus status:", error);
             }
         }
 
         window.claimBonus = async function() {
             if (!currentUserUid) return;
-
-            const btn = document.querySelector('.btn-claim');
+            const btn = document.getElementById('claimBtn');
+            const msgDiv = document.getElementById('bonusMessage');
             btn.disabled = true;
-            btn.innerText = 'Processing...';
+            btn.innerText = "Processing...";
 
             try {
                 const userRef = doc(db, "users", currentUserUid);
-                const userSnap = await getDoc(userRef);
+                
+                // Update user main balance and lastBonus timestamp
+                await updateDoc(userRef, {
+                    mainBalance: increment(5.00),
+                    lastBonus: serverTimestamp()
+                });
 
-                if (userSnap.exists()) {
-                    const userData = userSnap.data();
-                    
-                    if (userData.lastBonusTime) {
-                        const lastBonusDate = userData.lastBonusTime.toDate();
-                        const now = new Date();
-                        if ((now - lastBonusDate) / (1000 * 60 * 60) < 24) {
-                            alert('আপনি ইতিমধ্যে আজ ডেইলি বোনাস ক্লেইম করেছেন!');
-                            window.location.reload();
-                            return;
-                        }
-                    }
+                // Record in earnings collection
+                await addDoc(collection(db, "earnings"), {
+                    userId: currentUserUid,
+                    title: "Daily Login Bonus",
+                    amount: 5.00,
+                    status: "approved",
+                    timestamp: serverTimestamp()
+                });
 
-                    const bonusAmount = 5.00;
-
-                    await updateDoc(userRef, {
-                        mainBalance: increment(bonusAmount),
-                        lastBonusTime: serverTimestamp()
-                    });
-
-                    alert(`অভিনন্দন! আপনি সফলভাবে ৳${bonusAmount} ডেইলি বোনাস ক্লেইম করেছেন।`);
-                    
-                    // সরাসরি dashboard.html পেইজে রিডাইরেক্ট হবে
-                    window.location.href = 'dashboard.html'; 
-                }
+                msgDiv.innerHTML = `<span class="text-emerald-600 font-bold">Successfully claimed ৳ 5.00 bonus!</span>`;
+                btn.innerText = "Claimed Successfully";
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
             } catch (error) {
-                console.error("Error claiming bonus: ", error);
-                alert('দুঃখিত, বোনাস ক্লেইম করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                console.error("Error claiming bonus:", error);
+                msgDiv.innerHTML = `<span class="text-red-500">Failed to claim bonus. Try again later.</span>`;
                 btn.disabled = false;
-                btn.innerText = 'Claim Daily Bonus';
+                btn.innerText = "Claim Bonus Now";
             }
         }
     </script>
 </body>
-</html>
+                </html>
