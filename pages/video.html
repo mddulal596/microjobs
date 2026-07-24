@@ -121,9 +121,11 @@
                 
                 <h3 class="text-sm font-bold text-gray-800">Complete Promotional Video Task #1</h3>
                 
-                <!-- YouTube Iframe with Autoplay Enabled -->
+                <!-- YouTube Iframe with Anti-Touch / Anti-Seek Overlay -->
                 <div class="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden relative shadow-inner">
-                    <iframe class="w-full h-full absolute inset-0" src="https://www.youtube.com/embed/TS2VUZ7tMzM?autoplay=1&mute=0&si=iGZ_nSetIPE7uzPS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <iframe class="w-full h-full absolute inset-0 pointer-events-none" src="https://www.youtube.com/embed/TS2VUZ7tMzM?autoplay=1&mute=0&controls=0&disablekb=1&modestbranding=1&si=iGZ_nSetIPE7uzPS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    <!-- Transparent Shield to block clicking and seeking -->
+                    <div class="absolute inset-0 z-10 bg-transparent"></div>
                 </div>
 
                 <button onclick="claimReward()" id="watchBtn" disabled class="w-full py-3 bg-gray-300 text-gray-500 font-bold text-xs rounded-xl shadow transition cursor-not-allowed flex items-center justify-center gap-2">
@@ -153,7 +155,7 @@
                 <span>Wallet</span>  
             </a>  
             
-            <a href="dashboard.html" class="nav-item-animated">  
+            <a href="dashboard.html" class="nav-item-animated active">  
                 <i class="fa-solid fa-house"></i>  
                 <span>Home</span>  
             </a>  
@@ -189,8 +191,8 @@
             });  
         });  
           
-        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated"));  
-        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated"));  
+        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
+        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
 
         // Automatic Countdown Timer Logic
         const timerDisplay = document.getElementById('timerDisplay');
