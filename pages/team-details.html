@@ -3,18 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Binary Referral Tree - Micro Job Pro</title>
+    <title>15-Level Binary Referral Tree - Micro Job Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Tree Connection Lines Styling */
-        .tree-node {
-            position: relative;
-        }
-        /* Custom tree card design */
         .node-card {
             background: #ffffff;
             border: 2px solid #e5e7eb;
@@ -43,17 +38,17 @@
                 <a href="referral.html" class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
                     <i class="fa-solid fa-arrow-left text-sm"></i>
                 </a>
-                <h1 class="text-base font-bold">Referral Tree Structure</h1>
+                <h1 class="text-base font-bold">15-Level Referral Tree</h1>
             </div>
             <span id="totalTeamBadge" class="text-xs bg-white/20 px-2.5 py-1 rounded-full font-semibold">Team: 0</span>
         </header>
 
-        <!-- Main Content: Binary Referral Tree -->
+        <!-- Main Content: 15-Level Binary Referral Tree -->
         <main class="p-4 flex-grow space-y-6">
             
             <!-- Title & Legend -->
             <div class="text-center space-y-2">
-                <h2 class="text-sm font-extrabold text-gray-800 uppercase tracking-wide">Member Binary Referral Tree</h2>
+                <h2 class="text-sm font-extrabold text-gray-800 uppercase tracking-wide">15 Member Binary Referral Tree</h2>
                 
                 <!-- Status Indicators Legend -->
                 <div class="flex justify-center items-center gap-6 pt-1">
@@ -88,7 +83,6 @@
                 <!-- Level 2 (2 Members Branch) -->
                 <div class="space-y-2">
                     <div class="flex justify-around px-4 relative">
-                        <!-- Horizontal connector bar -->
                         <div class="absolute top-0 left-1/4 right-1/4 h-0.5 bg-indigo-300"></div>
 
                         <!-- Left Branch L2 -->
@@ -112,18 +106,18 @@
                                 <div class="w-8 h-8 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-1 text-xs font-bold">
                                     <i class="fa-solid fa-user"></i>
                                 </div>
-                                <h5 class="text-[11px] font-bold text-gray-500" id="l2_right_name">Empty / Inactive</h5>
+                                <h5 class="text-[11px] font-bold text-gray-500" id="l2_right_name">Empty</h5>
                                 <span class="text-[9px] bg-gray-500 text-white px-1.5 py-0.5 rounded font-bold mt-0.5 inline-block">Level 2</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Level Summary Cards Table (For Deep Levels 3 to 10) -->
+                <!-- Extended 15-Level Breakdown Cards Table (Levels 3 to 15) -->
                 <div class="pt-4 space-y-3 border-t border-indigo-100">
-                    <h3 class="text-xs font-bold text-gray-600 uppercase tracking-wider text-center">Extended 10-Level Breakdown</h3>
+                    <h3 class="text-xs font-bold text-gray-600 uppercase tracking-wider text-center">15-Level Tree Breakdown</h3>
                     <div id="extendedLevelsGrid" class="grid grid-cols-2 gap-2.5">
-                        <!-- Dynamic levels 3 to 10 will load here -->
+                        <!-- Dynamic levels 3 to 15 will load here -->
                     </div>
                 </div>
 
@@ -139,7 +133,7 @@
         </div>
     </div>
 
-    <!-- Firebase Script & Logic -->
+    <!-- Firebase Script & Logic for 15 Levels -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
@@ -165,18 +159,17 @@
                     document.getElementById('totalTeamBadge').innerText = `Team: ${totalRef}`;
                     document.getElementById('rootUserName').innerText = userName;
 
-                    // Level 2 Left Node update if data exists
                     if (levelsData.level_2 && levelsData.level_2.count > 0) {
                         document.getElementById('l2_left_name').innerText = `${levelsData.level_2.count} Members`;
                     } else if (totalRef > 0) {
                         document.getElementById('l2_left_name').innerText = `1 Member`;
                     }
 
-                    // Render levels 3 to 10 in grid cards below tree
+                    // Render levels 3 to 15 in grid cards
                     const gridContainer = document.getElementById('extendedLevelsGrid');
                     gridContainer.innerHTML = '';
 
-                    for (let i = 3; i <= 10; i++) {
+                    for (let i = 3; i <= 15; i++) {
                         let levelMembers = 0;
                         let levelEarnings = 0;
 
@@ -198,7 +191,7 @@
                     }
                 }
             } catch (error) {
-                console.error("Error loading referral tree:", error);
+                console.error("Error loading 15-level referral tree:", error);
             }
         });
     </script>
