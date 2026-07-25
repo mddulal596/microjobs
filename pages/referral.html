@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Animated Bottom Nav Styles - Fixed Position */
         .nav-container {  
             position: fixed;  
             bottom: 15px;  
@@ -28,7 +27,6 @@
             overflow: visible;  
             z-index: 100;
         }  
-          
         .nav-item-animated {  
             flex: 1;  
             text-decoration: none;  
@@ -37,27 +35,22 @@
             position: relative;  
             z-index: 2;  
         }  
-          
         .nav-item-animated i {  
             font-size: 22px;  
             transition: .25s;  
         }  
-          
         .nav-item-animated span {  
             display: block;  
             font-size: 11px;  
             margin-top: 4px;  
             transition: .25s;  
         }  
-          
         .nav-item-animated.active i {  
             transform: translateY(-10px);  
         }  
-          
         .nav-item-animated.active span {  
             font-weight: bold;  
         }  
-          
         .indicator {  
             position: absolute;  
             top: -15px;  
@@ -70,7 +63,6 @@
             box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
-          
         .indicator::before {  
             content: "";  
             position: absolute;  
@@ -79,7 +71,6 @@
             border: 2px solid rgba(49,46,129,.4);  
             animation: pulse 2s infinite;  
         }  
-          
         @keyframes pulse {  
             0% { transform: scale(1); opacity: 1; }  
             100% { transform: scale(1.4); opacity: 0; }  
@@ -87,7 +78,6 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased">
-    <!-- প্রপার প্যাডিং নিশ্চিত করা হয়েছে যাতে নেভবার কোনো কন্টেন্ট ঢেকে না ফেলে -->
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
         
         <!-- Top Header & Balances -->
@@ -105,7 +95,6 @@
                 <a href="profile.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">Profile</a>
             </div>
 
-            <!-- Balance Cards inside Header -->
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
                     <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
@@ -121,7 +110,6 @@
         <!-- Main Content Area -->
         <main class="p-4 flex-grow space-y-4">
             
-            <!-- Invite Banner Info -->
             <div class="space-y-1 px-1">
                 <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Invite Friends & Earn 10-Level Commission</h2>
                 <p class="text-xs text-gray-500 leading-relaxed">
@@ -157,7 +145,7 @@
             <div class="space-y-2 pt-2">
                 <h3 class="text-xs font-bold text-gray-600 uppercase tracking-wider px-1">10-Level Referral Structure</h3>
                 <div id="levelContainer" class="grid grid-cols-2 gap-2.5">
-                    <!-- Levels will be injected dynamically via JS -->
+                    <!-- Dynamic Levels -->
                 </div>
             </div>
 
@@ -166,30 +154,20 @@
         <!-- Animated Bottom Navigation Bar -->
         <div class="nav-container">  
             <div class="indicator"></div>  
-            
             <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
-                <i class="fa-solid fa-headset"></i>  
-                <span>Help</span>  
+                <i class="fa-solid fa-headset"></i><span>Help</span>  
             </a>  
-
             <a href="wallet.html" class="nav-item-animated">  
-                <i class="fa-solid fa-wallet"></i>  
-                <span>Wallet</span>  
+                <i class="fa-solid fa-wallet"></i><span>Wallet</span>  
             </a>  
-            
             <a href="dashboard.html" class="nav-item-animated">  
-                <i class="fa-solid fa-house"></i>  
-                <span>Home</span>  
+                <i class="fa-solid fa-house"></i><span>Home</span>  
             </a>  
-            
             <a href="referral.html" class="nav-item-animated active">  
-                <i class="fa-solid fa-user-group"></i>  
-                <span>Team</span>  
+                <i class="fa-solid fa-user-group"></i><span>Team</span>  
             </a>  
-            
             <a href="profile.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user"></i>  
-                <span>Profile</span>  
+                <i class="fa-solid fa-user"></i><span>Profile</span>  
             </a>  
         </div>  
     </div>
@@ -208,9 +186,7 @@
         }  
           
         items.forEach(item => {  
-            item.addEventListener("click", () => {  
-                moveIndicator(item);  
-            });  
+            item.addEventListener("click", () => moveIndicator(item));  
         });  
           
         const activeItem = document.querySelector(".nav-item-animated.active") || items[3];
@@ -237,14 +213,13 @@
             document.getElementById('userNameDisplay').innerText = name;
             document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
 
-            // ফায়ারবেজ থেকে রিয়েল-টাইমে ডেটা লোড করা
             const userDocRef = doc(db, "users", user.uid);
             
             onSnapshot(userDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    // আলাদা আলাদা ব্যালেন্স ম্যাপ বা ফিল্ড থেকে রিড করা
+                    // ব্যালেন্স ফেচ করা
                     const mainBal = data.balances?.main ?? data.mainBalance ?? 0;
                     const depositBal = data.balances?.deposit ?? data.depositBalance ?? 0;
 
@@ -254,20 +229,29 @@
                     const refCode = data.referralCode || "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
                     document.getElementById('myReferralCode').value = refCode;
 
-                    // ১০ লেভেল ডেটা ম্যানেজমেন্ট
-                    const levelsData = data.levels || {};
-                    let totalTeamCount = 0;
-                    let totalRefEarnings = data.referralEarnings ?? 0;
+                    // মোট রেফারড মেম্বার বের করা
+                    const totalRef = data.totalReferred ?? 0;
+                    document.getElementById('totalTeam').innerText = totalRef;
 
+                    const totalRefEarnings = data.referralEarnings ?? 0;
+                    document.getElementById('referralEarnings').innerText = `৳ ${Number(totalRefEarnings).toFixed(2)}`;
+
+                    // ১০ লেভেল রেন্ডার করা (ফায়ারবেজে levels না থাকলে totalReferred কে Level 1 এ দেখাবে)
+                    const levelsData = data.levels || {};
                     const levelContainer = document.getElementById('levelContainer');
                     levelContainer.innerHTML = '';
 
-                    // ১০ টি লেভেল লুপ চালিয়ে জেনারেট করা
                     for (let i = 1; i <= 10; i++) {
-                        const levelObj = levelsData[`level_${i}`] || {};
-                        const levelMembers = levelObj.count || 0;
-                        const levelEarnings = levelObj.earnings || 0;
-                        totalTeamCount += levelMembers;
+                        let levelMembers = 0;
+                        let levelEarnings = 0;
+
+                        if (levelsData[`level_${i}`]) {
+                            levelMembers = levelsData[`level_${i}`].count || 0;
+                            levelEarnings = levelsData[`level_${i}`].earnings || 0;
+                        } else if (i === 1) {
+                            // যদি levels অবজেক্ট না থাকে তবে রুট লেভেলের totalReferred কে লেভেল ১ হিসেবে দেখাবে
+                            levelMembers = totalRef;
+                        }
 
                         const levelCard = document.createElement('div');
                         levelCard.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl space-y-1 shadow-sm";
@@ -280,10 +264,6 @@
                         `;
                         levelContainer.appendChild(levelCard);
                     }
-
-                    const totalRef = data.totalReferred ?? totalTeamCount;
-                    document.getElementById('totalTeam').innerText = totalRef;
-                    document.getElementById('referralEarnings').innerText = `৳ ${Number(totalRefEarnings).toFixed(2)}`;
                 }
             }, (error) => {
                 console.error("Error fetching referral data:", error);
