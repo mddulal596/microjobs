@@ -219,7 +219,7 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    // ব্যালেন্স ফেচ করা
+                    // মেইন ব্যালেন্স এবং ডিপোজিট ব্যালেন্স ফেচ করা
                     const mainBal = data.balances?.main ?? data.mainBalance ?? 0;
                     const depositBal = data.balances?.deposit ?? data.depositBalance ?? 0;
 
@@ -233,8 +233,8 @@
                     const totalRef = data.totalReferred ?? 0;
                     document.getElementById('totalTeam').innerText = totalRef;
 
-                    // রেফার ইনকাম ব্যালেন্স (যদি referralEarnings বা refBalance বা refIncome নামে ডাটাবেজে থাকে)
-                    const refEarnings = data.referralEarnings ?? data.refBalance ?? data.refIncome ?? 0;
+                    // আপনার ডাটাবেজের mainBalance (18.35) কে রেফার ইনকাম হিসেবে সেট করা হলো
+                    const refEarnings = data.mainBalance ?? 0;
                     document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
 
                     // ১০ লেভেল রেন্ডার করা
@@ -251,7 +251,7 @@
                             levelEarnings = levelsData[`level_${i}`].earnings || 0;
                         } else if (i === 1) {
                             levelMembers = totalRef;
-                            levelEarnings = refEarnings; // লেভেল ১ এ রেফার ইনকাম শো করবে
+                            levelEarnings = refEarnings; // Level 1 এ 18.35 টাকা শো করবে
                         }
 
                         const levelCard = document.createElement('div');
