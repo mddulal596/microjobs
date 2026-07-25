@@ -6,11 +6,10 @@
     <title>Dashboard - Micro Job Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome CDN for Icons -->
+    <!-- FontAwesome CDN for Navigation Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
-        /* Animated Bottom Nav Styles */
         .nav-container {  
             position: fixed;  
             bottom: 15px;  
@@ -28,7 +27,6 @@
             overflow: visible;  
             z-index: 100;
         }  
-          
         .nav-item-animated {  
             flex: 1;  
             text-decoration: none;  
@@ -37,27 +35,22 @@
             position: relative;  
             z-index: 2;  
         }  
-          
         .nav-item-animated i {  
             font-size: 22px;  
             transition: .25s;  
         }  
-          
         .nav-item-animated span {  
             display: block;  
             font-size: 11px;  
             margin-top: 4px;  
             transition: .25s;  
         }  
-          
         .nav-item-animated.active i {  
             transform: translateY(-10px);  
         }  
-          
         .nav-item-animated.active span {  
             font-weight: bold;  
         }  
-          
         .indicator {  
             position: absolute;  
             top: -15px;  
@@ -70,7 +63,6 @@
             box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
-          
         .indicator::before {  
             content: "";  
             position: absolute;  
@@ -79,7 +71,6 @@
             border: 2px solid rgba(49,46,129,.4);  
             animation: pulse 2s infinite;  
         }  
-          
         @keyframes pulse {  
             0% { transform: scale(1); opacity: 1; }  
             100% { transform: scale(1.4); opacity: 0; }  
@@ -87,147 +78,145 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
         
-        <!-- Dashboard Header -->
-        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg space-y-4">
-            <div class="flex justify-between items-center">
+        <!-- Top Header & Balances -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
+            <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <!-- Profile Picture / First Letter Icon -->
-                    <div id="profilePicContainer" class="w-12 h-12 rounded-full border-2 border-white overflow-hidden bg-white text-purple-700 flex items-center justify-center font-bold text-lg shadow-md flex-shrink-0">
-                        <span id="profileInitial">U</span>
-                        <img id="profileImage" src="" alt="" class="w-full h-full object-cover hidden">
+                    <div id="profileIconBtn" class="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-white text-purple-700 flex items-center justify-center font-bold text-base shadow-md flex-shrink-0">
+                        U
                     </div>
                     <div class="overflow-hidden">
                         <h2 id="userNameDisplay" class="text-base font-bold truncate">Loading...</h2>
                         <span class="text-xs text-purple-200">Welcome back!</span>
                     </div>
                 </div>
-                
-                <!-- Notification Bell Icon on Top Right -->
-                <a href="notification.html" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/35 border border-white/30 flex items-center justify-center text-white relative transition shadow-sm flex-shrink-0">
-                    <i class="fa-regular fa-bell text-base"></i>
-                    <!-- Notification Badge Dot -->
-                    <span class="absolute top-2 right-2.5 w-2 h-2 bg-red-400 rounded-full ring-2 ring-indigo-700"></span>
-                </a>
+                <a href="profile.html" class="text-xs bg-white/25 hover:bg-white/40 transition px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">Profile</a>
             </div>
 
-            <!-- Balance Cards inside Header -->
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 flex justify-between items-center">
-                    <div>
-                        <p class="text-[11px] text-purple-200 font-medium">Main Balance</p>
-                        <h3 class="text-lg font-extrabold mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
-                    </div>
-                    <a href="wallet.html" class="bg-white text-purple-700 px-3 py-1.5 rounded-xl text-xs font-bold shadow hover:bg-purple-50 transition">Wallet</a>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
+                    <h3 class="text-base font-extrabold mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
                 </div>
-                <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 flex justify-between items-center">
-                    <div>
-                        <p class="text-[11px] text-purple-200 font-medium">Deposit Balance</p>
-                        <h3 class="text-lg font-extrabold mt-0.5">৳ <span id="depositBalance">0.00</span></h3>
-                    </div>
-                    <a href="deposit.html" class="bg-white text-purple-700 px-3 py-1.5 rounded-xl text-xs font-bold shadow hover:bg-purple-50 transition">Add</a>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
+                    <h3 class="text-base font-extrabold mt-0.5">৳ <span id="depositBalance">0.00</span></h3>
                 </div>
             </div>
         </header>
 
         <!-- Main Content Area -->
-        <main class="p-4 flex-grow">
+        <main class="p-4 flex-grow space-y-4">
             
-            <!-- Notice / News Bar with "Update" text -->
-            <div class="mb-4 bg-indigo-50 border border-indigo-100 rounded-2xl p-3 flex items-center shadow-sm overflow-hidden">
-                <div class="bg-indigo-600 text-white px-2.5 py-1.5 rounded-xl flex items-center space-x-1.5 shadow-sm flex-shrink-0 mr-3">
-                    <i class="fa-solid fa-bullhorn text-[11px]"></i>
-                    <span class="text-[11px] font-bold tracking-wide">Update</span>
-                </div>
-                <div class="overflow-hidden whitespace-nowrap w-full">
-                    <marquee behavior="scroll" direction="left" scrollamount="4" class="text-xs font-semibold text-indigo-900">
-                        🎉 Micro Job Pro-তে স্বাগতম! নিয়মিত কাজ করুন এবং প্রতিদিন আকর্ষণীয় বোনাস ও পেমেন্ট নিন। যেকোনো সমস্যায় আমাদের সাপোর্ট টেলিগ্রাম চ্যানেলে যোগাযোগ করুন।
-                    </marquee>
-                </div>
+            <!-- Notice Box -->
+            <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-2xl flex items-center gap-3">
+                <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-xl">Update</span>
+                <p class="text-xs text-indigo-900 truncate">পেমেন্ট নিন। যেকোনো সমস্যায় আমাদের সাপোর্ট টেলিগ্রাম...</p>
             </div>
 
-            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Quick Menu</h2>
-            <div class="grid grid-cols-3 gap-3">
-                <a href="bonus.html" class="p-3 bg-amber-50/60 border border-amber-100 rounded-2xl text-center hover:bg-amber-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">🎁</span>
-                    <h4 class="text-[11px] font-bold text-amber-900 leading-tight">Daily Bonus</h4>
-                </a>
-                <a href="video.html" class="p-3 bg-red-50/60 border border-red-100 rounded-2xl text-center hover:bg-red-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">▶️</span>
-                    <h4 class="text-[11px] font-bold text-red-900 leading-tight">Video</h4>
-                </a>
-                
-                <a href="microjobs.html" class="p-3 bg-purple-50/60 border border-purple-100 rounded-2xl text-center hover:bg-purple-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">💼</span>
-                    <h4 class="text-[11px] font-bold text-purple-900 leading-tight">Microjobs</h4>
-                </a>
-                <a href="daily-job.html" class="p-3 bg-emerald-50/60 border border-emerald-100 rounded-2xl text-center hover:bg-emerald-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">🎯</span>
-                    <h4 class="text-[11px] font-bold text-emerald-900 leading-tight">Daily Jobs</h4>
-                </a>
-                <a href="lucky-spin.html" class="p-3 bg-pink-50/60 border border-pink-100 rounded-2xl text-center hover:bg-pink-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">🎡</span>
-                    <h4 class="text-[11px] font-bold text-pink-900 leading-tight">Lucky Spin</h4>
-                </a>
-                <a href="post-job.html" class="p-3 bg-blue-50/60 border border-blue-100 rounded-2xl text-center hover:bg-blue-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">➕</span>
-                    <h4 class="text-[11px] font-bold text-blue-900 leading-tight">Post Job</h4>
-                </a>
-                <a href="deposit.html" class="p-3 bg-amber-50/60 border border-amber-100 rounded-2xl text-center hover:bg-amber-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">💳</span>
-                    <h4 class="text-[11px] font-bold text-amber-900 leading-tight">Deposit</h4>
-                </a>
-                <a href="withdraw.html" class="p-3 bg-teal-50/60 border border-teal-100 rounded-2xl text-center hover:bg-teal-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">💸</span>
-                    <h4 class="text-[11px] font-bold text-teal-900 leading-tight">Withdraw</h4>
-                </a>
-                <a href="referral.html" class="p-3 bg-indigo-50/60 border border-indigo-100 rounded-2xl text-center hover:bg-indigo-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">👥</span>
-                    <h4 class="text-[11px] font-bold text-indigo-900 leading-tight">Referral</h4>
-                </a>
-                <a href="history.html" class="p-3 bg-rose-50/60 border border-rose-100 rounded-2xl text-center hover:bg-rose-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">📊</span>
-                    <h4 class="text-[11px] font-bold text-rose-900 leading-tight">History</h4>
-                </a>
-                <a href="task-complete.html" class="p-3 bg-violet-50/60 border border-violet-100 rounded-2xl text-center hover:bg-violet-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">✅</span>
-                    <h4 class="text-[11px] font-bold text-violet-900 leading-tight">Completed</h4>
-                </a>
-                <a href="https://t.me/microjobspro" target="_blank" class="p-3 bg-sky-50/60 border border-sky-100 rounded-2xl text-center hover:bg-sky-100 transition shadow-sm flex flex-col items-center justify-center gap-1.5">
-                    <span class="text-xl">🎧</span>
-                    <h4 class="text-[11px] font-bold text-sky-900 leading-tight">Support</h4>
-                </a>
+            <!-- Quick Menu Title -->
+            <div>
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Quick Menu</h2>
             </div>
+
+            <!-- Quick Menu Section (Custom Ordered) -->
+            <div class="grid grid-cols-3 gap-3">
+                
+                <!-- Post Job -->
+                <a href="post-job.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">➕</span>
+                    <span class="text-xs font-semibold text-gray-700">Post Job</span>
+                </a>
+
+                <!-- Daily Bonus -->
+                <a href="daily-bonus.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">🎁</span>
+                    <span class="text-xs font-semibold text-gray-700">Daily Bonus</span>
+                </a>
+
+                <!-- Video -->
+                <a href="video.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">▶️</span>
+                    <span class="text-xs font-semibold text-gray-700">Video</span>
+                </a>
+
+                <!-- PTC Ads -->
+                <a href="ptcads.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">📢</span>
+                    <span class="text-xs font-semibold text-gray-700">PTC Ads</span>
+                </a>
+
+                <!-- Microjobs -->
+                <a href="microjobs.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">💼</span>
+                    <span class="text-xs font-semibold text-gray-700">Microjobs</span>
+                </a>
+
+                <!-- Daily Jobs -->
+                <a href="daily-jobs.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">🎯</span>
+                    <span class="text-xs font-semibold text-gray-700">Daily Jobs</span>
+                </a>
+
+                <!-- Lucky Spin -->
+                <a href="spin.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">🎡</span>
+                    <span class="text-xs font-semibold text-gray-700">Lucky Spin</span>
+                </a>
+
+                <!-- Deposit -->
+                <a href="deposit.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">💳</span>
+                    <span class="text-xs font-semibold text-gray-700">Deposit</span>
+                </a>
+
+                <!-- Withdraw -->
+                <a href="withdraw.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">💸</span>
+                    <span class="text-xs font-semibold text-gray-700">Withdraw</span>
+                </a>
+
+                <!-- Referral -->
+                <a href="referral.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">👥</span>
+                    <span class="text-xs font-semibold text-gray-700">Referral</span>
+                </a>
+
+                <!-- Leaderboard -->
+                <a href="leaderboard.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">🏆</span>
+                    <span class="text-xs font-semibold text-gray-700">Leaderboard</span>
+                </a>
+
+                <!-- Support -->
+                <a href="support.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
+                    <span class="text-xl mb-1">🎧</span>
+                    <span class="text-xs font-semibold text-gray-700">Support</span>
+                </a>
+
+            </div>
+
         </main>
 
         <!-- Animated Bottom Navigation Bar -->
         <div class="nav-container">  
             <div class="indicator"></div>  
-            
-            <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
-                <i class="fa-solid fa-headset"></i>  
-                <span>Help</span>  
+            <a href="support.html" class="nav-item-animated">  
+                <i class="fa-solid fa-headset"></i><span>Help</span>  
             </a>  
-
             <a href="wallet.html" class="nav-item-animated">  
-                <i class="fa-solid fa-wallet"></i>  
-                <span>Wallet</span>  
+                <i class="fa-solid fa-wallet"></i><span>Wallet</span>  
             </a>  
-            
             <a href="dashboard.html" class="nav-item-animated active">  
-                <i class="fa-solid fa-house"></i>  
-                <span>Home</span>  
+                <i class="fa-solid fa-house"></i><span>Home</span>  
             </a>  
-            
             <a href="referral.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user-group"></i>  
-                <span>Team</span>  
+                <i class="fa-solid fa-user-group"></i><span>Team</span>  
             </a>  
-            
             <a href="profile.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user"></i>  
-                <span>Profile</span>  
+                <i class="fa-solid fa-user"></i><span>Profile</span>  
             </a>  
         </div>  
     </div>
@@ -246,12 +235,9 @@
         }  
           
         items.forEach(item => {  
-            item.addEventListener("click", (e) => {  
-                moveIndicator(item);  
-            });  
+            item.addEventListener("click", () => moveIndicator(item));  
         });  
           
-        // পেজ লোড হওয়ার সাথে সাথে ইনস্ট্যান্ট পজিশন সেট করা (দেরি দূর করার জন্য)
         const activeItem = document.querySelector(".nav-item-animated.active") || items[2];
         moveIndicator(activeItem);
 
@@ -260,7 +246,7 @@
         });
     </script>
 
-    <!-- Firebase & Auth Script -->
+    <!-- Firebase Script & Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
@@ -272,52 +258,24 @@
                 return;
             }
 
-            // নাম এবং ছবি সেট করা
             const name = user.fullName || user.displayName || "User";
             document.getElementById('userNameDisplay').innerText = name;
+            document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
 
-            const profileImgTag = document.getElementById('profileImage');
-            const profileInitialTag = document.getElementById('profileInitial');
-
-            if (user.photoURL) {
-                profileImgTag.src = user.photoURL;
-                profileImgTag.classList.remove('hidden');
-                profileInitialTag.classList.add('hidden');
-            } else {
-                profileInitialTag.innerText = name.charAt(0).toUpperCase();
-                profileInitialTag.classList.remove('hidden');
-                profileImgTag.classList.add('hidden');
-            }
-
-            // ফায়ারবেজ থেকে রিয়েল-টাইমে মেইন ও ডিপোজিট ব্যালেন্স লোড করা
             const userDocRef = doc(db, "users", user.uid);
             
             onSnapshot(userDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    // Main Balance
-                    let mainBalance = 0;
-                    if (data.balances && typeof data.balances.main !== 'undefined') {
-                        mainBalance = data.balances.main;
-                    } else if (typeof data.mainBalance !== 'undefined') {
-                        mainBalance = data.mainBalance;
-                    } else if (typeof data.balance !== 'undefined') {
-                        mainBalance = data.balance;
-                    }
-                    document.getElementById('mainBalance').innerText = Number(mainBalance).toFixed(2);
+                    const mainBal = data.balances?.main ?? data.mainBalance ?? 0;
+                    const depositBal = data.balances?.deposit ?? data.depositBalance ?? 0;
 
-                    // Deposit Balance
-                    let depositBalance = 0;
-                    if (data.balances && typeof data.balances.deposit !== 'undefined') {
-                        depositBalance = data.balances.deposit;
-                    } else if (typeof data.depositBalance !== 'undefined') {
-                        depositBalance = data.depositBalance;
-                    }
-                    document.getElementById('depositBalance').innerText = Number(depositBalance).toFixed(2);
+                    document.getElementById('mainBalance').innerText = Number(mainBal).toFixed(2);
+                    document.getElementById('depositBalance').innerText = Number(depositBal).toFixed(2);
                 }
             }, (error) => {
-                console.error("Error fetching balance:", error);
+                console.error("Error fetching user data:", error);
             });
         });
     </script>
