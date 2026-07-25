@@ -244,19 +244,9 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    let mainBal = 0;
-                    if (data.balances && typeof data.balances.main !== 'undefined') {
-                        mainBal = data.balances.main;
-                    } else if (typeof data.mainBalance !== 'undefined') {
-                        mainBal = data.mainBalance;
-                    }
-
-                    let depositBal = 0;
-                    if (data.balances && typeof data.balances.deposit !== 'undefined') {
-                        depositBal = data.balances.deposit;
-                    } else if (typeof data.depositBalance !== 'undefined') {
-                        depositBal = data.depositBalance;
-                    }
+                    // আলাদা আলাদা ব্যালেন্স ম্যাপ বা ফিল্ড থেকে রিড করা
+                    const mainBal = data.balances?.main ?? data.mainBalance ?? 0;
+                    const depositBal = data.balances?.deposit ?? data.depositBalance ?? 0;
 
                     document.getElementById('mainBalance').innerText = Number(mainBal).toFixed(2);
                     document.getElementById('depositBalance').innerText = Number(depositBal).toFixed(2);
@@ -264,18 +254,19 @@
                     const refCode = data.referralCode || "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
                     document.getElementById('myReferralCode').value = refCode;
 
-                    // ১০ লেভেল ডেটা ম্যানেজমেন্ট (যদি লেভেল অনুযায়ী অবজেক্ট বা অ্যারে থাকে)
+                    // ১০ লেভেল ডেটা ম্যানেজমেন্ট
                     const levelsData = data.levels || {};
                     let totalTeamCount = 0;
-                    let totalRefEarnings = data.referralEarnings ?? data.referralBonus ?? 0;
+                    let totalRefEarnings = data.referralEarnings ?? 0;
 
                     const levelContainer = document.getElementById('levelContainer');
                     levelContainer.innerHTML = '';
 
                     // ১০ টি লেভেল লুপ চালিয়ে জেনারেট করা
                     for (let i = 1; i <= 10; i++) {
-                        const levelMembers = levelsData[`level_${i}`]?.count || 0;
-                        const levelEarnings = levelsData[`level_${i}`]?.earnings || 0;
+                        const levelObj = levelsData[`level_${i}`] || {};
+                        const levelMembers = levelObj.count || 0;
+                        const levelEarnings = levelObj.earnings || 0;
                         totalTeamCount += levelMembers;
 
                         const levelCard = document.createElement('div');
@@ -290,7 +281,7 @@
                         levelContainer.appendChild(levelCard);
                     }
 
-                    const totalRef = data.totalReferred ?? data.totalTeam ?? totalTeamCount;
+                    const totalRef = data.totalReferred ?? totalTeamCount;
                     document.getElementById('totalTeam').innerText = totalRef;
                     document.getElementById('referralEarnings').innerText = `৳ ${Number(totalRefEarnings).toFixed(2)}`;
                 }
