@@ -86,21 +86,29 @@
             <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl flex items-start gap-3">
                 <span class="text-amber-600 text-lg"><i class="fa-solid fa-circle-exclamation"></i></span>
                 <p class="text-xs text-amber-900 leading-relaxed">
-                    বিজ্ঞাপনের নির্দিষ্ট সময় শেষ হওয়া পর্যন্ত অপেক্ষা করুন এবং ক্যাপচা বা ভেরিফিকেশন সম্পন্ন করে রিওয়ার্ড ক্লাইম করুন।
+                    বিজ্ঞাপনে ক্লিক করে নির্দিষ্ট সময় অপেক্ষা করুন এবং টাইম শেষ হলে রিওয়ার্ড ক্লাইম করুন।
                 </p>
+            </div>
+
+            <!-- Adsterra Banner Integration Area -->
+            <div class="bg-white border border-gray-100 p-3 rounded-2xl shadow-sm text-center">
+                <p class="text-[10px] text-gray-400 mb-2 uppercase font-bold">Sponsored Ad</p>
+                <!-- Adsterra Banner Script Container -->
+                <script async="async" data-cfasync="false" src="https://middayopened.com/44ea16fb3bf3a48a9a140ddd4fa5dc93/invoke.js"></script>
+                <div id="container-44ea16fb3bf3a48a9a140ddd4fa5dc93"></div>
             </div>
 
             <!-- Ads List Container -->
             <div id="adsListContainer" class="space-y-3">
                 
-                <!-- Sample Ad Card 1 -->
+                <!-- Ad Card 1 -->
                 <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex items-center justify-between gap-3">
                     <div class="flex items-center space-x-3">
                         <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0">
                             <i class="fa-solid fa-rectangle-ad"></i>
                         </div>
                         <div>
-                            <h3 class="text-xs font-bold text-gray-800">Watch Website Promotion Ad</h3>
+                            <h3 class="text-xs font-bold text-gray-800">Watch Adsterra Promotion Ad</h3>
                             <p class="text-[11px] text-gray-500 mt-0.5">Duration: 15 Seconds</p>
                             <span class="inline-block bg-green-50 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded mt-1">Reward: ৳ 0.50</span>
                         </div>
@@ -110,7 +118,7 @@
                     </button>
                 </div>
 
-                <!-- Sample Ad Card 2 -->
+                <!-- Ad Card 2 -->
                 <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex items-center justify-between gap-3">
                     <div class="flex items-center space-x-3">
                         <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0">
@@ -127,36 +135,19 @@
                     </button>
                 </div>
 
-                <!-- Sample Ad Card 3 -->
-                <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex items-center justify-between gap-3">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0">
-                            <i class="fa-solid fa-rectangle-ad"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xs font-bold text-gray-800">Explore Mobile App Landing Page</h3>
-                            <p class="text-[11px] text-gray-500 mt-0.5">Duration: 10 Seconds</p>
-                            <span class="inline-block bg-green-50 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded mt-1">Reward: ৳ 0.30</span>
-                        </div>
-                    </div>
-                    <button onclick="startAd(10, 0.30)" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition cursor-pointer whitespace-nowrap">
-                        View Ad
-                    </button>
-                </div>
-
             </div>
 
         </main>
 
-        <!-- Ad Timer / View Modal (Hidden by Default) -->
+        <!-- Ad Timer / View Modal -->
         <div id="adModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white w-full max-w-sm rounded-3xl p-6 text-center space-y-4 shadow-2xl">
                 <h3 class="text-sm font-bold text-gray-800">Viewing Advertisement</h3>
                 <div id="adTimerDisplay" class="text-4xl font-extrabold text-indigo-600 my-4">
                     15
                 </div>
-                <p id="adStatusText" class="text-xs text-gray-500">Please wait while the advertisement is loading...</p>
-                <div id="claimContainer" class="hidden">
+                <p id="adStatusText" class="text-xs text-gray-500">Please wait while the advertisement is running...</p>
+                <div id="claimContainer" class="hidden space-y-2">
                     <button onclick="claimReward()" class="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-xs rounded-xl shadow-md transition">
                         Claim Reward
                     </button>
@@ -185,7 +176,7 @@
         </div>  
     </div>
 
-    <!-- Navigation & Ad Script -->
+    <!-- Navigation & Ad Script with Adsterra Direct Link Integration -->
     <script>  
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
@@ -205,12 +196,18 @@
         const activeItem = document.querySelector(".nav-item-animated.active") || items[2];
         moveIndicator(activeItem);
 
-        // Ad Timer Simulation Logic
+        // Adsterra Direct Link
+        const adsterraDirectLink = "https://middayopened.com/rmm8pbwe?key=a42d11bce0966c10bc9b3f909ae44009";
+
         let countdown;
         let currentReward = 0;
 
         window.startAd = function(duration, reward) {
             currentReward = reward;
+            
+            // Open Adsterra Direct Link in a new tab/window for the user to view
+            window.open(adsterraDirectLink, '_blank');
+
             const modal = document.getElementById('adModal');
             const timerDisplay = document.getElementById('adTimerDisplay');
             const statusText = document.getElementById('adStatusText');
@@ -219,7 +216,7 @@
             modal.classList.remove('hidden');
             claimContainer.classList.add('hidden');
             timerDisplay.innerText = duration;
-            statusText.innerText = "Please keep this window open...";
+            statusText.innerText = "Please wait on the sponsor page and come back here...";
 
             let timeLeft = duration;
             clearInterval(countdown);
@@ -230,7 +227,7 @@
                 
                 if (timeLeft <= 0) {
                     clearInterval(countdown);
-                    statusText.innerText = "Ad completed successfully! Click below to claim.";
+                    statusText.innerText = "Timer completed! Click below to claim your reward.";
                     claimContainer.classList.remove('hidden');
                 }
             }, 1000);
@@ -239,7 +236,7 @@
         window.claimReward = function() {
             alert(`Congratulations! You have successfully earned ৳ ${currentReward.toFixed(2)}.`);
             document.getElementById('adModal').classList.add('hidden');
-            // এখানে ফায়ারবেসে ব্যালেন্স আপডেট কোড যোগ করতে পারেন
+            // এখানে ফায়ারবেস ডেটাবেস আপডেট কোড যুক্ত করতে পারেন
         }
     </script>
 </body>
