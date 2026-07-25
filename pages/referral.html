@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Team - Micro Job Pro</title>
+    <title>Referral Program - Micro Job Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN for Navigation Icons -->
@@ -89,10 +89,10 @@
                     </div>
                     <div class="overflow-hidden">
                         <h2 id="userNameDisplay" class="text-base font-bold truncate">Loading...</h2>
-                        <span class="text-xs text-purple-200">Refer Team & Levels</span>
+                        <span class="text-xs text-purple-200">10-Level Referral Program</span>
                     </div>
                 </div>
-                <a href="profile.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">Profile</a>
+                <a href="profile.html" class="text-xs bg-white/25 hover:bg-white/40 transition px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">Profile</a>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -111,7 +111,7 @@
         <main class="p-4 flex-grow space-y-4">
             
             <div class="space-y-1 px-1">
-                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Invite Friends & Earn 10-Level Commission</h2>
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Invite Friends & Earn Commission</h2>
                 <p class="text-xs text-gray-500 leading-relaxed">
                     Level 1 users get ৳20 and referrer gets ৳10 bonus instantly. Plus, earn commission up to 10 deep levels!
                 </p>
@@ -129,26 +129,35 @@
                 </button>
             </div>
 
-            <!-- Stats Side-by-Side -->
+            <!-- Stats Side-by-Side with "Refer Team" Button Link -->
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Total Team Members</p>
-                    <h3 id="totalTeam" class="text-lg font-extrabold text-indigo-600">0</h3>
+                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-2 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Total Team</p>
+                        <h3 id="totalTeam" class="text-lg font-extrabold text-indigo-600">0</h3>
+                    </div>
+                    <!-- Refer Team Button directing to new page -->
+                    <a href="team-details.html" class="block w-full py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-center font-bold text-[11px] rounded-xl transition border border-indigo-200">
+                        Refer Team <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
                 </div>
-                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Total Referral Earnings</p>
-                    <h3 id="referralEarnings" class="text-lg font-extrabold text-green-600">৳ 0.00</h3>
+                <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Total Earnings</p>
+                        <h3 id="referralEarnings" class="text-lg font-extrabold text-green-600">৳ 0.00</h3>
+                    </div>
+                    <span class="text-[10px] text-gray-400 font-medium">10 Level Comm.</span>
                 </div>
             </div>
 
-            <!-- 10-Level Referral Structure (Referral Levels Category) -->
+            <!-- 10-Level Breakdown Preview -->
             <div class="space-y-2 pt-2">
                 <div class="flex justify-between items-center px-1">
-                    <h3 class="text-xs font-bold text-gray-600 uppercase tracking-wider">Referral Levels Structure</h3>
-                    <span class="text-[10px] bg-indigo-50 text-indigo-600 font-bold px-2 py-0.5 rounded-full">10 Tiers</span>
+                    <h3 class="text-xs font-bold text-gray-600 uppercase tracking-wider">Level Summary</h3>
+                    <a href="team-details.html" class="text-[11px] font-bold text-indigo-600 hover:underline">View All Levels →</a>
                 </div>
                 <div id="levelContainer" class="grid grid-cols-2 gap-2.5">
-                    <!-- Dynamic Levels Will Be Rendered Here -->
+                    <!-- Dynamic Levels Preview -->
                 </div>
             </div>
 
@@ -222,7 +231,6 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    // Main Balance & Deposit Balance
                     const mainBal = data.balances?.main ?? data.mainBalance ?? 0;
                     const depositBal = data.balances?.deposit ?? data.depositBalance ?? 0;
 
@@ -232,20 +240,18 @@
                     const refCode = data.referralCode || "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
                     document.getElementById('myReferralCode').value = refCode;
 
-                    // Total Team Members
                     const totalRef = data.totalReferred ?? 0;
                     document.getElementById('totalTeam').innerText = totalRef;
 
-                    // Total Referral Earnings
                     const refEarnings = data.mainBalance ?? 0;
                     document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
 
-                    // 10-Level Category Structure Rendering
+                    // Level Preview (Showing top levels)
                     const levelsData = data.levels || {};
                     const levelContainer = document.getElementById('levelContainer');
                     levelContainer.innerHTML = '';
 
-                    for (let i = 1; i <= 10; i++) {
+                    for (let i = 1; i <= 4; i++) { // Showing first 4 levels as preview
                         let levelMembers = 0;
                         let levelEarnings = 0;
 
@@ -258,7 +264,7 @@
                         }
 
                         const levelCard = document.createElement('div');
-                        levelCard.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl space-y-1 shadow-sm hover:border-indigo-300 transition";
+                        levelCard.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl space-y-1 shadow-sm";
                         levelCard.innerHTML = `
                             <p class="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">Level ${i}</p>
                             <div class="flex justify-between items-center">
