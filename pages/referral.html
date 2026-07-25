@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Program - Micro Job Pro</title>
+    <title>Referral Team - Micro Job Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN for Navigation Icons -->
@@ -89,7 +89,7 @@
                     </div>
                     <div class="overflow-hidden">
                         <h2 id="userNameDisplay" class="text-base font-bold truncate">Loading...</h2>
-                        <span class="text-xs text-purple-200">10-Level Referral Program</span>
+                        <span class="text-xs text-purple-200">Refer Team & Levels</span>
                     </div>
                 </div>
                 <a href="profile.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">Profile</a>
@@ -141,11 +141,14 @@
                 </div>
             </div>
 
-            <!-- 10-Level Breakdown Section -->
+            <!-- 10-Level Referral Structure (Referral Levels Category) -->
             <div class="space-y-2 pt-2">
-                <h3 class="text-xs font-bold text-gray-600 uppercase tracking-wider px-1">10-Level Referral Structure</h3>
+                <div class="flex justify-between items-center px-1">
+                    <h3 class="text-xs font-bold text-gray-600 uppercase tracking-wider">Referral Levels Structure</h3>
+                    <span class="text-[10px] bg-indigo-50 text-indigo-600 font-bold px-2 py-0.5 rounded-full">10 Tiers</span>
+                </div>
                 <div id="levelContainer" class="grid grid-cols-2 gap-2.5">
-                    <!-- Dynamic Levels -->
+                    <!-- Dynamic Levels Will Be Rendered Here -->
                 </div>
             </div>
 
@@ -219,7 +222,7 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    // মেইন ব্যালেন্স এবং ডিপোজিট ব্যালেন্স ফেচ করা
+                    // Main Balance & Deposit Balance
                     const mainBal = data.balances?.main ?? data.mainBalance ?? 0;
                     const depositBal = data.balances?.deposit ?? data.depositBalance ?? 0;
 
@@ -229,15 +232,15 @@
                     const refCode = data.referralCode || "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
                     document.getElementById('myReferralCode').value = refCode;
 
-                    // মোট রেফারড মেম্বার
+                    // Total Team Members
                     const totalRef = data.totalReferred ?? 0;
                     document.getElementById('totalTeam').innerText = totalRef;
 
-                    // আপনার ডাটাবেজের mainBalance (18.35) কে রেফার ইনকাম হিসেবে সেট করা হলো
+                    // Total Referral Earnings
                     const refEarnings = data.mainBalance ?? 0;
                     document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
 
-                    // ১০ লেভেল রেন্ডার করা
+                    // 10-Level Category Structure Rendering
                     const levelsData = data.levels || {};
                     const levelContainer = document.getElementById('levelContainer');
                     levelContainer.innerHTML = '';
@@ -251,11 +254,11 @@
                             levelEarnings = levelsData[`level_${i}`].earnings || 0;
                         } else if (i === 1) {
                             levelMembers = totalRef;
-                            levelEarnings = refEarnings; // Level 1 এ 18.35 টাকা শো করবে
+                            levelEarnings = refEarnings; 
                         }
 
                         const levelCard = document.createElement('div');
-                        levelCard.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl space-y-1 shadow-sm";
+                        levelCard.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl space-y-1 shadow-sm hover:border-indigo-300 transition";
                         levelCard.innerHTML = `
                             <p class="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">Level ${i}</p>
                             <div class="flex justify-between items-center">
