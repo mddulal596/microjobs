@@ -229,14 +229,15 @@
                     const refCode = data.referralCode || "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
                     document.getElementById('myReferralCode').value = refCode;
 
-                    // মোট রেফারড মেম্বার বের করা
+                    // মোট রেফারড মেম্বার
                     const totalRef = data.totalReferred ?? 0;
                     document.getElementById('totalTeam').innerText = totalRef;
 
-                    const totalRefEarnings = data.referralEarnings ?? 0;
-                    document.getElementById('referralEarnings').innerText = `৳ ${Number(totalRefEarnings).toFixed(2)}`;
+                    // রেফার ইনকাম ব্যালেন্স (যদি referralEarnings বা refBalance বা refIncome নামে ডাটাবেজে থাকে)
+                    const refEarnings = data.referralEarnings ?? data.refBalance ?? data.refIncome ?? 0;
+                    document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
 
-                    // ১০ লেভেল রেন্ডার করা (ফায়ারবেজে levels না থাকলে totalReferred কে Level 1 এ দেখাবে)
+                    // ১০ লেভেল রেন্ডার করা
                     const levelsData = data.levels || {};
                     const levelContainer = document.getElementById('levelContainer');
                     levelContainer.innerHTML = '';
@@ -249,8 +250,8 @@
                             levelMembers = levelsData[`level_${i}`].count || 0;
                             levelEarnings = levelsData[`level_${i}`].earnings || 0;
                         } else if (i === 1) {
-                            // যদি levels অবজেক্ট না থাকে তবে রুট লেভেলের totalReferred কে লেভেল ১ হিসেবে দেখাবে
                             levelMembers = totalRef;
+                            levelEarnings = refEarnings; // লেভেল ১ এ রেফার ইনকাম শো করবে
                         }
 
                         const levelCard = document.createElement('div');
