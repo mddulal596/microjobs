@@ -15,14 +15,15 @@
             align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,.2); z-index: 100;  
         }  
         .nav-item-animated { flex: 1; text-decoration: none; color: #fff; text-align: center; position: relative; z-index: 2; }  
-        .nav-item-animated i { font-size: 22px; transition: .35s; }  
-        .nav-item-animated span { display: block; font-size: 11px; margin-top: 4px; transition: .35s; }  
+        .nav-item-animated i { font-size: 22px; transition: .25s; }  
+        .nav-item-animated span { display: block; font-size: 11px; margin-top: 4px; transition: .25s; }  
         .nav-item-animated.active i { transform: translateY(-10px); }  
         .nav-item-animated.active span { font-weight: bold; }  
         .indicator {  
             position: absolute; top: -15px; width: 60px; height: 60px;  
             background: #312e81; border-radius: 50%; border: 4px solid #fff;  
-            transition: left .35s ease; box-shadow: 0 0 20px rgba(49,46,129,.5); z-index: 1;  
+            transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);  
+            box-shadow: 0 0 20px rgba(49,46,129,.5); z-index: 1;  
         }  
     </style>
 </head>
@@ -102,6 +103,7 @@
     <script>  
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
+        
         function moveIndicator(el){  
             if (!el) return;
             const left = el.offsetLeft + (el.offsetWidth / 2) - (indicator.offsetWidth / 2);  
@@ -109,9 +111,16 @@
             items.forEach(i => i.classList.remove("active"));  
             el.classList.add("active");  
         }  
-        items.forEach(item => item.addEventListener("click", () => moveIndicator(item)));  
-        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
-        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
+        
+        items.forEach(item => item.addEventListener("click", (e) => moveIndicator(item)));  
+        
+        // পেজ লোড হওয়ার সাথে সাথেই ইনস্ট্যান্ট পজিশন সেট করা
+        const activeItem = document.querySelector(".nav-item-animated.active") || items[1];
+        moveIndicator(activeItem);
+
+        window.addEventListener('resize', () => {
+            moveIndicator(document.querySelector(".nav-item-animated.active"));
+        });
     </script>
 
     <script type="module">
