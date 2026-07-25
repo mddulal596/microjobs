@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>15-Level Binary Referral Tree - Micro Job Pro</title>
+    <title>Binary Referral Tree - Micro Job Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN -->
@@ -13,12 +13,12 @@
         .node-card {
             background: #ffffff;
             border: 2px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 8px 12px;
+            border-radius: 14px;
+            padding: 6px 10px;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.05);
             display: inline-block;
-            min-width: 95px;
+            min-width: 80px;
         }
         .node-card.active-node {
             border-color: #10b981;
@@ -27,7 +27,6 @@
             border-color: #9ca3af;
             opacity: 0.75;
         }
-        /* Custom scrollbar for smooth horizontal scrolling of deep tree */
         ::-webkit-scrollbar {
             height: 6px;
             width: 6px;
@@ -47,17 +46,17 @@
                 <a href="referral.html" class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
                     <i class="fa-solid fa-arrow-left text-sm"></i>
                 </a>
-                <h1 class="text-base font-bold">15-Level Referral Tree</h1>
+                <h1 class="text-base font-bold">15-Level Binary Tree</h1>
             </div>
             <span id="totalTeamBadge" class="text-xs bg-white/20 px-2.5 py-1 rounded-full font-semibold">Team: 0</span>
         </header>
 
-        <!-- Main Content: Full 15-Level Tree Structure -->
+        <!-- Main Content -->
         <main class="p-4 flex-grow space-y-6">
             
             <!-- Title & Legend -->
             <div class="text-center space-y-2">
-                <h2 class="text-sm font-extrabold text-gray-800 uppercase tracking-wide">Complete 15-Level Binary Tree</h2>
+                <h2 class="text-sm font-extrabold text-gray-800 uppercase tracking-wide">Member Binary Referral Tree</h2>
                 
                 <!-- Status Indicators Legend -->
                 <div class="flex justify-center items-center gap-6 pt-1">
@@ -72,12 +71,63 @@
                 </div>
             </div>
 
-            <!-- Visual Tree Container (All 15 Levels Linked Visually) -->
-            <div id="treeContainer" class="bg-gradient-to-b from-indigo-50/50 to-white border border-indigo-100 rounded-3xl p-5 space-y-6 overflow-x-auto shadow-inner">
+            <!-- Visual Binary Tree Container -->
+            <div class="bg-gradient-to-b from-indigo-50/50 to-white border border-indigo-100 rounded-3xl p-4 overflow-x-auto shadow-inner">
                 
-                <!-- Dynamic 15 Levels will be generated here sequentially -->
-                <div id="visualTreeWrapper" class="flex flex-col items-center space-y-4 min-w-[320px]">
-                    <!-- JavaScript will inject level nodes here -->
+                <div class="flex flex-col items-center min-w-[340px] space-y-4">
+                    
+                    <!-- Level 1 (Root) -->
+                    <div class="flex flex-col items-center">
+                        <div class="node-card active-node relative">
+                            <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
+                            <div class="w-7 h-7 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center mx-auto mb-1 text-xs font-bold">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <h4 id="rootUserName" class="text-[11px] font-bold text-gray-900 truncate max-w-[100px]">User</h4>
+                            <span class="text-[9px] bg-emerald-600 text-white px-1.5 py-0.5 rounded font-bold mt-0.5 inline-block">Level 1</span>
+                        </div>
+                        <div class="w-0.5 h-5 bg-indigo-300"></div>
+                    </div>
+
+                    <!-- Level 2 (2 Branches) -->
+                    <div class="w-full flex flex-col items-center">
+                        <div class="w-3/5 h-0.5 bg-indigo-300"></div>
+                        <div class="w-full flex justify-around pt-1">
+                            <!-- Left L2 -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-0.5 h-3 bg-indigo-300"></div>
+                                <div id="l2_left" class="node-card inactive-node relative">
+                                    <span class="absolute top-1 right-1 w-2 h-2 bg-gray-400 rounded-full"></span>
+                                    <div class="w-6 h-6 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-1 text-[10px] font-bold">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <h5 id="l2_left_text" class="text-[10px] font-bold text-gray-500">Empty</h5>
+                                    <span class="text-[8px] bg-gray-500 text-white px-1 py-0.5 rounded font-bold mt-0.5 inline-block">Level 2 (L)</span>
+                                </div>
+                            </div>
+                            <!-- Right L2 -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-0.5 h-3 bg-indigo-300"></div>
+                                <div id="l2_right" class="node-card inactive-node relative">
+                                    <span class="absolute top-1 right-1 w-2 h-2 bg-gray-400 rounded-full"></span>
+                                    <div class="w-6 h-6 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-1 text-[10px] font-bold">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <h5 id="l2_right_text" class="text-[10px] font-bold text-gray-500">Empty</h5>
+                                    <span class="text-[8px] bg-gray-500 text-white px-1 py-0.5 rounded font-bold mt-0.5 inline-block">Level 2 (R)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Levels 3 to 15 Grid Summary Box -->
+                <div class="mt-6 pt-4 border-t border-indigo-100 space-y-3">
+                    <h3 class="text-xs font-bold text-gray-600 uppercase tracking-wider text-center">Levels 3 to 15 Overview</h3>
+                    <div id="extendedLevelsGrid" class="grid grid-cols-2 gap-2.5">
+                        <!-- Dynamic Levels 3 to 15 Cards -->
+                    </div>
                 </div>
 
             </div>
@@ -92,7 +142,7 @@
         </div>
     </div>
 
-    <!-- Firebase Script & Logic for 15-Level Visual Generation -->
+    <!-- Firebase Script -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
@@ -112,60 +162,48 @@
                     const data = docSnap.data();
                     const totalRef = data.totalReferred ?? 0;
                     const levelsData = data.levels || {};
-                    const userName = data.username || user.userName || user.displayName || "mddulalhosen0";
+                    const userName = data.username || user.userName || user.displayName || "User";
 
                     document.getElementById('totalTeamBadge').innerText = `Team: ${totalRef}`;
+                    document.getElementById('rootUserName').innerText = userName;
 
-                    const wrapper = document.getElementById('visualTreeWrapper');
-                    wrapper.innerHTML = '';
+                    // Handle Level 2 Left & Right nodes if users exist
+                    if (totalRef > 0) {
+                        const l2Left = document.getElementById('l2_left');
+                        l2Left.className = "node-card active-node relative";
+                        l2Left.querySelector('span').className = "absolute top-1 right-1 w-2 h-2 bg-emerald-500 rounded-full";
+                        l2Left.querySelector('div.w-6').className = "w-6 h-6 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-1 text-[10px] font-bold";
+                        document.getElementById('l2_left_text').innerText = `${Math.min(totalRef, 1)} Member`;
+                        l2Left.querySelector('span:last-of-type').className = "text-[8px] bg-indigo-600 text-white px-1 py-0.5 rounded font-bold mt-0.5 inline-block";
+                    }
 
-                    // Level 1: Root Node
-                    const rootDiv = document.createElement('div');
-                    rootDiv.className = "flex flex-col items-center w-full";
-                    rootDiv.innerHTML = `
-                        <div class="node-card active-node relative">
-                            <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
-                            <div class="w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center mx-auto mb-1 text-xs font-bold shadow-sm">
-                                <i class="fa-solid fa-user"></i>
+                    // Render Levels 3 to 15 cards
+                    const gridContainer = document.getElementById('extendedLevelsGrid');
+                    gridContainer.innerHTML = '';
+
+                    for (let i = 3; i <= 15; i++) {
+                        let levelMembers = 0;
+                        let levelEarnings = 0;
+
+                        if (levelsData[`level_${i}`]) {
+                            levelMembers = levelsData[`level_${i}`].count || 0;
+                            levelEarnings = levelsData[`level_${i}`].earnings || 0;
+                        }
+
+                        const card = document.createElement('div');
+                        card.className = "bg-white border border-gray-200 p-3 rounded-xl space-y-1 shadow-sm";
+                        card.innerHTML = `
+                            <p class="text-[10px] font-extrabold text-indigo-600 uppercase">Level ${i} Tree</p>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-gray-500">Members: <strong class="text-gray-800">${levelMembers}</strong></span>
+                                <span class="font-bold text-green-600">৳ ${Number(levelEarnings).toFixed(2)}</span>
                             </div>
-                            <h4 class="text-xs font-bold text-gray-900 truncate max-w-[110px]">${userName}</h4>
-                            <span class="text-[9px] bg-emerald-600 text-white px-2 py-0.5 rounded-md font-bold mt-1 inline-block">Level 1</span>
-                        </div>
-                        <div class="w-0.5 h-5 bg-indigo-300 my-1"></div>
-                    `;
-                    wrapper.appendChild(rootDiv);
-
-                    // Generate Levels 2 to 15 sequentially in tree node card style
-                    for (let i = 2; i <= 15; i++) {
-                        let levelInfo = levelsData[`level_${i}`] || {};
-                        let count = levelInfo.count || (i === 2 && totalRef > 0 ? 1 : 0);
-                        let earnings = levelInfo.earnings || 0;
-                        let isActive = count > 0;
-
-                        const levelNodeBox = document.createElement('div');
-                        levelNodeBox.className = "flex flex-col items-center w-full space-y-1";
-                        
-                        levelNodeBox.innerHTML = `
-                            <div class="w-full flex justify-center">
-                                <div class="node-card ${isActive ? 'active-node' : 'inactive-node'} relative">
-                                    <span class="absolute top-1 right-1 w-2.5 h-2.5 ${isActive ? 'bg-emerald-500' : 'bg-gray-400'} rounded-full"></span>
-                                    <div class="w-7 h-7 bg-gray-100 ${isActive ? 'text-indigo-600' : 'text-gray-400'} rounded-full flex items-center justify-center mx-auto mb-1 text-xs font-bold">
-                                        <i class="fa-solid fa-user"></i>
-                                    </div>
-                                    <h5 class="text-[11px] font-bold ${isActive ? 'text-gray-800' : 'text-gray-500'}">${count > 0 ? count + ' Members' : 'Empty / Inactive'}</h5>
-                                    <div class="flex items-center justify-center gap-1 mt-1">
-                                        <span class="text-[9px] ${isActive ? 'bg-indigo-600' : 'bg-gray-500'} text-white px-1.5 py-0.5 rounded font-bold">Level ${i}</span>
-                                        <span class="text-[9px] text-green-600 font-bold bg-green-50 px-1 rounded">৳${Number(earnings).toFixed(0)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            ${i < 15 ? '<div class="w-0.5 h-5 bg-indigo-300 my-0.5"></div>' : ''}
                         `;
-                        wrapper.appendChild(levelNodeBox);
+                        gridContainer.appendChild(card);
                     }
                 }
             } catch (error) {
-                console.error("Error loading 15-level tree:", error);
+                console.error("Error loading tree:", error);
             }
         });
     </script>
