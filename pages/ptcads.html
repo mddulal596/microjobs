@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTC Ads - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
+    
+    <style>
+        .nav-container {  
+            position: fixed;  
+            bottom: 15px;  
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;  
+            max-width: 440px;  
+            height: 70px;  
+            background: #4f46e5;  
+            border-radius: 22px;  
+            display: flex;  
+            justify-content: space-around;  
+            align-items: center;  
+            box-shadow: 0 10px 25px rgba(0,0,0,.2);  
+            overflow: visible;  
+            z-index: 100;
+        }  
+        .nav-item-animated {  
+            flex: 1;  
+            text-decoration: none;  
+            color: #fff;  
+            text-align: center;  
+            position: relative;  
+            z-index: 2;  
+        }  
+        .nav-item-animated i {  
+            font-size: 22px;  
+            transition: .25s;  
+        }  
+        .nav-item-animated span {  
+            display: block;  
+            font-size: 11px;  
+            margin-top: 4px;  
+            transition: .25s;  
+        }  
+        .nav-item-animated.active i {  
+            transform: translateY(-10px);  
+        }  
+        .nav-item-animated.active span {  
+            font-weight: bold;  
+        }  
+        .indicator {  
+            position: absolute;  
+            top: -15px;  
+            width: 60px;  
+            height: 60px;  
+            background: #312e81;  
+            border-radius: 50%;  
+            border: 4px solid #fff;  
+            transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);  
+            box-shadow: 0 0 20px rgba(49,46,129,.5);  
+            z-index: 1;  
+        }  
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
+        
+        <!-- Header -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="dashboard.html" class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </a>
+                <h1 class="text-base font-bold">PTC Ads (Watch & Earn)</h1>
+            </div>
+            <span class="text-xs bg-white/25 px-3 py-1.5 rounded-full font-semibold">Ads Available</span>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="p-4 flex-grow space-y-4">
+            
+            <!-- Notice Box -->
+            <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl flex items-start gap-3">
+                <span class="text-amber-600 text-lg"><i class="fa-solid fa-circle-exclamation"></i></span>
+                <p class="text-xs text-amber-900 leading-relaxed">
+                    বিজ্ঞাপনের নির্দিষ্ট সময় শেষ হওয়া পর্যন্ত অপেক্ষা করুন এবং ক্যাপচা বা ভেরিফিকেশন সম্পন্ন করে রিওয়ার্ড ক্লাইম করুন।
+                </p>
+            </div>
+
+            <!-- Ads List Container -->
+            <div id="adsListContainer" class="space-y-3">
+                
+                <!-- Sample Ad Card 1 -->
+                <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0">
+                            <i class="fa-solid fa-rectangle-ad"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-gray-800">Watch Website Promotion Ad</h3>
+                            <p class="text-[11px] text-gray-500 mt-0.5">Duration: 15 Seconds</p>
+                            <span class="inline-block bg-green-50 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded mt-1">Reward: ৳ 0.50</span>
+                        </div>
+                    </div>
+                    <button onclick="startAd(15, 0.50)" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition cursor-pointer whitespace-nowrap">
+                        View Ad
+                    </button>
+                </div>
+
+                <!-- Sample Ad Card 2 -->
+                <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0">
+                            <i class="fa-solid fa-rectangle-ad"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-gray-800">Visit Sponsor Link & Read</h3>
+                            <p class="text-[11px] text-gray-500 mt-0.5">Duration: 30 Seconds</p>
+                            <span class="inline-block bg-green-50 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded mt-1">Reward: ৳ 1.00</span>
+                        </div>
+                    </div>
+                    <button onclick="startAd(30, 1.00)" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition cursor-pointer whitespace-nowrap">
+                        View Ad
+                    </button>
+                </div>
+
+                <!-- Sample Ad Card 3 -->
+                <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0">
+                            <i class="fa-solid fa-rectangle-ad"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-gray-800">Explore Mobile App Landing Page</h3>
+                            <p class="text-[11px] text-gray-500 mt-0.5">Duration: 10 Seconds</p>
+                            <span class="inline-block bg-green-50 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded mt-1">Reward: ৳ 0.30</span>
+                        </div>
+                    </div>
+                    <button onclick="startAd(10, 0.30)" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition cursor-pointer whitespace-nowrap">
+                        View Ad
+                    </button>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- Ad Timer / View Modal (Hidden by Default) -->
+        <div id="adModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-sm rounded-3xl p-6 text-center space-y-4 shadow-2xl">
+                <h3 class="text-sm font-bold text-gray-800">Viewing Advertisement</h3>
+                <div id="adTimerDisplay" class="text-4xl font-extrabold text-indigo-600 my-4">
+                    15
+                </div>
+                <p id="adStatusText" class="text-xs text-gray-500">Please wait while the advertisement is loading...</p>
+                <div id="claimContainer" class="hidden">
+                    <button onclick="claimReward()" class="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+                        Claim Reward
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Animated Bottom Navigation Bar -->
+        <div class="nav-container">  
+            <div class="indicator"></div>  
+            <a href="support.html" class="nav-item-animated">  
+                <i class="fa-solid fa-headset"></i><span>Help</span>  
+            </a>  
+            <a href="wallet.html" class="nav-item-animated">  
+                <i class="fa-solid fa-wallet"></i><span>Wallet</span>  
+            </a>  
+            <a href="dashboard.html" class="nav-item-animated active">  
+                <i class="fa-solid fa-house"></i><span>Home</span>  
+            </a>  
+            <a href="referral.html" class="nav-item-animated">  
+                <i class="fa-solid fa-user-group"></i><span>Team</span>  
+            </a>  
+            <a href="profile.html" class="nav-item-animated">  
+                <i class="fa-solid fa-user"></i><span>Profile</span>  
+            </a>  
+        </div>  
+    </div>
+
+    <!-- Navigation & Ad Script -->
+    <script>  
+        const items = document.querySelectorAll(".nav-item-animated");  
+        const indicator = document.querySelector(".indicator");  
+          
+        function moveIndicator(el){  
+            if (!el) return;
+            const left = el.offsetLeft + (el.offsetWidth / 2) - (indicator.offsetWidth / 2);  
+            indicator.style.left = left + "px";  
+            items.forEach(i => i.classList.remove("active"));  
+            el.classList.add("active");  
+        }  
+          
+        items.forEach(item => {  
+            item.addEventListener("click", () => moveIndicator(item));  
+        });  
+          
+        const activeItem = document.querySelector(".nav-item-animated.active") || items[2];
+        moveIndicator(activeItem);
+
+        // Ad Timer Simulation Logic
+        let countdown;
+        let currentReward = 0;
+
+        window.startAd = function(duration, reward) {
+            currentReward = reward;
+            const modal = document.getElementById('adModal');
+            const timerDisplay = document.getElementById('adTimerDisplay');
+            const statusText = document.getElementById('adStatusText');
+            const claimContainer = document.getElementById('claimContainer');
+
+            modal.classList.remove('hidden');
+            claimContainer.classList.add('hidden');
+            timerDisplay.innerText = duration;
+            statusText.innerText = "Please keep this window open...";
+
+            let timeLeft = duration;
+            clearInterval(countdown);
+            
+            countdown = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    statusText.innerText = "Ad completed successfully! Click below to claim.";
+                    claimContainer.classList.remove('hidden');
+                }
+            }, 1000);
+        }
+
+        window.claimReward = function() {
+            alert(`Congratulations! You have successfully earned ৳ ${currentReward.toFixed(2)}.`);
+            document.getElementById('adModal').classList.add('hidden');
+            // এখানে ফায়ারবেসে ব্যালেন্স আপডেট কোড যোগ করতে পারেন
+        }
+    </script>
+</body>
+</html>
