@@ -93,7 +93,6 @@
             <!-- Adsterra Banner Integration Area -->
             <div class="bg-white border border-gray-100 p-3 rounded-2xl shadow-sm text-center">
                 <p class="text-[10px] text-gray-400 mb-2 uppercase font-bold">Sponsored Ad</p>
-                <!-- Adsterra Banner Script Container -->
                 <script async="async" data-cfasync="false" src="https://middayopened.com/44ea16fb3bf3a48a9a140ddd4fa5dc93/invoke.js"></script>
                 <div id="container-44ea16fb3bf3a48a9a140ddd4fa5dc93"></div>
             </div>
@@ -176,8 +175,8 @@
         </div>  
     </div>
 
-    <!-- Navigation & Ad Script with Adsterra Direct Link Integration -->
-    <script>  
+    <!-- Script Section -->
+    <script type="module">  
         const items = document.querySelectorAll(".nav-item-animated");  
         const indicator = document.querySelector(".indicator");  
           
@@ -196,6 +195,22 @@
         const activeItem = document.querySelector(".nav-item-animated.active") || items[2];
         moveIndicator(activeItem);
 
+        // Firebase Imports
+        import { db } from '../firebase/firebase-config.js';
+        import { doc, updateDoc, increment, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const auth = getAuth();
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
         // Adsterra Direct Link
         const adsterraDirectLink = "https://middayopened.com/rmm8pbwe?key=a42d11bce0966c10bc9b3f909ae44009";
 
@@ -205,7 +220,7 @@
         window.startAd = function(duration, reward) {
             currentReward = reward;
             
-            // Open Adsterra Direct Link in a new tab/window for the user to view
+            // Open Adsterra Direct Link in a new tab
             window.open(adsterraDirectLink, '_blank');
 
             const modal = document.getElementById('adModal');
@@ -233,10 +248,47 @@
             }, 1000);
         }
 
-        window.claimReward = function() {
-            alert(`Congratulations! You have successfully earned ৳ ${currentReward.toFixed(2)}.`);
-            document.getElementById('adModal').classList.add('hidden');
-            // এখানে ফায়ারবেস ডেটাবেস আপডেট কোড যুক্ত করতে পারেন
+        window.claimReward = async function() {
+            if (!currentUser) {
+                alert("Please login first!");
+                return;
+            }
+
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                const userSnap = await getDoc(userRef);
+
+                let updateData = {};
+                
+                if (userSnap.exists()) {
+                    const data = userSnap.data();
+                    
+                    if (data.balances && typeof data.balances.main !== 'undefined') {
+                        updateData["balances.main"] = increment(currentReward);
+                    }
+                    if (typeof data.mainBalance !== 'undefined') {
+                        updateData["mainBalance"] = increment(currentReward);
+                    }
+                }
+
+                if (Object.keys(updateData).length === 0) {
+                    updateData = {
+                        "balances.main": increment(currentReward),
+                        "mainBalance": increment(currentReward)
+                    };
+                }
+
+                await updateDoc(userRef, updateData);
+
+                alert(`Congratulations! You have successfully earned ৳ ${currentReward.toFixed(2)} and it has been added to your balance.`);
+                document.getElementById('adModal').classList.add('hidden');
+                
+                location.reload();
+
+            } catch (error) {
+                console.error("Error updating balance: ", error);
+                alert("Failed to add reward. Please try again.");
+            }
         }
     </script>
 </body>
