@@ -87,8 +87,8 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased">
-    <!-- প্রপার প্যাডিং নিশ্চিত করা হয়েছে যাতে নেভবার ঠিক জায়গায় থাকে -->
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
+    <!-- প্রপার প্যাডিং নিশ্চিত করা হয়েছে যাতে নেভবার কোনো কন্টেন্ট ঢেকে না ফেলে -->
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
         
         <!-- Top Header & Balances -->
         <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
@@ -99,7 +99,7 @@
                     </div>
                     <div class="overflow-hidden">
                         <h2 id="userNameDisplay" class="text-base font-bold truncate">Loading...</h2>
-                        <span class="text-xs text-purple-200">Referral Program</span>
+                        <span class="text-xs text-purple-200">10-Level Referral Program</span>
                     </div>
                 </div>
                 <a href="profile.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">Profile</a>
@@ -107,12 +107,12 @@
 
             <!-- Balance Cards inside Header -->
             <div class="grid grid-cols-2 gap-3">
-                <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20">
-                    <p class="text-[11px] text-purple-200 font-medium">Main Balance</p>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
                     <h3 class="text-base font-extrabold mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
                 </div>
-                <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20">
-                    <p class="text-[11px] text-purple-200 font-medium">Deposit Balance</p>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
                     <h3 class="text-base font-extrabold mt-0.5">৳ <span id="depositBalance">0.00</span></h3>
                 </div>
             </div>
@@ -123,9 +123,9 @@
             
             <!-- Invite Banner Info -->
             <div class="space-y-1 px-1">
-                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Invite Friends & Earn Commission</h2>
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Invite Friends & Earn 10-Level Commission</h2>
                 <p class="text-xs text-gray-500 leading-relaxed">
-                    Share your unique referral code with friends. When they join using your code and complete tasks, you will earn lifetime bonuses!
+                    Level 1 users get ৳20 and referrer gets ৳10 bonus instantly. Plus, earn commission up to 10 deep levels!
                 </p>
             </div>
 
@@ -144,12 +144,20 @@
             <!-- Stats Side-by-Side -->
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Total Referred</p>
+                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Total Team Members</p>
                     <h3 id="totalTeam" class="text-lg font-extrabold text-indigo-600">0</h3>
                 </div>
                 <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-1 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Referral Earnings</p>
+                    <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">Total Referral Earnings</p>
                     <h3 id="referralEarnings" class="text-lg font-extrabold text-green-600">৳ 0.00</h3>
+                </div>
+            </div>
+
+            <!-- 10-Level Breakdown Section -->
+            <div class="space-y-2 pt-2">
+                <h3 class="text-xs font-bold text-gray-600 uppercase tracking-wider px-1">10-Level Referral Structure</h3>
+                <div id="levelContainer" class="grid grid-cols-2 gap-2.5">
+                    <!-- Levels will be injected dynamically via JS -->
                 </div>
             </div>
 
@@ -205,7 +213,6 @@
             });  
         });  
           
-        // পেজ লোড হওয়ার সাথে সাথেই ইনস্ট্যান্ট পজিশন সেট করা
         const activeItem = document.querySelector(".nav-item-animated.active") || items[3];
         moveIndicator(activeItem);
 
@@ -257,11 +264,35 @@
                     const refCode = data.referralCode || "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
                     document.getElementById('myReferralCode').value = refCode;
 
-                    const totalRef = data.totalReferred ?? data.totalTeam ?? 0;
-                    document.getElementById('totalTeam').innerText = totalRef;
+                    // ১০ লেভেল ডেটা ম্যানেজমেন্ট (যদি লেভেল অনুযায়ী অবজেক্ট বা অ্যারে থাকে)
+                    const levelsData = data.levels || {};
+                    let totalTeamCount = 0;
+                    let totalRefEarnings = data.referralEarnings ?? data.referralBonus ?? 0;
 
-                    const refEarnings = data.referralEarnings ?? data.referralBonus ?? 0;
-                    document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
+                    const levelContainer = document.getElementById('levelContainer');
+                    levelContainer.innerHTML = '';
+
+                    // ১০ টি লেভেল লুপ চালিয়ে জেনারেট করা
+                    for (let i = 1; i <= 10; i++) {
+                        const levelMembers = levelsData[`level_${i}`]?.count || 0;
+                        const levelEarnings = levelsData[`level_${i}`]?.earnings || 0;
+                        totalTeamCount += levelMembers;
+
+                        const levelCard = document.createElement('div');
+                        levelCard.className = "bg-gray-50 border border-gray-200 p-3 rounded-2xl space-y-1 shadow-sm";
+                        levelCard.innerHTML = `
+                            <p class="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">Level ${i}</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-gray-500 font-medium">Members: <strong class="text-gray-800">${levelMembers}</strong></span>
+                                <span class="text-xs font-bold text-green-600">৳ ${Number(levelEarnings).toFixed(2)}</span>
+                            </div>
+                        `;
+                        levelContainer.appendChild(levelCard);
+                    }
+
+                    const totalRef = data.totalReferred ?? data.totalTeam ?? totalTeamCount;
+                    document.getElementById('totalTeam').innerText = totalRef;
+                    document.getElementById('referralEarnings').innerText = `৳ ${Number(totalRefEarnings).toFixed(2)}`;
                 }
             }, (error) => {
                 console.error("Error fetching referral data:", error);
