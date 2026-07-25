@@ -78,25 +78,27 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-28">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
         
-        <!-- Top Header & Balances -->
-        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
+        <!-- Top Header & Balances (প্রোফাইল পেজের হুবহু স্টাইল) -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg relative">
             <div class="flex justify-between items-center mb-4">
-                <a href="profile.html" class="flex items-center gap-2 bg-white/15 border border-white/30 px-3 py-1.5 rounded-full text-white text-xs font-bold hover:bg-white/25 transition">
+                <div class="flex items-center gap-2 bg-white/15 border border-white/30 px-3.5 py-1.5 rounded-full text-white text-xs font-bold">
                     <div id="profileIconBtn" class="w-6 h-6 bg-white text-purple-700 rounded-full flex items-center justify-center text-[11px] font-black">U</div>
-                    <span id="userNameDisplay">Loading...</span>
-                </a>
-                <a href="dashboard.html" class="bg-white/15 px-4 py-1.5 rounded-full text-white text-xs font-bold hover:bg-white/25 transition">Home</a>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20">
-                    <p class="text-[11px] text-purple-200 font-medium mb-1">Main Balance</p>
-                    <h2 id="mainBalance" class="text-lg font-extrabold">৳ 0.00</h2>
+                    <span id="userNameDisplay" class="truncate max-w-[120px]">Loading...</span>
                 </div>
-                <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20">
-                    <p class="text-[11px] text-purple-200 font-medium mb-1">Deposit Balance</p>
-                    <h2 id="depositBalance" class="text-lg font-extrabold">৳ 0.00</h2>
+                <a href="dashboard.html" class="bg-white/25 hover:bg-white/35 transition px-4 py-1.5 rounded-full text-white text-xs font-bold shadow">Home</a>
+            </div>
+
+            <!-- Balances Cards -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
+                    <h2 id="mainBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
+                </div>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
+                    <h2 id="depositBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
                 </div>
             </div>
         </header>
@@ -178,8 +180,8 @@
         
         items.forEach(item => { item.addEventListener("click", () => moveIndicator(item)); });  
         
-        // যেহেতু এই পেজটি সরাসরি নেভবারের কোনো নির্দিষ্ট আইটেমের সাথে সরাসরি ম্যাপ করা নয়, তাই ডিফল্টভাবে কোনোটি সিলেক্ট রাখতে পারেন বা হোমে রাখতে পারেন। তবে ইউজার যেটাতে ক্লিক করবে সেটা একটিভ হবে।
-        const activeItem = document.querySelector(".nav-item-animated.active") || items[2]; // ডিফল্ট হোম সিলেক্ট রাখা হয়েছে
+        // ডিফল্টভাবে কোনো নির্দিষ্ট ট্যাব একটিভ না থাকলে বা প্রোফাইল পেজ থেকে আসার পর সঠিক পজিশন রাখতে হোম বা অন্যটি সেট করা যায়
+        const activeItem = document.querySelector(".nav-item-animated.active") || items[2];
         moveIndicator(activeItem);
 
         window.addEventListener('resize', () => {
