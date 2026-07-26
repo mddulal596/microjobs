@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>  
-        /* Animated Bottom Navigation Styles */
+        /* Animated Bottom Navigation Styles (Matched with other pages) */
         .nav-container {  
             position: absolute;
             bottom: 15px;
@@ -17,7 +17,7 @@
             width: 92%;  
             max-width: 380px;  
             height: 70px;  
-            background: #16a34a;  
+            background: #4f46e5;  
             border-radius: 22px;  
             display: flex;  
             justify-content: space-around;  
@@ -61,11 +61,11 @@
             top: -24px;  
             width: 60px;  
             height: 60px;  
-            background: #2196f3;  
+            background: #312e81;  
             border-radius: 50%;  
             border: 4px solid #fff;  
             transition: left .35s ease;  
-            box-shadow: 0 0 20px rgba(33,150,243,.5);  
+            box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
           
@@ -74,7 +74,7 @@
             position: absolute;  
             inset: -6px;  
             border-radius: 50%;  
-            border: 2px solid rgba(33,150,243,.4);  
+            border: 2px solid rgba(49,46,129,.4);  
             animation: pulse 2s infinite;  
         }  
           
@@ -127,7 +127,6 @@
                     <span class="text-2xl">💼</span>
                     <h4 class="text-sm font-bold mt-2 text-purple-900">Micro Jobs</h4>
                 </a>
-                <!-- Lucky Spin Link Updated -->
                 <a href="lucky-spin.html" class="p-4 bg-pink-50 border border-pink-100 rounded-2xl text-center hover:bg-pink-100 transition shadow-sm">
                     <span class="text-2xl">🎡</span>
                     <h4 class="text-sm font-bold mt-2 text-pink-900">Lucky Spin</h4>
@@ -135,7 +134,7 @@
             </div>
         </main>
 
-        <!-- New Animated Bottom Navigation Bar -->
+        <!-- Animated Bottom Navigation Bar -->
         <div class="nav-container">  
             <div class="indicator"></div>  
             
@@ -144,7 +143,7 @@
                 <span>Wallet</span>  
             </a>  
 
-            <a href="help.html" class="nav-item">  
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item">  
                 <i class="fa-solid fa-headset"></i>  
                 <span>Help</span>  
             </a>  
@@ -201,7 +200,6 @@
                 return;
             }
 
-            // নাম এবং ছবি সেট করা
             const name = user.fullName || user.displayName || "User";
             document.getElementById('userNameDisplay').innerText = name;
 
@@ -218,7 +216,6 @@
                 profileImgTag.classList.add('hidden');
             }
 
-            // ফায়ারবেজ থেকে রিয়েল-টাইমে ব্যালেন্স লোড করা
             const userDocRef = doc(db, "users", user.uid);
             
             onSnapshot(userDocRef, (docSnap) => {
