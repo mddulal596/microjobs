@@ -4,55 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Jobs - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN for Navigation Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
+    
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 95px; }
-        
-        /* Header */
-        header { background-color: #4f46e5; color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
-        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        
-        .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .balance-card { background: rgba(255, 255, 255, 0.12); padding: 14px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.2); }
-        .balance-title { font-size: 11px; color: #e0e7ff; margin-bottom: 4px; }
-        .balance-amount { font-size: 18px; font-weight: 800; }
-
-        /* Main Content */
-        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
-        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
-
-        /* Job List Box */
-        .job-list { display: flex; flex-direction: column; gap: 12px; }
-        .job-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-        .job-card:hover { border-color: #4f46e5; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .job-info h4 { font-size: 13px; font-weight: 700; color: #1f2937; margin-bottom: 4px; }
-        .job-info p { font-size: 11px; color: #6b7280; margin-bottom: 8px; }
-        .job-reward { font-size: 13px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 8px; border-radius: 6px; display: inline-block; }
-        
-        .task-btn { background: #4f46e5; color: #ffffff; border: none; padding: 8px 14px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block; }
-        .task-btn:hover { background: #4338ca; }
-
-        /* Modal Overlay for Proof Submission */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
-        .modal-content { background: #ffffff; width: 100%; max-width: 400px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease; }
-        .modal-content h3 { font-size: 16px; font-weight: 700; color: #1f2937; margin-bottom: 8px; }
-        .modal-content p { font-size: 12px; color: #6b7280; margin-bottom: 16px; }
-        .modal-input { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 13px; outline: none; margin-bottom: 16px; }
-        .modal-input:focus { border-color: #4f46e5; }
-        .modal-btns { display: flex; gap: 10px; }
-        .modal-btn { flex: 1; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: bold; cursor: pointer; border: none; }
-        .btn-cancel { background: #f3f4f6; color: #4b5563; }
-        .btn-submit { background: #4f46e5; color: #ffffff; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Animated Bottom Nav Styles */
         .nav-container {  
             position: fixed;  
             bottom: 15px;  
@@ -70,7 +27,6 @@
             overflow: visible;  
             z-index: 100;
         }  
-          
         .nav-item-animated {  
             flex: 1;  
             text-decoration: none;  
@@ -79,40 +35,22 @@
             position: relative;  
             z-index: 2;  
         }  
-          
-        .nav-item-animated i {  
-            font-size: 22px;  
-            transition: .35s;  
-        }  
-          
-        .nav-item-animated span {  
-            display: block;  
-            font-size: 11px;  
-            margin-top: 4px;  
-            transition: .35s;  
-        }  
-          
-        .nav-item-animated.active i {  
-            transform: translateY(-10px);  
-        }  
-          
-        .nav-item-animated.active span {  
-            font-weight: bold;  
-        }  
-          
+        .nav-item-animated i { font-size: 22px; transition: .25s; }  
+        .nav-item-animated span { display: block; font-size: 11px; margin-top: 4px; transition: .25s; }  
+        .nav-item-animated.active i { transform: translateY(-10px); }  
+        .nav-item-animated.active span { font-weight: bold; }  
         .indicator {  
             position: absolute;  
-            top: -5px; /* এখানে -15px থেকে পরিবর্তন করে -5px করা হয়েছে যাতে সার্কেলটি নিচে নামে */  
+            top: -15px;  
             width: 60px;  
             height: 60px;  
             background: #312e81;  
             border-radius: 50%;  
             border: 4px solid #fff;  
-            transition: left .35s ease;  
+            transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);  
             box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
-          
         .indicator::before {  
             content: "";  
             position: absolute;  
@@ -121,58 +59,67 @@
             border: 2px solid rgba(49,46,129,.4);  
             animation: pulse 2s infinite;  
         }  
-          
         @keyframes pulse {  
             0% { transform: scale(1); opacity: 1; }  
             100% { transform: scale(1.4); opacity: 0; }  
         } 
     </style>
 </head>
-<body>
-    <div class="container">
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
         
-        <!-- Top Header & Balances -->
-        <header>
-            <div class="header-top">
-                <a href="profile.html" class="profile-btn">
-                    <div id="profileIconBtn" class="profile-icon">U</div>
-                    <span id="userNameDisplay">Loading...</span>
+        <!-- Top Header & Balances (Dashboard Theme) -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <a href="profile.html" class="flex items-center space-x-2 bg-white/20 hover:bg-white/30 transition px-3 py-1.5 rounded-full border border-white/20">
+                    <div id="profileIconBtn" class="w-6 h-6 rounded-full bg-white text-purple-700 flex items-center justify-center font-bold text-xs shadow">
+                        U
+                    </div>
+                    <span id="userNameDisplay" class="text-xs font-bold truncate max-w-[120px]">Loading...</span>
                 </a>
-                <a href="dashboard.html" class="home-link">Home</a>
+                <a href="dashboard.html" class="text-xs bg-white/20 hover:bg-white/30 transition px-3 py-1.5 rounded-full font-semibold border border-white/20">
+                    <i class="fa-solid fa-house text-[10px] mr-1"></i> Home
+                </a>
             </div>
-            <div class="balance-grid">
-                <div class="balance-card">
-                    <p class="balance-title">Main Balance</p>
-                    <h2 id="mainBalance" class="balance-amount">৳ 0.00</h2>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
+                    <h3 id="mainBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h3>
                 </div>
-                <div class="balance-card">
-                    <p class="balance-title">Deposit Balance</p>
-                    <h2 id="depositBalance" class="balance-amount">৳ 0.00</h2>
+                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
+                    <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
+                    <h3 id="depositBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h3>
                 </div>
             </div>
         </header>
 
         <!-- Main Content Area -->
-        <main>
-            <h2 class="section-title">Available Daily Jobs</h2>
+        <main class="p-4 flex-grow space-y-3">
+            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Available Daily Jobs</h2>
 
             <!-- Job List Container (Dynamic from Firebase) -->
-            <div id="dailyJobsContainer" class="job-list">
-                <div style="text-align: center; color: #6b7280; font-size: 12px; padding: 20px;">
-                    <i class="fa-solid fa-spinner fa-spin"></i> Loading daily jobs...
+            <div id="dailyJobsContainer" class="space-y-3">
+                <div class="text-center text-gray-400 text-xs py-8">
+                    <i class="fa-solid fa-spinner fa-spin text-lg mb-2"></i>
+                    <p>Loading daily jobs...</p>
                 </div>
             </div>
         </main>
 
         <!-- Screenshot Submission Modal -->
-        <div id="taskModal" class="modal-overlay">
-            <div class="modal-content">
-                <h3 id="modalTaskTitle">Task Submission</h3>
-                <p>কাজটি সম্পন্ন করে স্ক্রিনশটের লিংক (ImgBB বা ড্রাইভ লিংক) নিচে প্রদান করুন:</p>
-                <input type="url" id="screenshotUrlInput" class="modal-input" placeholder="https://i.ibb.co/... বা স্ক্রিনশট লিংক দিন" required>
-                <div class="modal-btns">
-                    <button type="button" class="modal-btn btn-cancel" onclick="closeTaskModal()">Cancel</button>
-                    <button type="button" class="modal-btn btn-submit" onclick="submitTaskProof()">Submit Proof</button>
+        <div id="taskModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden justify-center items-center z-50 p-4">
+            <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl space-y-4 transform transition-all">
+                <div>
+                    <h3 id="modalTaskTitle" class="text-sm font-bold text-gray-800">Task Submission</h3>
+                    <p class="text-xs text-gray-500 mt-1">কাজটি সম্পন্ন করে স্ক্রিনশটের লিংক (ImgBB বা ড্রাইভ লিংক) নিচে প্রদান করুন:</p>
+                </div>
+                
+                <input type="url" id="screenshotUrlInput" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-xs outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600" placeholder="https://i.ibb.co/... বা স্ক্রিনশট লিংক দিন" required>
+                
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeTaskModal()" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">Cancel</button>
+                    <button type="button" onclick="submitTaskProof()" class="btn-submit flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition">Submit Proof</button>
                 </div>
             </div>
         </div>
@@ -227,14 +174,14 @@
             });  
         });  
           
-        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
-        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
+        window.addEventListener('load', () => moveIndicator(items[2]));  
+        window.addEventListener('resize', () => moveIndicator(document.querySelector(".nav-item-animated.active") || items[2]));  
     </script>
 
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { observeAuthState } from '../firebase/auth.js';
-        import { getFirestore, doc, updateDoc, increment, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const db = getFirestore();
         let currentUserUid = null;
@@ -253,7 +200,6 @@
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                // User data load হওয়ার পর ডেইলি জবস ফেচ করা শুরু হবে
                 loadDailyJobs();
             } else {
                 window.location.href = 'login.html';
@@ -273,8 +219,8 @@
 
                 if (querySnapshot.empty) {
                     container.innerHTML = `
-                        <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 30px;">
-                            <i class="fa-solid fa-briefcase" style="font-size: 24px; margin-bottom: 8px;"></i>
+                        <div class="text-center text-gray-400 text-xs py-8">
+                            <i class="fa-solid fa-briefcase text-2xl mb-2"></i>
                             <p>কোনো ডেইলি জব উপলব্ধ নেই!</p>
                         </div>
                     `;
@@ -284,23 +230,29 @@
                 container.innerHTML = "";
                 querySnapshot.forEach((docSnap) => {
                     const task = docSnap.data();
-                    const taskId = docSnap.id;
 
                     const card = document.createElement('div');
-                    card.className = "job-card";
+                    card.className = "bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex justify-between items-center";
                     card.innerHTML = `
-                        <div class="job-info">
-                            <h4>${task.title}</h4>
-                            <p>Workers Left: ${task.workers} | <a href="${task.link}" target="_blank" style="color: #4f46e5; text-decoration: underline;">Visit Link</a></p>
-                            <span class="job-reward">+৳ ${Number(task.reward).toFixed(2)}</span>
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-bold text-gray-800">${task.title}</h4>
+                            <p class="text-[11px] text-gray-500">
+                                Workers Left: <span class="font-semibold text-gray-700">${task.workers || 0}</span> | 
+                                <a href="${task.link}" target="_blank" class="text-indigo-600 font-semibold underline">Visit Link</a>
+                            </p>
+                            <span class="inline-block bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">
+                                +৳ ${Number(task.reward).toFixed(2)}
+                            </span>
                         </div>
-                        <button onclick="openTaskModal('${task.title.replace(/'/g, "\\'")}', ${task.reward})" class="task-btn">Start Task</button>
+                        <button onclick="openTaskModal('${task.title.replace(/'/g, "\\'")}', ${task.reward})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow transition cursor-pointer">
+                            Start Task
+                        </button>
                     `;
                     container.appendChild(card);
                 });
             } catch (error) {
                 console.error("Error loading daily jobs:", error);
-                container.innerHTML = `<p style="color: red; font-size: 12px; text-align: center;">টাস্ক লোড করতে সমস্যা হয়েছে।</p>`;
+                container.innerHTML = `<p class="text-xs text-red-500 text-center py-4">টাস্ক লোড করতে সমস্যা হয়েছে।</p>`;
             }
         }
 
@@ -332,7 +284,6 @@
             submitBtn.innerText = 'Submitting...';
 
             try {
-                // ১. টাস্ক সাবমিশন রেকর্ড সেভ করা
                 await addDoc(collection(db, "taskSubmissions"), {
                     userId: currentUserUid,
                     taskName: selectedTaskTitle,
