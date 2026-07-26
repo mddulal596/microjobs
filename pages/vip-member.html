@@ -247,7 +247,7 @@
         window.upgradeVIP = async function() {
             if (!currentUser) return;
 
-            if (!confirm(`আপনি কি ৫০০০ বা ৫০০ টাকা ফি দিয়ে VIP মেম্বারশিপ নিতে চান?`)) return;
+            if (!confirm(`আপনি কি ৫০০ টাকা ফি দিয়ে VIP মেম্বারশিপ নিতে চান?`)) return;
 
             try {
                 const userRef = doc(db, "users", currentUser.uid);
@@ -256,30 +256,43 @@
                 if (!snap.exists()) return;
                 const data = snap.data();
                 
-                // মেইন ব্যালেন্স চেক করা (অথবা ডিপোজিট ব্যালেন্স থেকে কাটতে চাইলে পরিবর্তন করতে পারেন)
+                // ব্যালেন্স চেক (মেইন অথবা ডিপোজিট যেকোনো একটি থেকে কাটবে)
                 const mainBal = Number(data.balances?.main ?? data.mainBalance ?? 0);
+                const depositBal = Number(data.balances?.deposit ?? data.depositBalance ?? 0);
 
-                if (mainBal < vipFeeAmount) {
-                    alert("পর্যাপ্ত ব্যালেন্স নেই! দয়া করে আগে ডিপোজিট করুন।");
-                    window.location.href = 'deposit.html';
-                    return;
-                }
-
-                const newBalance = mainBal - vipFeeAmount;
-
-                // ব্যালেন্স আপডেট ও VIP স্ট্যাটাস ট্রু করা
-                if (data.balances) {
-                    await updateDoc(userRef, {
-                        "balances.main": newBalance,
-                        isVip: true,
-                        vipTime: new Date().toISOString()
-                    });
+                if (mainBal >= vipFeeAmount) {
+                    const newMainBal = mainBal - vipFeeAmount;
+                    if (data.balances) {
+                        await updateDoc(userRef, {
+                            "balances.main": newMainBal,
+                            isVip: true,
+                            vipTime: new Date().toISOString()
+                        });
+                    } else {
+                        await updateDoc(userRef, {
+                            mainBalance: newMainBal,
+                            isVip: true,
+                            vipTime: new Date().toISOString()
+                        });
+                    }
+                } else if (depositBal >= vipFeeAmount) {
+                    const newDepositBal = depositBal - vipFeeAmount;
+                    if (data.balances) {
+                        await updateDoc(userRef, {
+                            "balances.deposit": newDepositBal,
+                            isVip: true,
+                            vipTime: new Date().toISOString()
+                        });
+                    } else {
+                        await updateDoc(userRef, {
+                            depositBalance: newDepositBal,
+                            isVip: true,
+                            vipTime: new Date().toISOString()
+                        });
+                    }
                 } else {
-                    await updateDoc(userRef, {
-                        mainBalance: newBalance,
-                        isVip: true,
-                        vipTime: new Date().toISOString()
-                    });
+                    alert("পর্যাপ্ত ব্যালেন্স নেই! মেইন অথবা ডিপোজিট ব্যালেন্সে অন্তত ৫০০ টাকা থাকতে হবে।");
+                    return;
                 }
 
                 alert("অভিনন্দন! আপনি সফলভাবে VIP মেম্বার হয়েছেন।");
