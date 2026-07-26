@@ -32,17 +32,14 @@
         
         <!-- Header -->
         <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center gap-2.5 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
-                    <img id="userAvatar" src="https://via.placeholder.com/150" alt="Avatar" class="w-7 h-7 rounded-full object-cover border border-white/50">
-                    <div class="leading-tight">
-                        <h4 id="userName" class="text-xs font-bold text-white">Loading...</h4>
-                        <span id="userUsername" class="text-[10px] text-purple-200">@username</span>
-                    </div>
+            <!-- User Info Section (Full Name, Username, Gmail & Avatar) -->
+            <div class="flex items-center gap-3 bg-white/15 backdrop-blur-md p-3 rounded-2xl border border-white/20 mb-4">
+                <img id="userAvatar" src="https://via.placeholder.com/150" alt="Avatar" class="w-12 h-12 rounded-full object-cover border-2 border-white/60 shadow-sm flex-shrink-0">
+                <div class="leading-tight overflow-hidden">
+                    <h4 id="userName" class="text-sm font-bold text-white truncate">Loading...</h4>
+                    <span id="userUsername" class="text-[11px] text-purple-200 block truncate">@username</span>
+                    <span id="userEmail" class="text-[10px] text-purple-300 block truncate mt-0.5">email@example.com</span>
                 </div>
-                <a href="dashboard.html" class="text-xs bg-white/20 hover:bg-white/35 transition px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
-                    <i class="fa-solid fa-house"></i> Home
-                </a>
             </div>
 
             <div class="flex justify-between items-center mb-3">
@@ -109,7 +106,7 @@
         import { observeAuthState } from '../firebase/auth.js';
         import { doc, onSnapshot, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const ACTIVATION_FEE = 100;
+        const ACTIVATION_FEE = 200;
 
         observeAuthState((user) => {
             if (!user) { window.location.href = 'login.html'; return; }
@@ -118,11 +115,13 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    // User Info
+                    // User Info (Full Name, Username, Gmail & Avatar)
                     document.getElementById('userName').innerText = data.fullName || data.name || 'User';
                     document.getElementById('userUsername').innerText = '@' + (data.username || 'member');
-                    if(data.photoURL || data.profilePic) {
-                        document.getElementById('userAvatar').src = data.photoURL || data.profilePic;
+                    document.getElementById('userEmail').innerText = data.email || user.email || 'email@example.com';
+                    
+                    if(data.photoURL || data.profilePic || user.photoURL) {
+                        document.getElementById('userAvatar').src = data.photoURL || data.profilePic || user.photoURL;
                     }
 
                     // Balances
