@@ -148,20 +148,29 @@
             <form onsubmit="handlePostJob(event)">
                 <div class="form-group">
                     <label class="form-label">Select Category</label>
-                    <select id="jobCategory" class="form-select" required>
-                        <option value="YouTube Video">YouTube Video</option>
-                        <option value="YouTube Comment & Like Shear">YouTube Comment & Like Shear</option>
-                        <option value="Facebook Video">Facebook Video</option>
-                        <option value="Facebook Page Follow">Facebook Page Follow</option>
-                        <option value="Facebook Like Comment & Shear">Facebook Like Comment & Shear</option>
-                        <option value="Telegram Channel Join">Telegram Channel Join</option>
-                        <option value="Telegram Bot Join">Telegram Bot Join</option>
-                        <option value="Telegram Group Join">Telegram Group Join</option>
-                        <option value="TiKTok Follow">TiKTok Follow</option>
-                        <option value="TiKTok Like Comment & Shear">TiKTok Like Comment & Shear</option>
-                        <option value="Website Visi">Website Visi</option>
-                        <option value="Custom Task">Custom Task</option>
+                    <select id="jobCategory" class="form-select" required onchange="updateTargetPage()">
+                        <!-- Video Categories (Goes to video.html) -->
+                        <option value="YouTube Video" data-target="video.html">YouTube Video</option>
+                        <option value="Facebook Video" data-target="video.html">Facebook Video</option>
+                        <option value="Instagram Video" data-target="video.html">Instagram Video</option>
+                        <option value="Twitter Video" data-target="video.html">Twitter Video</option>
+
+                        <!-- Daily/Other Categories (Goes to daily-job.html) -->
+                        <option value="YouTube Comment & Like Shear" data-target="daily-job.html">YouTube Comment & Like Shear</option>
+                        <option value="Facebook Page Follow" data-target="daily-job.html">Facebook Page Follow</option>
+                        <option value="Facebook Like Comment & Shear" data-target="daily-job.html">Facebook Like Comment & Shear</option>
+                        <option value="Instagram Like Comment & Shear" data-target="daily-job.html">Instagram Like Comment & Shear</option>
+                        <option value="Twitter Like Comment & Shear" data-target="daily-job.html">Twitter Like Comment & Shear</option>
+                        <option value="Telegram Channel Join" data-target="daily-job.html">Telegram Channel Join</option>
+                        <option value="Telegram Bot Join" data-target="daily-job.html">Telegram Bot Join</option>
+                        <option value="Telegram Group Join" data-target="daily-job.html">Telegram Group Join</option>
+                        <option value="TiKTok Follow" data-target="daily-job.html">TiKTok Follow</option>
+                        <option value="TiKTok Like Comment & Shear" data-target="daily-job.html">TiKTok Like Comment & Shear</option>
+                        <option value="Website Visi" data-target="daily-job.html">Website Visi</option>
+                        <option value="Custom Task" data-target="daily-job.html">Custom Task</option>
                     </select>
+                    <!-- Hidden input to store target page automatically -->
+                    <input type="hidden" id="targetPageInput" value="video.html">
                 </div>
 
                 <div class="form-group">
@@ -248,6 +257,14 @@
             }
         });
 
+        // ডাইনামিক টার্গেট পেজ নির্ধারণ করার ফাংশন
+        window.updateTargetPage = function() {
+            const selectBox = document.getElementById('jobCategory');
+            const selectedOption = selectBox.options[selectBox.selectedIndex];
+            const targetPage = selectedOption.getAttribute('data-target') || 'daily-job.html';
+            document.getElementById('targetPageInput').value = targetPage;
+        }
+
         window.calculateTotal = function() {
             const workers = parseFloat(document.getElementById('jobWorkers').value) || 0;
             const reward = parseFloat(document.getElementById('jobReward').value) || 0;
@@ -258,6 +275,7 @@
         window.handlePostJob = function(event) {
             event.preventDefault();
             const category = document.getElementById('jobCategory').value;
+            const targetPage = document.getElementById('targetPageInput').value;
             const title = document.getElementById('jobTitle').value;
             const description = document.getElementById('jobDescription').value;
             const workers = parseInt(document.getElementById('jobWorkers').value);
@@ -271,12 +289,8 @@
 
             alert(`আপনার জব পোস্ট সফলভাবে পাবলিশ হয়েছে! মোট বাজেট ৳${totalBudget.toFixed(2)} কেটে নেওয়া হয়েছে।`);
 
-            // ক্যাটাগরি অনুযায়ী রিডাইরেকশন লজিক
-            if (category === "YouTube Video") {
-                window.location.href = 'video.html';
-            } else {
-                window.location.href = 'daily-job.html';
-            }
+            // ক্যাটাগরি অনুযায়ী রিডাইরেকশন লজিক (targetPage ইনপুট অনুযায়ী রিডাইরেক্ট করবে)
+            window.location.href = targetPage;
         }
     </script>
 </body>
