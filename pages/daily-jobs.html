@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Jobs - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
+</head>
+<body class="bg-gray-100 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-12">
+        
+        <!-- Header -->
+        <header class="p-5 bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-b-3xl shadow-lg flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="dashboard.html" class="w-8 h-8 bg-white/25 rounded-full flex items-center justify-center text-white hover:bg-white/35 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </a>
+                <h1 class="text-sm font-bold">Daily Jobs</h1>
+            </div>
+            <span class="text-xs bg-white/20 px-3 py-1 rounded-full font-semibold">Available Tasks</span>
+        </header>
+
+        <!-- Main Content -->
+        <main class="p-4 flex-grow space-y-4">
+            
+            <div class="flex items-center justify-between">
+                <h2 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Complete & Earn Daily</h2>
+                <span class="text-[10px] text-gray-400">Category: Daily Job</span>
+            </div>
+
+            <!-- Daily Jobs Container -->
+            <div id="dailyJobsContainer" class="space-y-3">
+                <div class="text-center py-10 text-gray-400 text-xs">
+                    <i class="fa-solid fa-spinner fa-spin text-lg mb-2"></i>
+                    <p>Loading daily jobs...</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { db } from '../firebase/firebase-config.js';
+        import { collection, getDocs, query, where, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        async function loadDailyJobs() {
+            const container = document.getElementById('dailyJobsContainer');
+            try {
+                // Query tasks where category is 'daily-jobs' and status is 'active'
+                const q = query(
+                    collection(db, "tasks"), 
+                    where("category", "==", "daily-jobs"), 
+                    where("status", "==", "active")
+                );
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    container.innerHTML = `
+                        <div class="text-center py-12 bg-gray-50 rounded-2xl border border-gray-100 p-6">
+                            <i class="fa-solid fa-briefcase text-3xl text-gray-300 mb-2"></i>
+                            <p class="text-xs text-gray-500 font-semibold">No daily jobs available right now!</p>
+                            <p class="text-[10px] text-gray-400 mt-1">Check back later for new tasks.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = "";
+                querySnapshot.forEach((docSnap) => {
+                    const task = docSnap.data();
+                    const taskId = docSnap.id;
+
+                    const card = document.createElement('div');
+                    card.className = "bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex flex-col gap-3 hover:border-emerald-200 transition";
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start gap-2">
+                            <div>
+                                <span class="text-[9px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold uppercase">Daily Job</span>
+                                <h3 class="font-bold text-gray-800 text-xs mt-1.5">${task.title}</h3>
+                            </div>
+                            <span class="text-xs font-black text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-xl">৳ ${task.reward}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px] text-gray-500 border-t border-gray-50 pt-2">
+                            <span>Workers Left: <b>${task.workers}</b></span>
+                            <a href="${task.link}" target="_blank" class="text-indigo-600 font-semibold hover:underline flex items-center gap-1">
+                                Visit Link <i class="fa-solid fa-external-link-alt text-[9px]"></i>
+                            </a>
+                        </div>
+                        <button onclick="openSubmitModal('${taskId}', '${task.title}', ${task.reward})" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition">
+                            Submit Proof
+                        </button>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error loading daily jobs:", error);
+                container.innerHTML = `<p class="text-red-500 text-xs text-center py-4">Failed to load tasks.</p>`;
+            }
+        }
+
+        // Simple proof submission handler placeholder or function integration
+        window.openSubmitModal = function(taskId, taskTitle, reward) {
+            const proofText = prompt(`Submit Proof for: "${taskTitle}"\n(Enter your proof details, username, or screenshot link):`);
+            if (proofText) {
+                // Here you can save to 'submissions' collection
+                alert("Proof submitted successfully! Awaiting admin review.");
+            }
+        }
+
+        loadDailyJobs();
+    </script>
+</body>
+</html>
