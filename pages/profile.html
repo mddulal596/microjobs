@@ -78,7 +78,6 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased">
-    <!-- pb-36 বা পর্যাপ্ত প্যাডিং দেওয়া হয়েছে যাতে নেভবার কোনো কন্টেন্ট ঢেকে না ফেলে -->
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
         
         <!-- Profile & Balance Header -->
@@ -103,10 +102,10 @@
                 </div>
             </div>
 
-            <!-- Balances Cards -->
+            <!-- Balances Cards (Main Balance changed to Refer Balance) -->
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
-                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
+                    <p class="text-[10px] text-purple-200 font-medium">Refer Balance</p>
                     <h2 id="mainBalance" class="text-base font-extrabold mt-0.5">৳ 0.00</h2>
                 </div>
                 <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
@@ -120,7 +119,6 @@
         <main class="p-4 flex-grow">
             <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Account Actions</h2>
             
-            <!-- সব বাটনগুলো সমান সাইজে সাজানো হয়েছে -->
             <div class="grid grid-cols-2 gap-2.5">
                 
                 <!-- ১. Leaderboard -->
@@ -216,7 +214,6 @@
         
         items.forEach(item => { item.addEventListener("click", () => moveIndicator(item)); });  
         
-        // পেজ লোড হওয়ার সাথে সাথেই ইনস্ট্যান্ট পজিশন সেট করা
         const activeItem = document.querySelector(".nav-item-animated.active") || items[4];
         moveIndicator(activeItem);
 
