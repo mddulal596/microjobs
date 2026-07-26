@@ -102,7 +102,7 @@
           
         .indicator {  
             position: absolute;  
-            top: -15px; /* এটি অ্যাডজাস্ট করে মাঝামাঝি করা হয়েছে */  
+            top: -15px;  
             width: 60px;  
             height: 60px;  
             background: #312e81;  
@@ -123,14 +123,8 @@
         }  
           
         @keyframes pulse {  
-            0% {  
-                transform: scale(1);  
-                opacity: 1;  
-            }  
-            100% {  
-                transform: scale(1.4);  
-                opacity: 0;  
-            }  
+            0% { transform: scale(1); opacity: 1; }  
+            100% { transform: scale(1.4); opacity: 0; }  
         } 
     </style>
 </head>
@@ -162,46 +156,10 @@
         <main>
             <h2 class="section-title">Available Daily Jobs</h2>
 
-            <!-- Job List Container -->
-            <div class="job-list">
-                <!-- Job 1 -->
-                <div class="job-card">
-                    <div class="job-info">
-                        <h4>YouTube Video Watch & Like</h4>
-                        <p>Watch full video and drop a like.</p>
-                        <span class="job-reward">+৳ 0.15</span>
-                    </div>
-                    <button onclick="openTaskModal('YouTube Video Watch & Like', 0.15)" class="task-btn">Start Task</button>
-                </div>
-
-                <!-- Job 2 -->
-                <div class="job-card">
-                    <div class="job-info">
-                        <h4>Facebook Page Follow</h4>
-                        <p>Follow our official Facebook page.</p>
-                        <span class="job-reward">+৳ 0.15</span>
-                    </div>
-                    <button onclick="openTaskModal('Facebook Page Follow', 0.15)" class="task-btn">Start Task</button>
-                </div>
-
-                <!-- Job 3 -->
-                <div class="job-card">
-                    <div class="job-info">
-                        <h4>Telegram Channel Join</h4>
-                        <p>Join our community support channel.</p>
-                        <span class="job-reward">+৳ 0.15</span>
-                    </div>
-                    <button onclick="openTaskModal('Telegram Channel Join', 0.15)" class="task-btn">Start Task</button>
-                </div>
-
-                <!-- Job 4 -->
-                <div class="job-card">
-                    <div class="job-info">
-                        <h4>Website Visit & Browse</h4>
-                        <p>Browse our partner site for 30 seconds.</p>
-                        <span class="job-reward">+৳ 0.15</span>
-                    </div>
-                    <button onclick="openTaskModal('Website Visit & Browse', 0.15)" class="task-btn">Start Task</button>
+            <!-- Job List Container (Dynamic from Firebase) -->
+            <div id="dailyJobsContainer" class="job-list">
+                <div style="text-align: center; color: #6b7280; font-size: 12px; padding: 20px;">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Loading daily jobs...
                 </div>
             </div>
         </main>
@@ -276,11 +234,11 @@
     <!-- Firebase Script & Logic -->
     <script type="module">
         import { observeAuthState } from '../firebase/auth.js';
-        import { getFirestore, doc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, updateDoc, increment, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const db = getFirestore();
         let currentUserUid = null;
-        let selectedTaskName = "";
+        let selectedTaskTitle = "";
         let selectedTaskReward = 0;
 
         observeAuthState((userData) => {
@@ -294,19 +252,66 @@
                 const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+
+                // User data load হওয়ার পর ডেইলি জবস ফেচ করা শুরু হবে
+                loadDailyJobs();
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        window.openTaskModal = function(taskName, reward) {
+        // Firebase থেকে 'daily-jobs' ক্যাটাগরির টাস্ক ফেচ করার ফাংশন
+        async function loadDailyJobs() {
+            const container = document.getElementById('dailyJobsContainer');
+            try {
+                const q = query(
+                    collection(db, "tasks"), 
+                    where("category", "==", "daily-jobs"), 
+                    where("status", "==", "active")
+                );
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = `
+                        <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 30px;">
+                            <i class="fa-solid fa-briefcase" style="font-size: 24px; margin-bottom: 8px;"></i>
+                            <p>কোনো ডেইলি জব উপলব্ধ নেই!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = "";
+                querySnapshot.forEach((docSnap) => {
+                    const task = docSnap.data();
+                    const taskId = docSnap.id;
+
+                    const card = document.createElement('div');
+                    card.className = "job-card";
+                    card.innerHTML = `
+                        <div class="job-info">
+                            <h4>${task.title}</h4>
+                            <p>Workers Left: ${task.workers} | <a href="${task.link}" target="_blank" style="color: #4f46e5; text-decoration: underline;">Visit Link</a></p>
+                            <span class="job-reward">+৳ ${Number(task.reward).toFixed(2)}</span>
+                        </div>
+                        <button onclick="openTaskModal('${task.title.replace(/'/g, "\\'")}', ${task.reward})" class="task-btn">Start Task</button>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error loading daily jobs:", error);
+                container.innerHTML = `<p style="color: red; font-size: 12px; text-align: center;">টাস্ক লোড করতে সমস্যা হয়েছে।</p>`;
+            }
+        }
+
+        window.openTaskModal = function(taskTitle, reward) {
             if (!currentUserUid) {
                 alert('লগইন করা অবস্থায় নেই!');
                 return;
             }
-            selectedTaskName = taskName;
+            selectedTaskTitle = taskTitle;
             selectedTaskReward = reward;
-            document.getElementById('modalTaskTitle').innerText = taskName;
+            document.getElementById('modalTaskTitle').innerText = taskTitle;
             document.getElementById('screenshotUrlInput').value = '';
             document.getElementById('taskModal').style.display = 'flex';
         }
@@ -327,28 +332,23 @@
             submitBtn.innerText = 'Submitting...';
 
             try {
-                // ১. টাস্ক সাবমিশন রেকর্ড 'taskSubmissions' কালেকশনে সেভ করা
+                // ১. টাস্ক সাবমিশন রেকর্ড সেভ করা
                 await addDoc(collection(db, "taskSubmissions"), {
                     userId: currentUserUid,
-                    taskName: selectedTaskName,
+                    taskName: selectedTaskTitle,
                     reward: selectedTaskReward,
                     screenshotUrl: screenshotUrl,
-                    status: 'approved', // সরাসরি অটো অ্যাপ্রুভ বা পেন্ডিং রাখতে পারেন
+                    status: 'pending',
                     timestamp: serverTimestamp()
                 });
 
-                // ২. ইউজারের মূল ব্যালেন্সে রিওয়ার্ড যোগ করা
-                const userRef = doc(db, "users", currentUserUid);
-                await updateDoc(userRef, {
-                    mainBalance: increment(selectedTaskReward)
-                });
-
-                alert(`অভিনন্দন! "${selectedTaskName}" সফলভাবে সাবমিট হয়েছে এবং আপনার অ্যাকাউন্টে ৳${selectedTaskReward} যোগ করা হয়েছে।`);
+                alert(`অভিনন্দন! "${selectedTaskTitle}" এর প্রুফ সফলভাবে সাবমিট হয়েছে। অ্যাডমিন রিভিউ করে অ্যাপ্রুভ করলে ব্যালেন্স যোগ হবে।`);
                 closeTaskModal();
-                window.location.reload();
+                document.getElementById('screenshotUrlInput').value = '';
             } catch (error) {
                 console.error("Error submitting task: ", error);
                 alert('দুঃখিত, টাস্ক সাবমিট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerText = 'Submit Proof';
             }
