@@ -97,8 +97,9 @@
 
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
-                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
-                    <h3 class="text-base font-extrabold mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
+                    <!-- এখানে লেখা পরিবর্তন করে Refer Balance করা হয়েছে -->
+                    <p class="text-[10px] text-purple-200 font-medium">Refer Balance</p>
+                    <h3 class="text-base font-extrabold mt-0.5">৳ <span id="ReferrBalance">0.00</span></h3>
                 </div>
                 <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
                     <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
@@ -223,7 +224,7 @@
                     const mainBal = data.balances?.main ?? data.mainBalance ?? 0;
                     const depositBal = data.balances?.deposit ?? data.depositBalance ?? 0;
 
-                    document.getElementById('mainBalance').innerText = Number(mainBal).toFixed(2);
+                    document.getElementById('ReferrBalance').innerText = Number(mainBal).toFixed(2);
                     document.getElementById('depositBalance').innerText = Number(depositBal).toFixed(2);
 
                     const refCode = data.referralCode || "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
@@ -232,7 +233,6 @@
                     const totalRef = data.totalReferred ?? 0;
                     document.getElementById('totalTeam').innerText = totalRef;
 
-                    // সংশোধন করা হয়েছে: মেইন ব্যালেন্সের পরিবর্তে শুধুমাত্র রেফারেল আর্নিংস ফিল্ড ফেচ করা হবে
                     const refEarnings = data.referralEarnings ?? 0;
                     document.getElementById('referralEarnings').innerText = `৳ ${Number(refEarnings).toFixed(2)}`;
                 }
@@ -250,4 +250,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
