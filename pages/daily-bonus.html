@@ -185,6 +185,9 @@
         import { observeAuthState } from '../firebase/auth.js';
         import { doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // আপনার এডস্টারা ডাইরেক্ট লিংক এখানে বসাবেন
+        const adsterraDirectLink = "https://your-adsterra-direct-link.com"; 
+
         let currentUserUid = null;
 
         observeAuthState(async (userData) => {
@@ -205,13 +208,12 @@
                     const lastBonusTime = data.lastBonus?.toDate();
                     if (lastBonusTime) {
                         const now = new Date();
-                        const diffHours = (now - lastBonusTime) / (1000 * 60 * 60);
-                        if (diffHours < 24) {
-                            const remainingHours = Math.ceil(24 - diffHours);
-                            const btn = document.getElementById('claimBtn');
-                            btn.disabled = true;
-                            btn.classList.add('opacity-50', 'cursor-not-allowed');
-                            document.getElementById('bonusMessage').innerHTML = `<span class="text-amber-600">You already claimed today's bonus! Next bonus available in ${remainingHours} hours.</span>`;
+                        const diffMs = now - lastBonusTime;
+                        const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+
+                        if (diffMs < twentyFourHoursMs) {
+                            const remainingTimeMs = twentyFourHoursMs - diffMs;
+                            startCountdown(remainingTimeMs);
                         }
                     }
                 }
@@ -220,17 +222,50 @@
             }
         }
 
+        function startCountdown(durationMs) {
+            const btn = document.getElementById('claimBtn');
+            btn.disabled = true;
+            btn.classList.add('opacity-60', 'cursor-not-allowed');
+
+            const endTime = new Date().getTime() + durationMs;
+
+            const interval = setInterval(() => {
+                const now = new Date().getTime();
+                const timeLeft = endTime - now;
+
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-60', 'cursor-not-allowed');
+                    btn.innerText = "Claim Bonus Now";
+                    document.getElementById('bonusMessage').innerHTML = "";
+                    return;
+                }
+
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                // "Claim Bonus Now" লেখা হাইড করে কাউন্টডাউন দেখানো
+                btn.innerText = `Next Claim: ${hours}h ${minutes}m ${seconds}s`;
+            }, 1000);
+        }
+
         window.claimBonus = async function() {
             if (!currentUserUid) return;
             const btn = document.getElementById('claimBtn');
             const msgDiv = document.getElementById('bonusMessage');
+            
+            // ১. এডস্টারা ডাইরেক্ট লিংক নতুন ট্যাবে ওপেন করা
+            window.open(adsterraDirectLink, '_blank');
+
             btn.disabled = true;
             btn.innerText = "Processing...";
 
             try {
                 const userRef = doc(db, "users", currentUserUid);
                 
-                // Update user main balance and lastBonus timestamp
+                // Update user main balance and lastBonus timestamp in Firestore
                 await updateDoc(userRef, {
                     mainBalance: increment(5.00),
                     lastBonus: serverTimestamp()
@@ -246,8 +281,9 @@
                 });
 
                 msgDiv.innerHTML = `<span class="text-emerald-600 font-bold">Successfully claimed ৳ 5.00 bonus!</span>`;
-                btn.innerText = "Claimed Successfully";
-                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                
+                // ২৪ ঘণ্টার রিয়েল-টাইম কাউন্টডাউন শুরু করা
+                startCountdown(24 * 60 * 60 * 1000);
             } catch (error) {
                 console.error("Error claiming bonus:", error);
                 msgDiv.innerHTML = `<span class="text-red-500">Failed to claim bonus. Try again later.</span>`;
