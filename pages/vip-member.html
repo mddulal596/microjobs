@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Member - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
+    
+    <style>
+        .nav-container {  
+            position: fixed;  
+            bottom: 15px;  
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;  
+            max-width: 440px;  
+            height: 70px;  
+            background: #4f46e5;  
+            border-radius: 22px;  
+            display: flex;  
+            justify-content: space-around;  
+            align-items: center;  
+            box-shadow: 0 10px 25px rgba(0,0,0,.2);  
+            overflow: visible;  
+            z-index: 100;
+        }  
+        .nav-item-animated {  
+            flex: 1;  
+            text-decoration: none;  
+            color: #fff;  
+            text-align: center;  
+            position: relative;  
+            z-index: 2;  
+        }  
+        .nav-item-animated i {  
+            font-size: 22px;  
+            transition: .25s;  
+        }  
+        .nav-item-animated span {  
+            display: block;  
+            font-size: 11px;  
+            margin-top: 4px;  
+            transition: .25s;  
+        }  
+        .nav-item-animated.active i {  
+            transform: translateY(-10px);  
+        }  
+        .nav-item-animated.active span {  
+            font-weight: bold;  
+        }  
+        .indicator {  
+            position: absolute;  
+            top: -15px;  
+            width: 60px;  
+            height: 60px;  
+            background: #312e81;  
+            border-radius: 50%;  
+            border: 4px solid #fff;  
+            transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);  
+            box-shadow: 0 0 20px rgba(49,46,129,.5);  
+            z-index: 1;  
+        }  
+        .indicator::before {  
+            content: "";  
+            position: absolute;  
+            inset: -6px;  
+            border-radius: 50%;  
+            border: 2px solid rgba(49,46,129,.4);  
+            animation: pulse 2s infinite;  
+        }  
+        @keyframes pulse {  
+            0% { transform: scale(1); opacity: 1; }  
+            100% { transform: scale(1.4); opacity: 0; }  
+        } 
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
+        
+        <!-- Header -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="dashboard.html" class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <h1 class="text-lg font-bold">VIP Membership</h1>
+            </div>
+            <div class="text-xs bg-amber-400 text-amber-950 font-bold px-3 py-1 rounded-full shadow-sm">
+                ⭐ Premium
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="p-4 flex-grow space-y-5">
+            
+            <!-- Banner Card -->
+            <div class="bg-gradient-to-br from-amber-500 via-purple-600 to-indigo-800 p-5 rounded-3xl text-white shadow-md relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 text-white/10 text-8xl font-black">VIP</div>
+                <div class="relative z-10">
+                    <span class="bg-white/20 text-xs font-semibold px-2.5 py-1 rounded-lg">Upgrade Account</span>
+                    <h2 class="text-2xl font-extrabold mt-2">Unlock VIP Benefits</h2>
+                    <p class="text-xs text-purple-100 mt-1">এক্সক্লুসিভ জবস, প্রতিদিন বেশি ইনকাম এবং ইনস্ট্যান্ট উইথড্র সুবিধা পান!</p>
+                </div>
+            </div>
+
+            <!-- Pricing & Status Box -->
+            <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-2xl flex justify-between items-center">
+                <div>
+                    <span class="text-xs text-indigo-500 font-semibold uppercase">Membership Fee</span>
+                    <h3 class="text-xl font-black text-indigo-900">৳ <span id="vipFee">500.00</span></h3>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs text-gray-500 block">Current Status</span>
+                    <span id="vipStatusBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-gray-200 text-gray-700 inline-block mt-1">Normal User</span>
+                </div>
+            </div>
+
+            <!-- Features List -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">VIP Features</h3>
+                
+                <div class="bg-white border border-gray-100 p-3.5 rounded-2xl flex items-center space-x-3 shadow-sm">
+                    <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">✓</div>
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-800">Higher Job Commissions</h4>
+                        <p class="text-[11px] text-gray-500">প্রতিটি মাইক্রোজব থেকে ২০% বেশি পেমেন্ট।</p>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-100 p-3.5 rounded-2xl flex items-center space-x-3 shadow-sm">
+                    <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">✓</div>
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-800">Priority Withdrawal</h4>
+                        <p class="text-[11px] text-gray-500">১ ঘণ্টার মধ্যে উইথড্র পেমেন্ট কমপ্লিট।</p>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-100 p-3.5 rounded-2xl flex items-center space-x-3 shadow-sm">
+                    <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">✓</div>
+                    <div>
+                        <h4 class="text-xs font-bold text-gray-800">Unlimited Daily Tasks</h4>
+                        <p class="text-[11px] text-gray-500">কোনো লিমিট ছাড়াই সব প্রিমিয়াম কাজ করার সুযোগ।</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="pt-2">
+                <button id="upgradeBtn" onclick="upgradeVIP()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition text-sm">
+                    Upgrade to VIP Now
+                </button>
+            </div>
+
+        </main>
+
+        <!-- Animated Bottom Navigation Bar -->
+        <div class="nav-container">  
+            <div class="indicator"></div>  
+            <a href="support.html" class="nav-item-animated">  
+                <i class="fa-solid fa-headset"></i><span>Support</span>  
+            </a>  
+            <a href="wallet.html" class="nav-item-animated">  
+                <i class="fa-solid fa-wallet"></i><span>Wallet</span>  
+            </a>  
+            <a href="dashboard.html" class="nav-item-animated">  
+                <i class="fa-solid fa-house"></i><span>Home</span>  
+            </a>  
+            <a href="referral.html" class="nav-item-animated">  
+                <i class="fa-solid fa-user-group"></i><span>Team</span>  
+            </a>  
+            <a href="profile.html" class="nav-item-animated">  
+                <i class="fa-solid fa-user"></i><span>Profile</span>  
+            </a>  
+        </div>  
+    </div>
+
+    <!-- Navigation Animation Script -->
+    <script>  
+        const items = document.querySelectorAll(".nav-item-animated");  
+        const indicator = document.querySelector(".indicator");  
+          
+        function moveIndicator(el){  
+            if (!el) return;
+            const left = el.offsetLeft + (el.offsetWidth / 2) - (indicator.offsetWidth / 2);  
+            indicator.style.left = left + "px";  
+            items.forEach(i => i.classList.remove("active"));  
+            el.classList.add("active");  
+        }  
+          
+        items.forEach(item => {  
+            item.addEventListener("click", () => moveIndicator(item));  
+        });  
+          
+        const activeItem = document.querySelector(".nav-item-animated.active") || items[2];
+        moveIndicator(activeItem);
+
+        window.addEventListener('resize', () => {
+            moveIndicator(document.querySelector(".nav-item-animated.active"));
+        });
+    </script>
+
+    <!-- Firebase Script & Upgrade Logic -->
+    <script type="module">
+        import { db } from '../firebase/firebase-config.js';
+        import { observeAuthState } from '../firebase/auth.js';
+        import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentUser = null;
+        const vipFeeAmount = 500; // VIP ফি ৫০০ টাকা
+
+        observeAuthState(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = user;
+            checkVipStatus(user.uid);
+        });
+
+        async function checkVipStatus(uid) {
+            try {
+                const userRef = doc(db, "users", uid);
+                const snap = await getDoc(userRef);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    const isVip = data.isVip || data.vipStatus === true;
+                    
+                    const badge = document.getElementById('vipStatusBadge');
+                    const btn = document.getElementById('upgradeBtn');
+
+                    if (isVip) {
+                        badge.innerText = "VIP Active ⭐";
+                        badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-amber-400 text-amber-950 inline-block mt-1";
+                        btn.innerText = "Already VIP Member";
+                        btn.disabled = true;
+                        btn.classList.add("opacity-50", "cursor-not-allowed");
+                    }
+                }
+            } catch (error) {
+                console.error("Error checking VIP status:", error);
+            }
+        }
+
+        window.upgradeVIP = async function() {
+            if (!currentUser) return;
+
+            if (!confirm(`আপনি কি ৫০০০ বা ৫০০ টাকা ফি দিয়ে VIP মেম্বারশিপ নিতে চান?`)) return;
+
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                const snap = await getDoc(userRef);
+                
+                if (!snap.exists()) return;
+                const data = snap.data();
+                
+                // মেইন ব্যালেন্স চেক করা (অথবা ডিপোজিট ব্যালেন্স থেকে কাটতে চাইলে পরিবর্তন করতে পারেন)
+                const mainBal = Number(data.balances?.main ?? data.mainBalance ?? 0);
+
+                if (mainBal < vipFeeAmount) {
+                    alert("পর্যাপ্ত ব্যালেন্স নেই! দয়া করে আগে ডিপোজিট করুন।");
+                    window.location.href = 'deposit.html';
+                    return;
+                }
+
+                const newBalance = mainBal - vipFeeAmount;
+
+                // ব্যালেন্স আপডেট ও VIP স্ট্যাটাস ট্রু করা
+                if (data.balances) {
+                    await updateDoc(userRef, {
+                        "balances.main": newBalance,
+                        isVip: true,
+                        vipTime: new Date().toISOString()
+                    });
+                } else {
+                    await updateDoc(userRef, {
+                        mainBalance: newBalance,
+                        isVip: true,
+                        vipTime: new Date().toISOString()
+                    });
+                }
+
+                alert("অভিনন্দন! আপনি সফলভাবে VIP মেম্বার হয়েছেন।");
+                location.reload();
+
+            } catch (error) {
+                console.error("Upgrade error:", error);
+                alert("দুঃখিত, কোনো সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+            }
+        }
+    </script>
+</body>
+</html>
