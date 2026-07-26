@@ -127,7 +127,7 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     let main = data.balances?.main ?? data.mainBalance ?? 0;
-                    let deposit = data.depositBalance ?? 0;
+                    let deposit = data.balances?.deposit ?? data.depositBalance ?? 0;
                     document.getElementById('mainBalance').innerText = Number(main).toFixed(2);
                     document.getElementById('depositBalance').innerText = Number(deposit).toFixed(2);
                 }
