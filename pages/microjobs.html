@@ -4,43 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microjobs - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN for Navigation Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
+    
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 90px; }
-        
-        /* Top Header */
-        header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
-        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        
-        .header-title { font-size: 16px; font-weight: 800; }
-
-        /* Main Content */
-        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
-        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .post-job-link { font-size: 11px; color: #4f46e5; text-decoration: none; font-weight: 700; }
-
-        /* Job List */
-        .job-list { display: flex; flex-direction: column; gap: 12px; }
-        .job-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; transition: 0.2s; }
-        .job-card:hover { border-color: #cbd5e1; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        
-        .job-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .job-info h4 { font-size: 13px; font-weight: 700; color: #1f2937; margin-bottom: 2px; }
-        .job-info p { font-size: 10px; color: #6b7280; line-height: 1.4; }
-        .job-reward { font-size: 13px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 8px; white-space: nowrap; }
-
-        .job-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e5e7eb; padding-top: 8px; margin-top: 2px; }
-        .job-workers { font-size: 10px; color: #6b7280; font-weight: 600; }
-        .btn-apply { background: #4f46e5; color: #ffffff; border: none; padding: 6px 14px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: none; }
-        .btn-apply:hover { background: #4338ca; }
-
-        /* Animated Bottom Nav Styles */
         .nav-container {  
             position: fixed;  
             bottom: 15px;  
@@ -49,7 +18,7 @@
             width: 92%;  
             max-width: 440px;  
             height: 70px;  
-            background: #16a34a;  
+            background: #4f46e5;  
             border-radius: 22px;  
             display: flex;  
             justify-content: space-around;  
@@ -58,7 +27,6 @@
             overflow: visible;  
             z-index: 100;
         }  
-          
         .nav-item-animated {  
             flex: 1;  
             text-decoration: none;  
@@ -67,127 +35,104 @@
             position: relative;  
             z-index: 2;  
         }  
-          
-        .nav-item-animated i {  
-            font-size: 22px;  
-            transition: .35s;  
-        }  
-          
-        .nav-item-animated span {  
-            display: block;  
-            font-size: 11px;  
-            margin-top: 4px;  
-            transition: .35s;  
-        }  
-          
-        .nav-item-animated.active i {  
-            transform: translateY(-10px);  
-        }  
-          
-        .nav-item-animated.active span {  
-            font-weight: bold;  
-        }  
-          
+        .nav-item-animated i { font-size: 22px; transition: .25s; }  
+        .nav-item-animated span { display: block; font-size: 11px; margin-top: 4px; transition: .25s; }  
+        .nav-item-animated.active i { transform: translateY(-10px); }  
+        .nav-item-animated.active span { font-weight: bold; }  
         .indicator {  
             position: absolute;  
-            top: -15px; 
+            top: -15px;  
             width: 60px;  
             height: 60px;  
-            background: #2196f3;  
+            background: #312e81;  
             border-radius: 50%;  
             border: 4px solid #fff;  
-            transition: left .35s ease;  
-            box-shadow: 0 0 20px rgba(33,150,243,.5);  
+            transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);  
+            box-shadow: 0 0 20px rgba(49,46,129,.5);  
             z-index: 1;  
         }  
-          
         .indicator::before {  
             content: "";  
             position: absolute;  
             inset: -6px;  
             border-radius: 50%;  
-            border: 2px solid rgba(33,150,243,.4);  
+            border: 2px solid rgba(49,46,129,.4);  
             animation: pulse 2s infinite;  
         }  
-          
         @keyframes pulse {  
-            0% {  
-                transform: scale(1);  
-                opacity: 1;  
-            }  
-            100% {  
-                transform: scale(1.4);  
-                opacity: 0;  
-            }  
+            0% { transform: scale(1); opacity: 1; }  
+            100% { transform: scale(1.4); opacity: 0; }  
         } 
     </style>
 </head>
-<body>
-    <div class="container">
+<body class="bg-gray-50 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
         
         <!-- Top Header -->
-        <header>
-            <div class="header-top">
-                <a href="dashboard.html" class="profile-btn">
-                    <div class="profile-icon">M</div>
-                    <span>Micro Job Pro</span>
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
+            <div class="flex justify-between items-center mb-3">
+                <a href="dashboard.html" class="flex items-center space-x-2 bg-white/20 hover:bg-white/30 transition px-3 py-1.5 rounded-full border border-white/20">
+                    <div class="w-6 h-6 rounded-full bg-white text-indigo-900 flex items-center justify-center font-black text-xs shadow">M</div>
+                    <span class="text-xs font-bold">Micro Job Pro</span>
                 </a>
-                <a href="dashboard.html" class="home-link">Home</a>
+                <a href="dashboard.html" class="text-xs bg-white/20 hover:bg-white/30 transition px-3 py-1.5 rounded-full font-semibold border border-white/20">
+                    <i class="fa-solid fa-house text-[10px] mr-1"></i> Home
+                </a>
             </div>
-            <div class="header-title">Available Microjobs</div>
+            <h1 class="text-base font-extrabold tracking-wide">Available Microjobs</h1>
         </header>
 
         <!-- Main Content Area -->
-        <main>
-            <div class="section-title">
-                <span>Active Tasks List</span>
-                <a href="post-job.html" class="post-job-link">+ Post New Job</a>
+        <main class="p-4 flex-grow space-y-3">
+            <div class="flex justify-between items-center px-1">
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Tasks List</h2>
+                <a href="post-job.html" class="text-xs text-indigo-600 hover:text-indigo-700 font-bold transition">+ Post New Job</a>
             </div>
 
             <!-- Job List Container -->
-            <div class="job-list" id="microjobList">
+            <div class="space-y-3" id="microjobList">
                 <!-- Job Card 1 -->
-                <div class="job-card">
-                    <div class="job-header">
-                        <div class="job-info">
-                            <h4>YouTube Video Watch & Subscribe</h4>
-                            <p>Watch the full video without skipping, like and subscribe to the channel permanently.</p>
+                <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col gap-3">
+                    <div class="flex justify-between items-start gap-2">
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-bold text-gray-800">YouTube Video Watch & Subscribe</h4>
+                            <p class="text-[11px] text-gray-500 leading-relaxed">Watch the full video without skipping, like and subscribe to the channel permanently.</p>
                         </div>
-                        <div class="job-reward">+৳ 0.15</div>
+                        <span class="bg-emerald-50 text-emerald-600 text-[10px] font-extrabold px-2.5 py-1 rounded-lg uppercase whitespace-nowrap">+৳ 0.15</span>
                     </div>
-                    <div class="job-footer">
-                        <span class="job-workers">Workers: 45 / 100 Done</span>
-                        <a href="task-details.html?id=1" class="btn-apply">Do Task</a>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-2.5">
+                        <span class="text-[11px] text-gray-500 font-medium">Workers: <span class="font-semibold text-gray-700">45 / 100 Done</span></span>
+                        <a href="task-details.html?id=1" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow transition">Do Task</a>
                     </div>
                 </div>
 
                 <!-- Job Card 2 -->
-                <div class="job-card">
-                    <div class="job-header">
-                        <div class="job-info">
-                            <h4>Facebook Page Follow & Share</h4>
-                            <p>Follow our official Facebook page and share the pinned post on your timeline.</p>
+                <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col gap-3">
+                    <div class="flex justify-between items-start gap-2">
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-bold text-gray-800">Facebook Page Follow & Share</h4>
+                            <p class="text-[11px] text-gray-500 leading-relaxed">Follow our official Facebook page and share the pinned post on your timeline.</p>
                         </div>
-                        <div class="job-reward">+৳ 0.15</div>
+                        <span class="bg-emerald-50 text-emerald-600 text-[10px] font-extrabold px-2.5 py-1 rounded-lg uppercase whitespace-nowrap">+৳ 0.15</span>
                     </div>
-                    <div class="job-footer">
-                        <span class="job-workers">Workers: 12 / 50 Done</span>
-                        <a href="task-details.html?id=2" class="btn-apply">Do Task</a>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-2.5">
+                        <span class="text-[11px] text-gray-500 font-medium">Workers: <span class="font-semibold text-gray-700">12 / 50 Done</span></span>
+                        <a href="task-details.html?id=2" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow transition">Do Task</a>
                     </div>
                 </div>
 
                 <!-- Job Card 3 -->
-                <div class="job-card">
-                    <div class="job-header">
-                        <div class="job-info">
-                            <h4>Website Visit & Click Ads</h4>
-                            <p>Browse our target website for 2 minutes and click on any one banner advertisement.</p>
+                <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col gap-3">
+                    <div class="flex justify-between items-start gap-2">
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-bold text-gray-800">Website Visit & Click Ads</h4>
+                            <p class="text-[11px] text-gray-500 leading-relaxed">Browse our target website for 2 minutes and click on any one banner advertisement.</p>
                         </div>
-                        <div class="job-reward">+৳ 0.25</div>
+                        <span class="bg-emerald-50 text-emerald-600 text-[10px] font-extrabold px-2.5 py-1 rounded-lg uppercase whitespace-nowrap">+৳ 0.25</span>
                     </div>
-                    <div class="job-footer">
-                        <span class="job-workers">Workers: 80 / 200 Done</span>
-                        <a href="task-details.html?id=3" class="btn-apply">Do Task</a>
+                    <div class="flex justify-between items-center border-t border-gray-100 pt-2.5">
+                        <span class="text-[11px] text-gray-500 font-medium">Workers: <span class="font-semibold text-gray-700">80 / 200 Done</span></span>
+                        <a href="task-details.html?id=3" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow transition">Do Task</a>
                     </div>
                 </div>
             </div>
@@ -243,8 +188,8 @@
             });  
         });  
           
-        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
-        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
+        window.addEventListener('load', () => moveIndicator(document.querySelector(".nav-item-animated.active") || items[2]));  
+        window.addEventListener('resize', () => moveIndicator(document.querySelector(".nav-item-animated.active") || items[2]));  
     </script>
 
     <!-- Firebase Script & Logic -->
