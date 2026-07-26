@@ -161,6 +161,22 @@
         import { db } from '../firebase/firebase-config.js';
         import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, increment, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // Helper function to handle fetch with timeout protection
+        async function fetchWithTimeout(promise, timeoutMs = 4000) {
+            let timeoutId;
+            const timeoutPromise = new Promise((_, reject) => {
+                timeoutId = setTimeout(() => reject(new Error("Timeout")), timeoutMs);
+            });
+            try {
+                const result = await Promise.race([promise, timeoutPromise]);
+                clearTimeout(timeoutId);
+                return result;
+            } catch (error) {
+                clearTimeout(timeoutId);
+                throw error;
+            }
+        }
+
         // 1. Handle Task Post & Edit with All Categories
         document.getElementById('taskForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -243,7 +259,7 @@
         async function loadSubmissions() {
             const container = document.getElementById('submissionsContainer');
             try {
-                const querySnapshot = await getDocs(collection(db, "submissions"));
+                const querySnapshot = await fetchWithTimeout(getDocs(collection(db, "submissions")));
                 
                 container.innerHTML = "";
                 let count = 0;
@@ -273,7 +289,6 @@
                     container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending submissions.</p>`;
                 }
             } catch (error) {
-                console.error("Submissions error:", error);
                 container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending submissions found.</p>`;
             }
         }
@@ -306,7 +321,7 @@
         async function loadWithdraws() {
             const container = document.getElementById('withdrawsContainer');
             try {
-                const querySnapshot = await getDocs(collection(db, "withdraws"));
+                const querySnapshot = await fetchWithTimeout(getDocs(collection(db, "withdraws")));
                 
                 container.innerHTML = "";
                 let count = 0;
@@ -333,7 +348,6 @@
                     container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending withdraw requests.</p>`;
                 }
             } catch (error) {
-                console.error("Withdraws error:", error);
                 container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending withdraw requests found.</p>`;
             }
         }
@@ -352,7 +366,7 @@
         async function loadDeposits() {
             const container = document.getElementById('depositsContainer');
             try {
-                const querySnapshot = await getDocs(collection(db, "deposits"));
+                const querySnapshot = await fetchWithTimeout(getDocs(collection(db, "deposits")));
                 
                 container.innerHTML = "";
                 let count = 0;
@@ -382,7 +396,6 @@
                     container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending deposit requests.</p>`;
                 }
             } catch (error) {
-                console.error("Deposits error:", error);
                 container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending deposit requests found.</p>`;
             }
         }
@@ -417,7 +430,7 @@
         async function loadActiveTasks() {
             const container = document.getElementById('tasksListContainer');
             try {
-                const querySnapshot = await getDocs(collection(db, "tasks"));
+                const querySnapshot = await fetchWithTimeout(getDocs(collection(db, "tasks")));
                 
                 if (querySnapshot.empty) {
                     container.innerHTML = `<p class="text-gray-400 text-center py-2">No active tasks found.</p>`;
