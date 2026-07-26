@@ -1,141 +1,175 @@
 <!DOCTYPE html>
-<html lang="en" class="transform-gpu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Micro Job Pro</title>
+    <title>Sign Up - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
 </head>
-<body class="bg-gray-100 text-gray-800 antialiased flex items-center justify-center min-h-screen p-4">
-    <div class="max-w-md w-full bg-white shadow-xl rounded-3xl p-6 space-y-6">
+<body class="bg-gray-50 text-gray-800 flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-6 space-y-6">
         
         <!-- Header -->
         <div class="text-center space-y-1">
-            <h1 class="text-xl font-extrabold text-indigo-600">Micro Job Pro</h1>
+            <h1 class="text-2xl font-black text-indigo-600">Micro Job Pro</h1>
             <p class="text-xs text-gray-500">Create an account & claim ৳10 bonus with a referral code!</p>
         </div>
 
-        <!-- Registration Form -->
-        <form id="registerForm" class="space-y-4">
+        <!-- Signup Form -->
+        <form id="signupForm" class="space-y-4">
+            <!-- Full Name -->
             <div class="space-y-1">
-                <label class="text-[11px] font-semibold text-gray-600">Full Name</label>
-                <input type="text" id="fullName" required placeholder="Enter your full name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
+                <label class="text-xs font-semibold text-gray-600">Full Name</label>
+                <input type="text" id="fullName" required placeholder="Enter your full name" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-600 text-sm bg-gray-50">
             </div>
 
+            <!-- Email Address -->
             <div class="space-y-1">
-                <label class="text-[11px] font-semibold text-gray-600">Email Address</label>
-                <input type="email" id="email" required placeholder="Enter your email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
+                <label class="text-xs font-semibold text-gray-600">Email Address</label>
+                <input type="email" id="email" required placeholder="Enter your email" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-600 text-sm bg-gray-50">
             </div>
 
+            <!-- Password -->
             <div class="space-y-1">
-                <label class="text-[11px] font-semibold text-gray-600">Password</label>
-                <input type="password" id="password" required placeholder="Enter password (min 6 chars)" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
+                <label class="text-xs font-semibold text-gray-600">Password</label>
+                <input type="password" id="password" required placeholder="Enter password (min 8 chars)" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-600 text-sm bg-gray-50">
+                
+                <!-- Password Strength Checklist -->
+                <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-100 space-y-1 text-[11px] mt-2">
+                    <p id="lengthCheck" class="text-red-500 flex items-center space-x-1.5"><i class="fa-solid fa-circle-xmark"></i><span>কমপক্ষে ৮ অক্ষরের হতে হবে</span></p>
+                    <p id="uppercaseCheck" class="text-red-500 flex items-center space-x-1.5"><i class="fa-solid fa-circle-xmark"></i><span>অন্তত একটি বড় হাতের অক্ষর (A-Z) থাকতে হবে</span></p>
+                    <p id="lowercaseCheck" class="text-red-500 flex items-center space-x-1.5"><i class="fa-solid fa-circle-xmark"></i><span>অন্তত একটি ছোট হাতের অক্ষর (a-z) থাকতে হবে</span></p>
+                    <p id="numberCheck" class="text-red-500 flex items-center space-x-1.5"><i class="fa-solid fa-circle-xmark"></i><span>অন্তত একটি সংখ্যা (0-9) থাকতে হবে</span></p>
+                </div>
             </div>
 
-            <!-- Referral Code Field -->
+            <!-- Referral Code -->
             <div class="space-y-1">
-                <label class="text-[11px] font-semibold text-gray-600">Referral Code (Optional)</label>
-                <input type="text" id="refCode" placeholder="e.g., MCJVIP..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-widest text-indigo-600 focus:outline-none focus:border-indigo-500">
+                <label class="text-xs font-semibold text-gray-600">Referral Code (Optional)</label>
+                <input type="text" id="referralCode" placeholder="E.G., MCJVIP..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-indigo-600 text-sm bg-gray-50">
             </div>
 
-            <button type="submit" id="submitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition cursor-pointer">
+            <!-- Submit Button -->
+            <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl text-xs shadow-lg shadow-indigo-200 transition">
                 Register & Claim ৳10 Bonus
             </button>
         </form>
 
-        <p class="text-center text-xs text-gray-500">
+        <!-- Login Redirect -->
+        <div class="text-center text-xs text-gray-500">
             Already have an account? <a href="login.html" class="text-indigo-600 font-bold hover:underline">Login here</a>
-        </p>
+        </div>
+
     </div>
 
-    <!-- Firebase Script & Logic -->
+    <!-- Script Logic -->
     <script type="module">
-        import { db } from '../firebase/firebase-config.js';
-        import { createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { doc, setDoc, getDocs, collection, query, where, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { auth } from '../firebase/auth.js';
+        import { auth, db } from '../firebase/firebase-config.js';
+        import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // URL থেকে সরাসরি ?ref=CODE রিসিভ করার অটো কোড (যদি কেউ রেফার লিংকে ক্লিক করে আসে)
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const refFromUrl = urlParams.get('ref');
-            if (refFromUrl) {
-                document.getElementById('refCode').value = refFromUrl.toUpperCase();
+        const passwordInput = document.getElementById('password');
+        const lengthCheck = document.getElementById('lengthCheck');
+        const uppercaseCheck = document.getElementById('uppercaseCheck');
+        const lowercaseCheck = document.getElementById('lowercaseCheck');
+        const numberCheck = document.getElementById('numberCheck');
+
+        // লাইভ পাসওয়ার্ড ভ্যালিডেশন চেক
+        passwordInput.addEventListener('input', () => {
+            const val = passwordInput.value;
+
+            // ৮ অক্ষর চেক
+            if (val.length >= 8) {
+                lengthCheck.className = "text-emerald-600 flex items-center space-x-1.5";
+                lengthCheck.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>কমপক্ষে ৮ অক্ষরের হতে হবে</span>`;
+            } else {
+                lengthCheck.className = "text-red-500 flex items-center space-x-1.5";
+                lengthCheck.innerHTML = `<i class="fa-solid fa-circle-xmark"></i><span>কমপক্ষে ৮ অক্ষরের হতে হবে</span>`;
+            }
+
+            // বড় হাতের অক্ষর চেক
+            if (/[A-Z]/.test(val)) {
+                uppercaseCheck.className = "text-emerald-600 flex items-center space-x-1.5";
+                uppercaseCheck.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>অন্তত একটি বড় হাতের অক্ষর (A-Z) থাকতে হবে</span>`;
+            } else {
+                uppercaseCheck.className = "text-red-500 flex items-center space-x-1.5";
+                uppercaseCheck.innerHTML = `<i class="fa-solid fa-circle-xmark"></i><span>অন্তত একটি বড় হাতের অক্ষর (A-Z) থাকতে হবে</span>`;
+            }
+
+            // ছোট হাতের অক্ষর চেক
+            if (/[a-z]/.test(val)) {
+                lowercaseCheck.className = "text-emerald-600 flex items-center space-x-1.5";
+                lowercaseCheck.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>অন্তত একটি ছোট হাতের অক্ষর (a-z) থাকতে হবে</span>`;
+            } else {
+                lowercaseCheck.className = "text-red-500 flex items-center space-x-1.5";
+                lowercaseCheck.innerHTML = `<i class="fa-solid fa-circle-xmark"></i><span>অন্তত একটি ছোট হাতের অক্ষর (a-z) থাকতে হবে</span>`;
+            }
+
+            // সংখ্যা চেক
+            if (/[0-9]/.test(val)) {
+                numberCheck.className = "text-emerald-600 flex items-center space-x-1.5";
+                numberCheck.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>অন্তত একটি সংখ্যা (0-9) থাকতে হবে</span>`;
+            } else {
+                numberCheck.className = "text-red-500 flex items-center space-x-1.5";
+                numberCheck.innerHTML = `<i class="fa-solid fa-circle-xmark"></i><span>অন্তত একটি সংখ্যা (0-9) থাকতে হবে</span>`;
             }
         });
 
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        // ফর্ম সাবমিট হ্যান্ডলার
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+
             const fullName = document.getElementById('fullName').value.trim();
             const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const inputRefCode = document.getElementById('refCode').value.trim().toUpperCase();
-            const submitBtn = document.getElementById('submitBtn');
+            const password = passwordInput.value;
+            const referralCode = document.getElementById('referralCode').value.trim();
 
+            // সকল শর্ত পূরণ হয়েছে কিনা ফাইনাল চেক
+            const isValidLength = password.length >= 8;
+            const hasUpper = /[A-Z]/.test(password);
+            const hasLower = /[a-z]/.test(password);
+            const hasNum = /[0-9]/.test(password);
+
+            if (!isValidLength || !hasUpper || !hasLower || !hasNum) {
+                alert("পাসওয়ার্ডটি নিরাপদ নয়! দয়া করে কমপক্ষে ৮ অক্ষর, বড় হাতের অক্ষর, ছোট হাতের অক্ষর এবং সংখ্যা ব্যবহার করুন।");
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = "Creating Account...";
             submitBtn.disabled = true;
-            submitBtn.innerText = "Creating account...";
 
             try {
-                // 1. Create user in Firebase Auth
+                // ফায়ারবেস অথ দিয়ে ইউজার তৈরি
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                await updateProfile(user, { displayName: fullName });
 
-                // 2. Generate referral code starting with MCJVIP
-                const myShortRef = "MCJVIP" + user.uid.substring(0, 4).toUpperCase();
-                
-                let initialBonus = 0.00;
-                let validReferrerUid = null;
-                const referralBonusAmount = 10.00; // রেফার করার জন্য নির্ধারিত বোনাস (১০ টাকা)
-
-                // 3. Verify Referral Code in Firestore
-                if (inputRefCode) {
-                    const usersRef = collection(db, "users");
-                    const q = query(usersRef, where("referralCode", "==", inputRefCode));
-                    const querySnapshot = await getDocs(q);
-
-                    if (!querySnapshot.empty) {
-                        querySnapshot.forEach((docSnap) => {
-                            validReferrerUid = docSnap.id;
-                        });
-                        initialBonus = 10.00; // নতুন ইউজার জয়েন করার জন্য বোনাস পাবে
-                    } else {
-                        alert('সতর্কতা: ভুল রেফার কোড দেওয়া হয়েছে! কোনো বোনাস যোগ হবে না, তবে একাউন্ট তৈরি হবে।');
-                    }
-                }
-
-                // 4. Save user data to Firestore
+                // ফায়ারস্টোর ডেটাবেজে ইউজারের ইনফো সেভ করা
                 await setDoc(doc(db, "users", user.uid), {
                     uid: user.uid,
-                    fullName: fullName,
+                    name: fullName,
                     email: email,
-                    referralCode: myShortRef,
-                    mainBalance: initialBonus,
-                    depositBalance: 0.00,
-                    referralEarnings: 0.00, // নতুন ইউজারের নিজের রেফার অর্নিং
-                    referredBy: validReferrerUid || null,
-                    totalReferred: 0,
-                    createdAt: serverTimestamp()
+                    balances: {
+                        main: 10.00, // সাইনআপ বোনাস ১০ টাকা
+                        deposit: 0.00
+                    },
+                    isActivated: false,
+                    isVip: false,
+                    referredBy: referralCode || "",
+                    createdAt: new Date().toISOString()
                 });
 
-                // 5. Update Referrer's Data (Team Count + Main Balance + Referral Earnings)
-                if (validReferrerUid) {
-                    const referrerRef = doc(db, "users", validReferrerUid);
-                    await updateDoc(referrerRef, {
-                        totalReferred: increment(1),                // টিম কাউন্ট ১ বাড়বে
-                        mainBalance: increment(referralBonusAmount), // মেইন ব্যালেন্সে ১০ টাকা যোগ হবে
-                        referralEarnings: increment(referralBonusAmount) // রেফার অর্নিংয়েও ১০ টাকা যোগ হবে
-                    });
-                }
-
-                alert('একাউন্ট সফলভাবে তৈরি হয়েছে!');
-                window.location.href = 'dashboard.html';
+                alert("রেজিস্ট্রেশন সফল হয়েছে! ৳১০ বোনাস যোগ করা হয়েছে।");
+                window.location.href = "dashboard.html";
 
             } catch (error) {
-                console.error("Registration error:", error);
-                alert('রেজিস্ট্রেশন ত্রুটি: ' + error.message);
-                submitBtn.disabled = false;
+                console.error("Signup error:", error);
+                alert("রেজিস্ট্রেশন ব্যর্থ হয়েছে: " + error.message);
                 submitBtn.innerText = "Register & Claim ৳10 Bonus";
+                submitBtn.disabled = false;
             }
         });
     </script>
