@@ -86,13 +86,13 @@
 
                 <div class="flex justify-between items-center">
                     <span id="activeRewardBadge" class="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Reward: ৳ 0.00</span>
-                    <span class="text-xs text-gray-400 font-medium">YouTube Video Task</span>
+                    <span class="text-xs text-gray-400 font-medium">Video Task</span>
                 </div>
                 
                 <h3 id="activeVideoTitle" class="text-sm font-bold text-gray-800">Task Title</h3>
                 
                 <div class="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden relative shadow-inner">
-                    <iframe id="youtubeIframe" class="w-full h-full absolute inset-0 pointer-events-none" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    <iframe id="youtubeIframe" class="w-full h-full absolute inset-0 pointer-events-none" src="" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                     <div class="absolute inset-0 z-10 bg-transparent"></div>
                 </div>
 
@@ -189,13 +189,15 @@
             }
         }
 
-        // ফায়ারস্টোর থেকে টাস্কগুলো ফেচ করা
+        // ফায়ারস্টোর থেকে শুধু ভিডিও ক্যাটাগরির (targetPage == 'video.html') টাস্কগুলো ফেচ করা
         async function fetchTasksFromFirestore() {
             try {
                 videoContainer.innerHTML = `<p class="text-xs text-center text-gray-400 py-4">Loading tasks...</p>`;
                 
-                // আপনার ডাটাবেজের 'tasks' কালেকশন থেকে ডাটা আনছে
-                const q = query(collection(db, "tasks"));
+                const q = query(
+                    collection(db, "tasks"), 
+                    where("targetPage", "==", "video.html")
+                );
                 const querySnapshot = await getDocs(q);
                 
                 let tasks = [];
@@ -216,16 +218,25 @@
             videoContainer.innerHTML = "";
 
             if (tasks.length === 0) {
-                videoContainer.innerHTML = `<p class="text-xs text-center text-gray-400 py-4">No tasks available right now.</p>`;
+                videoContainer.innerHTML = `<p class="text-xs text-center text-gray-400 py-4">No video tasks available right now.</p>`;
                 return;
             }
 
             tasks.forEach((task) => {
                 const isCompleted = completedVideos.includes(task.id);
-                // ভিডিও আইডি বা ডিফল্ট একটি ভিডিও আইডি ব্যবহারের জন্য
-                const videoId = task.videoId || "TS2VUZ7tMzM"; 
+                // ডাটাবেজের 'videoId' বা 'link' থেকে আইডি বের করার ব্যবস্থা
+                let videoId = task.videoId;
+                if (!videoId && task.link) {
+                    if (task.link.includes('youtu.be/')) {
+                        videoId = task.link.split('youtu.be/')[1]?.split('?')[0];
+                    } else if (task.link.includes('watch?v=')) {
+                        videoId = task.link.split('watch?v=')[1]?.split('&')[0];
+                    }
+                }
+                videoId = videoId || "TS2VUZ7tMzM"; 
+
                 const reward = Number(task.reward) || 0.10;
-                const title = task.title || "YouTube Video Task";
+                const title = task.title || "Video Task";
 
                 if (isCompleted) {
                     videoContainer.innerHTML += `
@@ -310,7 +321,6 @@
             try {
                 const userRef = doc(db, "users", loggedInUser.uid);
 
-                // সিকিউরিটি রুলসের সাথে মিলিয়ে শুধুমাত্র mainBalance আপডেট করা হলো
                 await updateDoc(userRef, {
                     "mainBalance": increment(currentSelectedReward)
                 });
