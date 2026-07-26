@@ -64,7 +64,6 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     const totalRef = data.totalReferred ?? 0;
-                    const refEarnings = data.mainBalance ?? 0;
                     const levelsData = data.levels || {};
 
                     document.getElementById('totalTeamBadge').innerText = `Team: ${totalRef}`;
@@ -80,8 +79,9 @@
                             levelMembers = levelsData[`level_${i}`].count || 0;
                             levelEarnings = levelsData[`level_${i}`].earnings || 0;
                         } else if (i === 1) {
+                            // সংশোধন করা হয়েছে: লেভেল ১-এ মেইন ব্যালেন্সের পরিবর্তে শূন্য (0) দেখানো হবে যদি কোনো রেফারেল না থাকে
                             levelMembers = totalRef;
-                            levelEarnings = refEarnings;
+                            levelEarnings = totalRef > 0 ? (data.referralEarnings ?? 0) : 0;
                         }
 
                         const card = document.createElement('div');
