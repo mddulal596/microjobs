@@ -6,7 +6,7 @@
     <title>Dashboard - Micro Job Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome CDN for Navigation Icons -->
+    <!-- FontAwesome CDN for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
     
     <style>
@@ -80,124 +80,106 @@
 <body class="bg-gray-50 text-gray-800 antialiased">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
         
-        <!-- Top Header & Balances -->
-        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg">
-            <div class="flex justify-between items-center mb-4">
+        <!-- Top Header & Balance Section -->
+        <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg space-y-4">
+            <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <div id="profileIconBtn" class="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-white text-purple-700 flex items-center justify-center font-bold text-base shadow-md flex-shrink-0">
-                        U
-                    </div>
-                    <div class="overflow-hidden">
-                        <h2 id="userNameDisplay" class="text-base font-bold truncate">Loading...</h2>
-                        <span class="text-xs text-purple-200">Welcome back!</span>
+                    <div id="userAvatar" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold text-lg">U</div>
+                    <div>
+                        <p class="text-xs text-purple-200">Welcome back!</p>
+                        <h1 id="userName" class="text-sm font-bold">User</h1>
                     </div>
                 </div>
-                <a href="profile.html" class="text-xs bg-white/25 hover:bg-white/40 transition px-3 py-1.5 rounded-full font-semibold whitespace-nowrap">Profile</a>
+                <a href="profile.html" class="text-xs bg-white/20 px-3 py-1.5 rounded-full font-semibold hover:bg-white/30 transition">Profile</a>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
-                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
-                    <h3 class="text-base font-extrabold mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
+            <!-- Balances -->
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/10">
+                    <span class="text-[11px] text-purple-200 block">Main Balance</span>
+                    <h2 class="text-lg font-black mt-1">৳ <span id="mainBalance">0.00</span></h2>
                 </div>
-                <div class="bg-purple-800/50 p-3 rounded-2xl backdrop-blur-sm border border-purple-400/30">
-                    <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
-                    <h3 class="text-base font-extrabold mt-0.5">৳ <span id="depositBalance">0.00</span></h3>
+                <div class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/10">
+                    <span class="text-[11px] text-purple-200 block">Deposit Balance</span>
+                    <h2 class="text-lg font-black mt-1">৳ <span id="depositBalance">0.00</span></h2>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content Area -->
+        <!-- Notification Banner -->
+        <div class="px-4 pt-4">
+            <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-2xl flex items-center space-x-3 text-xs text-indigo-900 shadow-sm">
+                <span class="bg-indigo-600 text-white font-bold px-2 py-1 rounded-lg text-[10px]">Update</span>
+                <p class="truncate">পেমেন্ট নিন! যেকোনো সমস্যায় আমাদের সাপোর্টে যোগাযোগ করুন।</p>
+            </div>
+        </div>
+
+        <!-- Main Content: Quick Menu -->
         <main class="p-4 flex-grow space-y-4">
-            
-            <!-- Notice Box -->
-            <div class="bg-indigo-50 border border-indigo-100 p-3 rounded-2xl flex items-center gap-3">
-                <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-xl">Update</span>
-                <p class="text-xs text-indigo-900 truncate">পেমেন্ট নিন। যেকোনো সমস্যায় আমাদের সাপোর্ট টেলিগ্রাম...</p>
-            </div>
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Quick Menu</h3>
 
-            <!-- Quick Menu Title -->
-            <div>
-                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">Quick Menu</h2>
-            </div>
-
-            <!-- Quick Menu Section (Custom Ordered) -->
             <div class="grid grid-cols-3 gap-3">
-                
-                <!-- Post Jobs -->
-                <a href="post-jobs.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">➕</span>
+                <a href="post-job.html" class="menu-btn bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2 relative">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg"><i class="fa-solid fa-plus"></i></div>
                     <span class="text-xs font-semibold text-gray-700">Post Job</span>
                 </a>
 
-                <!-- Daily Bonus -->
-                <a href="daily-bonus.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">🎁</span>
+                <a href="daily-bonus.html" class="menu-btn bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2 relative">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-gift"></i></div>
                     <span class="text-xs font-semibold text-gray-700">Daily Bonus</span>
                 </a>
 
-                <!-- Video -->
-                <a href="video.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">▶️</span>
+                <a href="video.html" class="menu-btn bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2 relative">
+                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-lg"><i class="fa-solid fa-play"></i></div>
                     <span class="text-xs font-semibold text-gray-700">Video</span>
                 </a>
 
-                <!-- PTC Ads -->
-                <a href="ptcads.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">📢</span>
+                <a href="ptc-ads.html" class="menu-btn bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2 relative">
+                    <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-lg"><i class="fa-solid fa-bullhorn"></i></div>
                     <span class="text-xs font-semibold text-gray-700">PTC Ads</span>
                 </a>
 
-                <!-- Microjobs -->
-                <a href="microjobs.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">💼</span>
+                <a href="microjobs.html" class="menu-btn bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2 relative">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg"><i class="fa-solid fa-briefcase"></i></div>
                     <span class="text-xs font-semibold text-gray-700">Microjobs</span>
                 </a>
 
-                <!-- Daily Jobs -->
-                <a href="daily-jobs.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">🎯</span>
+                <a href="daily-jobs.html" class="menu-btn bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2 relative">
+                    <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg"><i class="fa-solid fa-bullseye"></i></div>
                     <span class="text-xs font-semibold text-gray-700">Daily Jobs</span>
                 </a>
 
-                <!-- Lucky Spin -->
-                <a href="spin.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">🎡</span>
+                <a href="lucky-spin.html" class="menu-btn bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2 relative">
+                    <div class="w-10 h-10 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center text-lg"><i class="fa-solid fa-dharmachakra"></i></div>
                     <span class="text-xs font-semibold text-gray-700">Lucky Spin</span>
                 </a>
 
-                <!-- Deposit -->
-                <a href="deposit.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">💳</span>
+                <!-- Deposit & Withdraw normally allowed or locked based on requirement, keeping them accessible or locked as per standard -->
+                <a href="deposit.html" class="bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg"><i class="fa-solid fa-credit-card"></i></div>
                     <span class="text-xs font-semibold text-gray-700">Deposit</span>
                 </a>
 
-                <!-- Withdraw -->
-                <a href="withdraw.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">💸</span>
+                <a href="withdraw.html" class="bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2">
+                    <div class="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center text-lg"><i class="fa-solid fa-money-bill-transfer"></i></div>
                     <span class="text-xs font-semibold text-gray-700">Withdraw</span>
                 </a>
 
-                <!-- Referral -->
-                <a href="referral.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">👥</span>
+                <a href="referral.html" class="menu-btn bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2 relative">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-lg"><i class="fa-solid fa-user-group"></i></div>
                     <span class="text-xs font-semibold text-gray-700">Referral</span>
                 </a>
 
-                <!-- Leaderboard -->
-                <a href="leaderboard.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">🏆</span>
+                <a href="leaderboard.html" class="menu-btn bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2 relative">
+                    <div class="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center text-lg"><i class="fa-solid fa-trophy"></i></div>
                     <span class="text-xs font-semibold text-gray-700">Leaderboard</span>
                 </a>
 
-                <!-- VIP Member -->
-                <a href="vip-member.html" class="bg-white border border-gray-100 p-3 rounded-2xl flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition">
-                    <span class="text-xl mb-1">⭐</span>
-                    <span class="text-xs font-semibold text-gray-700">VIP Member</span>
+                <a href="activate-account.html" class="bg-white border border-gray-100 p-3.5 rounded-2xl text-center shadow-sm hover:shadow-md transition flex flex-col items-center justify-center space-y-2 border-amber-200 bg-amber-50/30">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-star"></i></div>
+                    <span class="text-xs font-semibold text-amber-900">Activate</span>
                 </a>
-
             </div>
-
         </main>
 
         <!-- Animated Bottom Navigation Bar -->
@@ -246,11 +228,11 @@
         });
     </script>
 
-    <!-- Firebase Script & Logic -->
+    <!-- Firebase Data Fetch & Account Activation Lock Logic Script -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         observeAuthState(async (user) => {
             if (!user) {
@@ -258,25 +240,48 @@
                 return;
             }
 
-            const name = user.fullName || user.displayName || "User";
-            document.getElementById('userNameDisplay').innerText = name;
-            document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
+            try {
+                const userRef = doc(db, "users", user.uid);
+                const snap = await getDoc(userRef);
 
-            const userDocRef = doc(db, "users", user.uid);
-            
-            onSnapshot(userDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
+                if (snap.exists()) {
+                    const data = snap.data();
                     
+                    // নাম ও ব্যালেন্স সেট করা
+                    const name = data.name || data.fullName || user.displayName || "User";
+                    document.getElementById('userName').innerText = name;
+                    document.getElementById('userAvatar').innerText = name.charAt(0).toUpperCase();
+
                     const mainBal = data.balances?.main ?? data.mainBalance ?? 0;
-                    const depositBal = data.balances?.deposit ?? data.depositBalance ?? 0;
+                    const depBal = data.balances?.deposit ?? data.depositBalance ?? 0;
 
                     document.getElementById('mainBalance').innerText = Number(mainBal).toFixed(2);
-                    document.getElementById('depositBalance').innerText = Number(depositBal).toFixed(2);
+                    document.getElementById('depositBalance').innerText = Number(depBal).toFixed(2);
+
+                    // অ্যাকাউন্ট অ্যাক্টিভেশন স্ট্যাটাস চেক করা (isActivated অথবা isVip)
+                    const isActivated = data.isActivated || data.isVip || data.accountActive === true;
+
+                    if (!isActivated) {
+                        // যদি অ্যাকাউন্ট অ্যাক্টিভ করা না থাকে, তবে মেনু বাটনগুলো লক করা
+                        const menuButtons = document.querySelectorAll('.menu-btn');
+                        menuButtons.forEach(btn => {
+                            // লক আইকন যুক্ত করা
+                            const lockBadge = document.createElement("span");
+                            lockBadge.innerHTML = "🔒";
+                            lockBadge.style.cssText = "position:absolute; top:6px; right:8px; font-size:12px; background:rgba(255,255,255,0.8); padding:2px 4px; border-radius:50%;";
+                            btn.appendChild(lockBadge);
+
+                            // ক্লিক ইভেন্ট ব্লক করে activate-account.html এ পাঠানো
+                            btn.addEventListener("click", (e) => {
+                                e.preventDefault();
+                                window.location.href = "activate-account.html";
+                            });
+                        });
+                    }
                 }
-            }, (error) => {
-                console.error("Error fetching user data:", error);
-            });
+            } catch (error) {
+                console.error("Error loading dashboard data:", error);
+            }
         });
     </script>
 </body>
