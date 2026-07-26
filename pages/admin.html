@@ -205,7 +205,7 @@
             }
         });
 
-        // 3. Manage User Balance (Uniform structure)
+        // 3. Manage User Balance
         document.getElementById('userBalanceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('targetUserEmail').value.trim();
@@ -243,17 +243,14 @@
         async function loadSubmissions() {
             const container = document.getElementById('submissionsContainer');
             try {
-                const q = query(collection(db, "submissions"), where("status", "==", "pending"));
-                const querySnapshot = await getDocs(q);
+                const querySnapshot = await getDocs(collection(db, "submissions"));
                 
-                if (querySnapshot.empty) {
-                    container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending submissions.</p>`;
-                    return;
-                }
-
                 container.innerHTML = "";
+                let count = 0;
                 querySnapshot.forEach((documentSnap) => {
                     const sub = documentSnap.data();
+                    if (sub.status && sub.status.toLowerCase() !== "pending") return;
+                    count++;
                     const subId = documentSnap.id;
 
                     const card = document.createElement('div');
@@ -271,6 +268,10 @@
                     `;
                     container.appendChild(card);
                 });
+
+                if (count === 0) {
+                    container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending submissions.</p>`;
+                }
             } catch (error) {
                 container.innerHTML = `<p class="text-red-500">Failed to load submissions.</p>`;
             }
@@ -304,17 +305,14 @@
         async function loadWithdraws() {
             const container = document.getElementById('withdrawsContainer');
             try {
-                const q = query(collection(db, "withdraws"), where("status", "==", "pending"));
-                const querySnapshot = await getDocs(q);
+                const querySnapshot = await getDocs(collection(db, "withdraws"));
                 
-                if (querySnapshot.empty) {
-                    container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending withdraw requests.</p>`;
-                    return;
-                }
-
                 container.innerHTML = "";
+                let count = 0;
                 querySnapshot.forEach((documentSnap) => {
                     const wd = documentSnap.data();
+                    if (wd.status && wd.status.toLowerCase() !== "pending") return;
+                    count++;
                     const wdId = documentSnap.id;
 
                     const card = document.createElement('div');
@@ -329,6 +327,10 @@
                     `;
                     container.appendChild(card);
                 });
+
+                if (count === 0) {
+                    container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending withdraw requests.</p>`;
+                }
             } catch (error) {
                 container.innerHTML = `<p class="text-red-500">Failed to load withdraws.</p>`;
             }
@@ -348,17 +350,14 @@
         async function loadDeposits() {
             const container = document.getElementById('depositsContainer');
             try {
-                const q = query(collection(db, "deposits"), where("status", "==", "pending"));
-                const querySnapshot = await getDocs(q);
+                const querySnapshot = await getDocs(collection(db, "deposits"));
                 
-                if (querySnapshot.empty) {
-                    container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending deposit requests.</p>`;
-                    return;
-                }
-
                 container.innerHTML = "";
+                let count = 0;
                 querySnapshot.forEach((documentSnap) => {
                     const dep = documentSnap.data();
+                    if (dep.status && dep.status.toLowerCase() !== "pending") return;
+                    count++;
                     const depId = documentSnap.id;
 
                     const card = document.createElement('div');
@@ -376,6 +375,10 @@
                     `;
                     container.appendChild(card);
                 });
+
+                if (count === 0) {
+                    container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending deposit requests.</p>`;
+                }
             } catch (error) {
                 container.innerHTML = `<p class="text-red-500">Failed to load deposits.</p>`;
             }
