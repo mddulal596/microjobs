@@ -26,13 +26,21 @@
         <!-- Main Content -->
         <main class="p-4 flex-grow space-y-6">
             
-            <!-- 1. Post New Task / Job -->
+            <!-- 1. Post New Task / Job with Category -->
             <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
                 <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
                     <i class="fa-solid fa-plus-circle text-indigo-600"></i> Post New Task / Job
                 </h2>
                 <form id="taskForm" class="space-y-3">
                     <input type="hidden" id="editTaskId">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Task Category</label>
+                        <select id="taskCategory" required class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
+                            <option value="microjobs">Micro Jobs</option>
+                            <option value="video">Video Task</option>
+                            <option value="daily-jobs">Daily Job</option>
+                        </select>
+                    </div>
                     <div>
                         <label class="block text-[11px] font-semibold text-gray-600 mb-1">Task Title</label>
                         <input type="text" id="taskTitle" required placeholder="e.g. Watch YouTube Video" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
@@ -150,10 +158,11 @@
         import { db } from '../firebase/firebase-config.js';
         import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, increment, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // 1. Handle Task Post & Edit
+        // 1. Handle Task Post & Edit with Category
         document.getElementById('taskForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const editId = document.getElementById('editTaskId').value;
+            const category = document.getElementById('taskCategory').value;
             const title = document.getElementById('taskTitle').value;
             const reward = parseFloat(document.getElementById('taskReward').value);
             const workers = parseInt(document.getElementById('taskWorkers').value);
@@ -161,13 +170,13 @@
 
             try {
                 if (editId) {
-                    await updateDoc(doc(db, "tasks", editId), { title, reward, workers, link });
+                    await updateDoc(doc(db, "tasks", editId), { category, title, reward, workers, link });
                     alert("Task updated successfully!");
                     document.getElementById('editTaskId').value = "";
                     document.getElementById('taskSubmitBtn').innerText = "Publish Task";
                 } else {
                     await addDoc(collection(db, "tasks"), {
-                        title, reward, workers, link,
+                        category, title, reward, workers, link,
                         status: "active",
                         timestamp: serverTimestamp()
                     });
@@ -193,7 +202,7 @@
             }
         });
 
-        // 3. Manage User Balance (Uniform structure: Updates both mainBalance and balances.main)
+        // 3. Manage User Balance (Uniform structure)
         document.getElementById('userBalanceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('targetUserEmail').value.trim();
@@ -267,7 +276,6 @@
         window.approveSub = async function(subId, userId, rewardAmount) {
             try {
                 await updateDoc(doc(db, "submissions", subId), { status: "approved" });
-                // Uniformly update both mainBalance and balances.main
                 await updateDoc(doc(db, "users", userId), {
                     mainBalance: increment(rewardAmount),
                     "balances.main": increment(rewardAmount)
@@ -373,7 +381,6 @@
         window.approveDeposit = async function(depId, userId, amount) {
             try {
                 await updateDoc(doc(db, "deposits", depId), { status: "approved" });
-                // Uniformly update mainBalance, balances.main, and deposit balance field
                 await updateDoc(doc(db, "users", userId), {
                     mainBalance: increment(amount),
                     "balances.main": increment(amount),
@@ -417,11 +424,12 @@
                     card.className = "border border-gray-100 bg-gray-50 p-2.5 rounded-xl flex items-center justify-between gap-2";
                     card.innerHTML = `
                         <div class="overflow-hidden">
-                            <h4 class="font-bold text-gray-800 truncate text-[11px]">${task.title}</h4>
+                            <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold uppercase">${task.category || 'microjobs'}</span>
+                            <h4 class="font-bold text-gray-800 truncate text-[11px] mt-0.5">${task.title}</h4>
                             <p class="text-[10px] text-gray-500">Reward: ৳ ${task.reward} | Workers: ${task.workers}</p>
                         </div>
                         <div class="flex gap-1.5">
-                            <button onclick="editTask('${taskId}', '${task.title}', ${task.reward}, ${task.workers}, '${task.link}')" class="bg-amber-500 hover:bg-amber-600 text-white px-2 py-1.5 rounded-lg font-bold text-[10px] transition">Edit</button>
+                            <button onclick="editTask('${taskId}', '${task.category || 'microjobs'}', '${task.title}', ${task.reward}, ${task.workers}, '${task.link}')" class="bg-amber-500 hover:bg-amber-600 text-white px-2 py-1.5 rounded-lg font-bold text-[10px] transition">Edit</button>
                             <button onclick="deleteTask('${taskId}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1.5 rounded-lg font-bold text-[10px] transition">Delete</button>
                         </div>
                     `;
@@ -432,8 +440,9 @@
             }
         }
 
-        window.editTask = function(id, title, reward, workers, link) {
+        window.editTask = function(id, category, title, reward, workers, link) {
             document.getElementById('editTaskId').value = id;
+            document.getElementById('taskCategory').value = category;
             document.getElementById('taskTitle').value = title;
             document.getElementById('taskReward').value = reward;
             document.getElementById('taskWorkers').value = workers;
@@ -461,4 +470,4 @@
         loadActiveTasks();
     </script>
 </body>
-                                </html>
+</html>
