@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Micro Job Pro</title>
+    <title>Full Control Admin Panel - Micro Job Pro</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN -->
@@ -18,15 +18,15 @@
                 <a href="dashboard.html" class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
                     <i class="fa-solid fa-arrow-left text-sm"></i>
                 </a>
-                <h1 class="text-base font-bold">Admin Panel</h1>
+                <h1 class="text-base font-bold">Full Admin Panel</h1>
             </div>
-            <span class="text-xs bg-red-500 px-3 py-1.5 rounded-full font-semibold">Admin Mode</span>
+            <span class="text-xs bg-red-500 px-3 py-1.5 rounded-full font-semibold">Super Admin</span>
         </header>
 
         <!-- Main Content -->
         <main class="p-4 flex-grow space-y-6">
             
-            <!-- Post New Task Section -->
+            <!-- 1. Post New Task / Job -->
             <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
                 <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
                     <i class="fa-solid fa-plus-circle text-indigo-600"></i> Post New Task / Job
@@ -34,7 +34,7 @@
                 <form id="taskForm" class="space-y-3">
                     <div>
                         <label class="block text-[11px] font-semibold text-gray-600 mb-1">Task Title</label>
-                        <input type="text" id="taskTitle" required placeholder="e.g. Watch YouTube Video & Subscribe" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
+                        <input type="text" id="taskTitle" required placeholder="e.g. Watch YouTube Video" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Task Link / Proof Requirement</label>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Task Link / Proof Details</label>
                         <input type="text" id="taskLink" required placeholder="https://example.com" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
                     </div>
                     <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
@@ -56,7 +56,7 @@
                 </form>
             </div>
 
-            <!-- Manage PTC Ads Section -->
+            <!-- 2. Post PTC Ad -->
             <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
                 <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
                     <i class="fa-solid fa-rectangle-ad text-purple-600"></i> Post New PTC Ad
@@ -82,13 +82,23 @@
                 </form>
             </div>
 
+            <!-- 3. Pending User Submissions Review Area -->
+            <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
+                <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-green-600"></i> Worker Submissions Review
+                </h2>
+                <div id="submissionsContainer" class="space-y-2 text-xs text-gray-500">
+                    <p>Loading pending submissions...</p>
+                </div>
+            </div>
+
         </main>
     </div>
 
-    <!-- Firebase Script Logic -->
+    <!-- Firebase Admin Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
-        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { collection, addDoc, getDocs, doc, updateDoc, increment, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Handle Task Posting
         document.getElementById('taskForm').addEventListener('submit', async (e) => {
@@ -137,6 +147,82 @@
                 alert("Failed to post ad.");
             }
         });
+
+        // Load Pending Submissions for Approval
+        async function loadSubmissions() {
+            const container = document.getElementById('submissionsContainer');
+            try {
+                const q = query(collection(db, "submissions"), where("status", "==", "pending"));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending submissions found.</p>`;
+                    return;
+                }
+
+                container.innerHTML = "";
+                querySnapshot.forEach((documentSnap) => {
+                    const sub = documentSnap.data();
+                    const subId = documentSnap.id;
+
+                    const card = document.createElement('div');
+                    card.className = "border border-gray-100 bg-gray-50 p-3 rounded-xl flex flex-col gap-2";
+                    card.innerHTML = `
+                        <div>
+                            <span class="font-bold text-gray-800">Task: ${sub.taskTitle || 'N/A'}</span>
+                            <p class="text-[10px] text-gray-500 mt-0.5">Proof: ${sub.proofText || sub.proof || 'No proof provided'}</p>
+                            <p class="text-[10px] text-indigo-600 font-semibold mt-1">Reward: ৳ ${sub.reward || 0}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="approveSub('${subId}', '${sub.userId}', ${sub.reward || 0})" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-1.5 rounded-lg font-bold text-[10px] transition">Approve</button>
+                            <button onclick="rejectSub('${subId}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-1.5 rounded-lg font-bold text-[10px] transition">Reject</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error loading submissions:", error);
+                container.innerHTML = `<p class="text-red-500">Failed to load submissions.</p>`;
+            }
+        }
+
+        // Approve Submission & Add Balance to User
+        window.approveSub = async function(subId, userId, rewardAmount) {
+            try {
+                // Update submission status to approved
+                const subRef = doc(db, "submissions", subId);
+                await updateDoc(subRef, { status: "approved" });
+
+                // Add balance to user account
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, {
+                    mainBalance: increment(rewardAmount),
+                    "balances.main": increment(rewardAmount)
+                });
+
+                alert("Submission approved and balance added!");
+                loadSubmissions();
+            } catch (error) {
+                console.error("Error approving submission:", error);
+                alert("Failed to approve.");
+            }
+        }
+
+        // Reject Submission
+        window.rejectSub = async function(subId) {
+            try {
+                const subRef = doc(db, "submissions", subId);
+                await updateDoc(subRef, { status: "rejected" });
+                alert("Submission rejected.");
+                loadSubmissions();
+            } catch (error) {
+                console.error("Error rejecting submission:", error);
+                alert("Failed to reject.");
+            }
+        }
+
+        // Initialize loading submissions on page load
+        loadSubmissions();
     </script>
 </body>
 </html>
