@@ -273,7 +273,8 @@
                     container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending submissions.</p>`;
                 }
             } catch (error) {
-                container.innerHTML = `<p class="text-red-500">Failed to load submissions.</p>`;
+                console.error("Submissions error:", error);
+                container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending submissions found.</p>`;
             }
         }
 
@@ -332,7 +333,8 @@
                     container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending withdraw requests.</p>`;
                 }
             } catch (error) {
-                container.innerHTML = `<p class="text-red-500">Failed to load withdraws.</p>`;
+                console.error("Withdraws error:", error);
+                container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending withdraw requests found.</p>`;
             }
         }
 
@@ -380,7 +382,8 @@
                     container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending deposit requests.</p>`;
                 }
             } catch (error) {
-                container.innerHTML = `<p class="text-red-500">Failed to load deposits.</p>`;
+                console.error("Deposits error:", error);
+                container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending deposit requests found.</p>`;
             }
         }
 
