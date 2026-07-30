@@ -91,25 +91,73 @@
         window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
         window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
+    
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, onSnapshot, collection, addDoc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        let currentUser = null;
+        let currentBalance = 0;
 
         observeAuthState((user) => {
             if (!user) { window.location.href = 'login.html'; return; }
+            currentUser = user;
+            
             onSnapshot(doc(db, "users", user.uid), (docSnap) => {
                 if (docSnap.exists()) {
-                    let main = docSnap.data().balances?.main ?? docSnap.data().mainBalance ?? 0;
-                    document.getElementById('mainBalance').innerText = Number(main).toFixed(2);
+                    currentBalance = docSnap.data().balances?.main ?? docSnap.data().mainBalance ?? 0;
+                    document.getElementById('mainBalance').innerText = Number(currentBalance).toFixed(2);
                 }
             });
         });
 
-        document.getElementById('withdrawForm').addEventListener('submit', (e) => {
+        document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert("উত্তোলনের রিকোয়েস্ট সফলভাবে জমা হয়েছে!");
-            window.location.href = 'wallet.html';
+            
+            if (!currentUser) {
+                alert("Please login first!");
+                return;
+            }
+
+            const method = document.getElementById('method').value;
+            const accountNumber = document.getElementById('accountNo').value.trim();
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+
+            if (amount <= 0) {
+                alert("সঠিক অ্যামাউন্ট দিন!");
+                return;
+            }
+
+            if (amount > currentBalance) {
+                alert("আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই!");
+                return;
+            }
+
+            try {
+                // ১. ফায়ারস্টোরের withdraws কালেকশনে রিকোয়েস্ট সেভ করা
+                await addDoc(collection(db, "withdraws"), {
+                    userId: currentUser.uid,
+                    method: method,
+                    accountNumber: accountNumber,
+                    amount: amount,
+                    status: "pending",
+                    timestamp: serverTimestamp()
+                });
+
+                // ২. ইউজারের মেইন ব্যালেন্স থেকে উইথড্র করা টাকা কেটে নেওয়া
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    mainBalance: increment(-amount),
+                    "balances.main": increment(-amount)
+                });
+
+                alert("উত্তোলনের রিকোয়েস্ট সফলভাবে জমা হয়েছে!");
+                window.location.href = 'wallet.html';
+
+            } catch (error) {
+                console.error("Error processing withdraw: ", error);
+                alert("উত্তোলনের রিকোয়েস্ট ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
+            }
         });
     </script>
 </body>
