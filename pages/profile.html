@@ -173,7 +173,7 @@
                 </div>
             </div>
 
-            <!-- Add Referral Code Section (যাদের রেফার কোড দেওয়া হয়নি তাদের জন্য) -->
+            <!-- Add Referral Code Section -->
             <div id="referralSection" class="bg-indigo-50 border border-indigo-100 p-4 rounded-2xl shadow-sm hidden">
                 <h3 class="text-xs font-bold text-indigo-900 uppercase tracking-wider mb-1"><i class="fa-solid fa-user-plus mr-1"></i> Add Upline Referral Code</h3>
                 <p class="text-[11px] text-indigo-600 mb-3">আপনি সাইনআপের সময় রেফার কোড না দিয়ে থাকলে এখানে বসিয়ে সাবমিট করতে পারেন (এটি শুধুমাত্র একবার করা যাবে)।</p>
@@ -295,7 +295,6 @@
                         activateBtn.classList.remove('hidden');
                     }
 
-                    // ইউজার যদি ইতিমধ্যে রেফার্ড হয়ে থাকে (referredBy ফিল্ড না থাকে), তবেই ইনপুট বক্স দেখাবে
                     const referralSection = document.getElementById('referralSection');
                     if (!currentUserData.referredBy) {
                         referralSection.classList.remove('hidden');
@@ -306,7 +305,7 @@
             });
         });
 
-        // রেফার কোড সাবমিট হ্যান্ডলার
+        // Referral Code Submit Handler with Clean Structured Data
         document.getElementById('submitReferralBtn').addEventListener('click', async () => {
             const inputCode = document.getElementById('uplineReferralInput').value.trim().toUpperCase();
             if (!inputCode) {
@@ -320,7 +319,6 @@
             }
 
             try {
-                // ফায়ারস্টোরে রেফার কোডধারী ইউজারকে খোঁজা
                 const usersRef = collection(db, "users");
                 const q = query(usersRef, where("referralCode", "==", inputCode));
                 const querySnapshot = await getDocs(q);
@@ -340,18 +338,16 @@
                     return;
                 }
 
-                // বর্তমান ইউজারের ডকুমেন্টে referredBy আপডেট করা
                 const currentUserRef = doc(db, "users", currentUserId);
                 await updateDoc(currentUserRef, {
                     referredBy: uplineDocId
                 });
 
-                // রেফারকারীর মোট রেফার এবং বোনাস আপডেট করা (ঐচ্ছিক)
                 const uplineRef = doc(db, "users", uplineDocId);
                 await updateDoc(uplineRef, {
                     totalReferred: increment(1),
-                    mainBalance: increment(10), // রেফারকারীকে ১০ টাকা বোনাস (যদি চান)
-                    referralEarnings: increment(10)
+                    referralEarnings: increment(10),
+                    "balances.main": increment(10)
                 });
 
                 alert('সফলভাবে রেফার কোড যুক্ত করা হয়েছে!');
