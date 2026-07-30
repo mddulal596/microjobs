@@ -190,50 +190,56 @@
             allTransactions = [];
 
             try {
-                // ১. ডিপোজিট হিস্ট্রি ফেচ করা
-                const depositSnapshot = await getDocs(query(collection(db, "deposits"), where("userId", "==", uid)));
-                depositSnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    allTransactions.push({
-                        type: 'deposit',
-                        title: `Deposit via ${data.method || data.gateway || 'Mobile'}`,
-                        subtitle: `Trx: ${data.trxId || 'N/A'}`,
-                        amount: `+৳ ${Number(data.amount || 0).toFixed(2)}`,
-                        status: data.status || 'pending',
-                        amountClass: 'text-emerald-600',
-                        timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
+                // ১. ডিপোজিট হিস্ট্রি
+                try {
+                    const depositSnapshot = await getDocs(query(collection(db, "deposits"), where("userId", "==", uid)));
+                    depositSnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        allTransactions.push({
+                            type: 'deposit',
+                            title: `Deposit via ${data.method || data.gateway || 'Mobile'}`,
+                            subtitle: `Trx: ${data.trxId || 'N/A'}`,
+                            amount: `+৳ ${Number(data.amount || 0).toFixed(2)}`,
+                            status: data.status || 'pending',
+                            amountClass: 'text-emerald-600',
+                            timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
+                        });
                     });
-                });
+                } catch (err) { console.log("Deposit fetch error:", err); }
 
-                // ২. উইথড্রাল হিস্ট্রি ফেচ করা (withdraws কালেকশন ব্যবহার করে)
-                const withdrawSnapshot = await getDocs(query(collection(db, "withdraws"), where("userId", "==", uid)));
-                withdrawSnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    allTransactions.push({
-                        type: 'withdraw',
-                        title: `Withdrawal via ${data.method || 'Method'}`,
-                        subtitle: `A/C: ${data.accountNumber || data.number || 'N/A'}`,
-                        amount: `-৳ ${Number(data.amount || 0).toFixed(2)}`,
-                        status: data.status || 'pending',
-                        amountClass: 'text-amber-600',
-                        timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
+                // ২. উইথড্রাল হিস্ট্রি
+                try {
+                    const withdrawSnapshot = await getDocs(query(collection(db, "withdraws"), where("userId", "==", uid)));
+                    withdrawSnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        allTransactions.push({
+                            type: 'withdraw',
+                            title: `Withdrawal via ${data.method || 'Method'}`,
+                            subtitle: `A/C: ${data.accountNumber || data.number || 'N/A'}`,
+                            amount: `-৳ ${Number(data.amount || 0).toFixed(2)}`,
+                            status: data.status || 'pending',
+                            amountClass: 'text-amber-600',
+                            timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
+                        });
                     });
-                });
+                } catch (err) { console.log("Withdraw fetch error:", err); }
 
-                // ৩. আর্নিং হিস্ট্রি ফেচ করা
-                const earningSnapshot = await getDocs(query(collection(db, "earnings"), where("userId", "==", uid)));
-                earningSnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    allTransactions.push({
-                        type: 'earning',
-                        title: data.title || 'Task Reward Earned',
-                        subtitle: 'Task Completion Bonus',
-                        amount: `+৳ ${Number(data.amount || 0).toFixed(2)}`,
-                        status: data.status || 'approved',
-                        amountClass: 'text-emerald-600',
-                        timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
+                // ৩. আর্নিং হিস্ট্রি
+                try {
+                    const earningSnapshot = await getDocs(query(collection(db, "earnings"), where("userId", "==", uid)));
+                    earningSnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        allTransactions.push({
+                            type: 'earning',
+                            title: data.title || 'Task Reward Earned',
+                            subtitle: 'Task Completion Bonus',
+                            amount: `+৳ ${Number(data.amount || 0).toFixed(2)}`,
+                            status: data.status || 'approved',
+                            amountClass: 'text-emerald-600',
+                            timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
+                        });
                     });
-                });
+                } catch (err) { console.log("Earning fetch error:", err); }
 
                 // তারিখ অনুযায়ী রিসেন্ট ট্রানজেকশন উপরে সাজানো (Descending)
                 allTransactions.sort((a, b) => b.timestamp - a.timestamp);
