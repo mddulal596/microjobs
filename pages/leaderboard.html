@@ -80,7 +80,7 @@
 <body class="bg-gray-50 text-gray-800 antialiased">
     <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-36">
         
-        <!-- Top Header & Balances (প্রোফাইল পেজের হুবহু স্টাইল) -->
+        <!-- Top Header & Balances -->
         <header class="p-5 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-b-3xl shadow-lg relative">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-2 bg-white/15 border border-white/30 px-3.5 py-1.5 rounded-full text-white text-xs font-bold">
@@ -107,40 +107,9 @@
         <main class="p-4 flex-grow">
             <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Top 50 Earners Leaderboard</h2>
 
-            <!-- Leaderboard List Container -->
+            <!-- Leaderboard List Container (রিয়েল ইউজার ডাটা এখানে লোড হবে) -->
             <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3 flex flex-col gap-2.5" id="leaderboardList">
-                <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-indigo-500 transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-7 h-7 bg-yellow-100 text-yellow-800 font-extrabold text-xs rounded-full flex items-center justify-center">1</div>
-                        <div>
-                            <h4 class="text-xs font-bold text-gray-800">Rahim Ahmed</h4>
-                            <p class="text-[10px] text-gray-500">Completed 340 Tasks</p>
-                        </div>
-                    </div>
-                    <div class="text-xs font-extrabold text-emerald-600">৳ 4,500.00</div>
-                </div>
-
-                <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-indigo-500 transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-7 h-7 bg-slate-200 text-slate-700 font-extrabold text-xs rounded-full flex items-center justify-center">2</div>
-                        <div>
-                            <h4 class="text-xs font-bold text-gray-800">Tanvir Hossain</h4>
-                            <p class="text-[10px] text-gray-500">Completed 290 Tasks</p>
-                        </div>
-                    </div>
-                    <div class="text-xs font-extrabold text-emerald-600">৳ 3,850.00</div>
-                </div>
-
-                <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-indigo-500 transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-7 h-7 bg-amber-100 text-amber-800 font-extrabold text-xs rounded-full flex items-center justify-center">3</div>
-                        <div>
-                            <h4 class="text-xs font-bold text-gray-800">Karim Uddin</h4>
-                            <p class="text-[10px] text-gray-500">Completed 250 Tasks</p>
-                        </div>
-                    </div>
-                    <div class="text-xs font-extrabold text-emerald-600">৳ 3,120.00</div>
-                </div>
+                <p class="text-center text-xs text-gray-400 py-6">Loading leaderboard...</p>
             </div>
         </main>
 
@@ -180,7 +149,6 @@
         
         items.forEach(item => { item.addEventListener("click", () => moveIndicator(item)); });  
         
-        // ডিফল্টভাবে কোনো নির্দিষ্ট ট্যাব একটিভ না থাকলে বা প্রোফাইল পেজ থেকে আসার পর সঠিক পজিশন রাখতে হোম বা অন্যটি সেট করা যায়
         const activeItem = document.querySelector(".nav-item-animated.active") || items[2];
         moveIndicator(activeItem);
 
@@ -194,8 +162,9 @@
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, onSnapshot, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // ১. ইউজারের লাইভ ব্যালেন্স এবং প্রোফাইল ইনফো লোড করা
         observeAuthState((user) => {
             if (!user) {
                 window.location.href = 'login.html';
@@ -218,6 +187,61 @@
                 }
             });
         });
+
+        // ২. ফায়ারবেস থেকে রিয়েল ইউজারদের নিয়ে লিডারবোর্ড তৈরি করা
+        async function loadLeaderboard() {
+            const leaderboardContainer = document.getElementById('leaderboardList');
+
+            try {
+                const usersRef = collection(db, "users");
+                // মেইন ব্যালেন্সের ওপর ভিত্তি করে টপ ৫০ জন ইউজারের কুয়েরি
+                const q = query(usersRef, orderBy("balances.main", "desc"), limit(50));
+                const querySnapshot = await getDocs(q);
+
+                leaderboardContainer.innerHTML = "";
+                let rank = 1;
+
+                if (querySnapshot.empty) {
+                    leaderboardContainer.innerHTML = `<p class='text-center text-xs text-gray-400 py-4'>No users found on leaderboard yet.</p>`;
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const userData = docSnap.data();
+                    const name = userData.fullName || userData.displayName || "User";
+                    const mainBalance = Number(userData.balances?.main ?? userData.mainBalance ?? 0);
+                    const completedTasks = userData.completedTasksCount || 0;
+
+                    // র‍্যাংক অনুযায়ী মেডেল বা কালার ডিজাইন
+                    let badgeBg = "bg-gray-100 text-gray-700";
+                    if (rank === 1) badgeBg = "bg-yellow-100 text-yellow-800 font-extrabold";
+                    else if (rank === 2) badgeBg = "bg-slate-200 text-slate-700 font-extrabold";
+                    else if (rank === 3) badgeBg = "bg-amber-100 text-amber-800 font-extrabold";
+
+                    const itemHTML = `
+                        <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-indigo-500 transition">
+                            <div class="flex items-center gap-3">
+                                <div class="w-7 h-7 ${badgeBg} text-xs rounded-full flex items-center justify-center">${rank}</div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-gray-800">${name}</h4>
+                                    <p class="text-[10px] text-gray-500">Completed ${completedTasks} Tasks</p>
+                                </div>
+                            </div>
+                            <div class="text-xs font-extrabold text-emerald-600">৳ ${mainBalance.toFixed(2)}</div>
+                        </div>
+                    `;
+                    leaderboardContainer.innerHTML += itemHTML;
+                    rank++;
+                });
+
+            } catch (error) {
+                console.error("Error loading leaderboard:", error);
+                leaderboardContainer.innerHTML = `<p class='text-center text-xs text-red-400 py-4'>Failed to load leaderboard data.</p>`;
+            }
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে লিডারবোর্ড ফেচ হবে
+        loadLeaderboard();
     </script>
 </body>
 </html>
