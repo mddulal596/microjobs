@@ -116,65 +116,75 @@
         </header>
 
         <!-- Main Content Area (Action Buttons) -->
-        <main class="p-4 flex-grow">
-            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Account Actions</h2>
-            
-            <div class="grid grid-cols-2 gap-2.5">
+        <main class="p-4 flex-grow space-y-4">
+            <div>
+                <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Account Actions</h2>
                 
-                <!-- ১. Leaderboard -->
-                <a href="leaderboard.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-indigo-100 transition shadow-sm gap-1.5">
-                    <span class="text-2xl">🏆</span>
-                    <span class="text-xs font-bold text-indigo-900 leading-tight">Leaderboard</span>
-                </a>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <!-- ১. Leaderboard -->
+                    <a href="leaderboard.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-indigo-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">🏆</span>
+                        <span class="text-xs font-bold text-indigo-900 leading-tight">Leaderboard</span>
+                    </a>
 
-                <!-- ২. Membership -->
-                <div id="accountStatusBox" class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center shadow-sm gap-1.5 relative">
-                    <span class="text-2xl">⭐</span>
-                    <span class="text-xs font-bold text-amber-900 leading-tight">Membership</span>
-                    <p id="statusText" class="text-[10px] text-amber-700 font-medium">Checking...</p>
-                    <a id="activateBtn" href="activate-account.html" class="hidden absolute top-2 right-2 bg-amber-600 text-white px-2 py-0.5 rounded-lg text-[9px] font-bold shadow hover:bg-amber-700 transition">Activate</a>
+                    <!-- ২. Membership -->
+                    <div id="accountStatusBox" class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center shadow-sm gap-1.5 relative">
+                        <span class="text-2xl">⭐</span>
+                        <span class="text-xs font-bold text-amber-900 leading-tight">Membership</span>
+                        <p id="statusText" class="text-[10px] text-amber-700 font-medium">Checking...</p>
+                        <a id="activateBtn" href="activate-account.html" class="hidden absolute top-2 right-2 bg-amber-600 text-white px-2 py-0.5 rounded-lg text-[9px] font-bold shadow hover:bg-amber-700 transition">Activate</a>
+                    </div>
+
+                    <!-- ৩. My Wallet & Balances -->
+                    <a href="wallet.html" class="p-3.5 bg-purple-50/60 border border-purple-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-purple-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">💳</span>
+                        <span class="text-xs font-bold text-purple-900 leading-tight">My Wallet & Balances</span>
+                    </a>
+
+                    <!-- ৪. Referral Team -->
+                    <a href="referral.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-indigo-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">👥</span>
+                        <span class="text-xs font-bold text-indigo-900 leading-tight">Referral Team</span>
+                    </a>
+
+                    <!-- ৫. Task History -->
+                    <a href="history.html" class="p-3.5 bg-rose-50/60 border border-rose-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-rose-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">📊</span>
+                        <span class="text-xs font-bold text-rose-900 leading-tight">Task History</span>
+                    </a>
+
+                    <!-- ৬. Support & Help -->
+                    <a href="https://t.me/microjobspro" target="_blank" class="p-3.5 bg-sky-50/60 border border-sky-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-sky-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">🎧</span>
+                        <span class="text-xs font-bold text-sky-900 leading-tight">Support & Help</span>
+                    </a>
+
+                    <!-- ৭. Task Complete -->
+                    <a href="task-complete.html" class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-emerald-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">✅</span>
+                        <span class="text-xs font-bold text-emerald-900 leading-tight">Task Complete</span>
+                    </a>
+
+                    <!-- ৮. Task Pending -->
+                    <a href="task-pending.html" class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-amber-100 transition shadow-sm gap-1.5">
+                        <span class="text-2xl">⏳</span>
+                        <span class="text-xs font-bold text-amber-900 leading-tight">Task Pending</span>
+                    </a>
                 </div>
+            </div>
 
-                <!-- ৩. My Wallet & Balances -->
-                <a href="wallet.html" class="p-3.5 bg-purple-50/60 border border-purple-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-purple-100 transition shadow-sm gap-1.5">
-                    <span class="text-2xl">💳</span>
-                    <span class="text-xs font-bold text-purple-900 leading-tight">My Wallet & Balances</span>
-                </a>
-
-                <!-- ৪. Referral Team -->
-                <a href="referral.html" class="p-3.5 bg-indigo-50/60 border border-indigo-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-indigo-100 transition shadow-sm gap-1.5">
-                    <span class="text-2xl">👥</span>
-                    <span class="text-xs font-bold text-indigo-900 leading-tight">Referral Team</span>
-                </a>
-
-                <!-- ৫. Task History -->
-                <a href="history.html" class="p-3.5 bg-rose-50/60 border border-rose-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-rose-100 transition shadow-sm gap-1.5">
-                    <span class="text-2xl">📊</span>
-                    <span class="text-xs font-bold text-rose-900 leading-tight">Task History</span>
-                </a>
-
-                <!-- ৬. Support & Help -->
-                <a href="https://t.me/microjobspro" target="_blank" class="p-3.5 bg-sky-50/60 border border-sky-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-sky-100 transition shadow-sm gap-1.5">
-                    <span class="text-2xl">🎧</span>
-                    <span class="text-xs font-bold text-sky-900 leading-tight">Support & Help</span>
-                </a>
-
-                <!-- ৭. Task Complete -->
-                <a href="task-complete.html" class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-emerald-100 transition shadow-sm gap-1.5">
-                    <span class="text-2xl">✅</span>
-                    <span class="text-xs font-bold text-emerald-900 leading-tight">Task Complete</span>
-                </a>
-
-                <!-- ৮. Task Pending -->
-                <a href="task-pending.html" class="p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center hover:bg-amber-100 transition shadow-sm gap-1.5">
-                    <span class="text-2xl">⏳</span>
-                    <span class="text-xs font-bold text-amber-900 leading-tight">Task Pending</span>
-                </a>
-
+            <!-- Add Referral Code Section (যাদের রেফার কোড দেওয়া হয়নি তাদের জন্য) -->
+            <div id="referralSection" class="bg-indigo-50 border border-indigo-100 p-4 rounded-2xl shadow-sm hidden">
+                <h3 class="text-xs font-bold text-indigo-900 uppercase tracking-wider mb-1"><i class="fa-solid fa-user-plus mr-1"></i> Add Upline Referral Code</h3>
+                <p class="text-[11px] text-indigo-600 mb-3">আপনি সাইনআপের সময় রেফার কোড না দিয়ে থাকলে এখানে বসিয়ে সাবমিট করতে পারেন (এটি শুধুমাত্র একবার করা যাবে)।</p>
+                <div class="flex gap-2">
+                    <input type="text" id="uplineReferralInput" placeholder="Enter Referral Code" class="flex-grow bg-white border border-indigo-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase">
+                    <button id="submitReferralBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow">Submit</button>
+                </div>
             </div>
 
             <!-- Logout Button -->
-            <button id="logoutBtn" class="w-full mt-3 p-3.5 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 transition shadow-sm text-red-600 font-bold text-xs cursor-pointer">
+            <button id="logoutBtn" class="w-full p-3.5 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 transition shadow-sm text-red-600 font-bold text-xs cursor-pointer">
                 <i class="fa-solid fa-right-from-bracket"></i> Logout Account
             </button>
         </main>
@@ -222,14 +232,16 @@
         });
     </script>
 
-    <!-- Firebase Realtime Sync -->
+    <!-- Firebase Realtime Sync & Referral Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
-        import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { doc, getDocs, updateDoc, collection, query, where, onSnapshot, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const auth = getAuth();
+        let currentUserData = null;
+        let currentUserId = null;
 
         observeAuthState(async (user) => {
             if (!user) {
@@ -237,6 +249,7 @@
                 return;
             }
 
+            currentUserId = user.uid;
             const name = user.fullName || user.displayName || "User";
             const email = user.email || "No email available";
             
@@ -260,11 +273,10 @@
             const userDocRef = doc(db, "users", user.uid);
             onSnapshot(userDocRef, (docSnap) => {
                 if (docSnap.exists()) {
-                    const data = docSnap.data();
+                    currentUserData = docSnap.data();
 
-                    // ডাটাবেসের balances ম্যাপ থেকে main এবং deposit ব্যালেন্স ফেচ করা হচ্ছে
-                    const mainBal = Number(data.balances?.main ?? data.mainBalance ?? 0);
-                    const depositBal = Number(data.balances?.deposit ?? data.depositBalance ?? 0);
+                    const mainBal = Number(currentUserData.balances?.main ?? currentUserData.mainBalance ?? 0);
+                    const depositBal = Number(currentUserData.balances?.deposit ?? currentUserData.depositBalance ?? 0);
                     
                     document.getElementById('mainBalance').innerText = `৳ ${mainBal.toFixed(2)}`;
                     document.getElementById('depositBalance').innerText = `৳ ${depositBal.toFixed(2)}`;
@@ -273,7 +285,7 @@
                     const activateBtn = document.getElementById('activateBtn');
                     const statusBox = document.getElementById('accountStatusBox');
 
-                    if (data.isActivated) {
+                    if (currentUserData.isActivated) {
                         statusText.innerText = "Active (Premium)";
                         statusBox.className = "p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-2xl flex flex-col items-center text-center justify-center shadow-sm gap-1.5 relative";
                         activateBtn.classList.add('hidden');
@@ -282,8 +294,73 @@
                         statusBox.className = "p-3.5 bg-amber-50/60 border border-amber-100 rounded-2xl flex flex-col items-center text-center justify-center shadow-sm gap-1.5 relative";
                         activateBtn.classList.remove('hidden');
                     }
+
+                    // ইউজার যদি ইতিমধ্যে রেফার্ড হয়ে থাকে (referredBy ফিল্ড না থাকে), তবেই ইনপুট বক্স দেখাবে
+                    const referralSection = document.getElementById('referralSection');
+                    if (!currentUserData.referredBy) {
+                        referralSection.classList.remove('hidden');
+                    } else {
+                        referralSection.classList.add('hidden');
+                    }
                 }
             });
+        });
+
+        // রেফার কোড সাবমিট হ্যান্ডলার
+        document.getElementById('submitReferralBtn').addEventListener('click', async () => {
+            const inputCode = document.getElementById('uplineReferralInput').value.trim().toUpperCase();
+            if (!inputCode) {
+                alert('দয়া করে একটি রেফার কোড লিখুন!');
+                return;
+            }
+
+            if (currentUserData.referralCode === inputCode) {
+                alert('আপনি নিজের রেফার কোড ব্যবহার করতে পারবেন না!');
+                return;
+            }
+
+            try {
+                // ফায়ারস্টোরে রেফার কোডধারী ইউজারকে খোঁজা
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("referralCode", "==", inputCode));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    alert('ভুল রেফার কোড! এই কোডের কোনো ইউজার পাওয়া যায়নি।');
+                    return;
+                }
+
+                let uplineDocId = null;
+                querySnapshot.forEach((doc) => {
+                    uplineDocId = doc.id;
+                });
+
+                if (uplineDocId === currentUserId) {
+                    alert('আপনি নিজের রেফার কোড ব্যবহার করতে পারবেন না!');
+                    return;
+                }
+
+                // বর্তমান ইউজারের ডকুমেন্টে referredBy আপডেট করা
+                const currentUserRef = doc(db, "users", currentUserId);
+                await updateDoc(currentUserRef, {
+                    referredBy: uplineDocId
+                });
+
+                // রেফারকারীর মোট রেফার এবং বোনাস আপডেট করা (ঐচ্ছিক)
+                const uplineRef = doc(db, "users", uplineDocId);
+                await updateDoc(uplineRef, {
+                    totalReferred: increment(1),
+                    mainBalance: increment(10), // রেফারকারীকে ১০ টাকা বোনাস (যদি চান)
+                    referralEarnings: increment(10)
+                });
+
+                alert('সফলভাবে রেফার কোড যুক্ত করা হয়েছে!');
+                document.getElementById('referralSection').classList.add('hidden');
+
+            } catch (error) {
+                console.error("Error updating referral code:", error, { code: error.code, message: error.message });
+                alert('রেফার কোড যুক্ত করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+            }
         });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
