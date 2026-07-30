@@ -179,7 +179,6 @@
                 document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
                 document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
 
-                // Fetch Transactions from Firestore
                 await fetchUserTransactions(uid);
             } else {
                 window.location.href = 'login.html';
@@ -197,27 +196,27 @@
                     const data = doc.data();
                     allTransactions.push({
                         type: 'deposit',
-                        title: `Deposit via ${data.gateway || 'Mobile'}`,
+                        title: `Deposit via ${data.method || data.gateway || 'Mobile'}`,
                         subtitle: `Trx: ${data.trxId || 'N/A'}`,
                         amount: `+৳ ${Number(data.amount || 0).toFixed(2)}`,
                         status: data.status || 'pending',
                         amountClass: 'text-emerald-600',
-                        timestamp: data.timestamp?.toDate() || new Date()
+                        timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
                     });
                 });
 
-                // ২. উইথড্রাল হিস্ট্রি ফেচ করা
-                const withdrawSnapshot = await getDocs(query(collection(db, "withdrawals"), where("userId", "==", uid)));
+                // ২. উইথড্রাল হিস্ট্রি ফেচ করা (withdraws কালেকশন ব্যবহার করে)
+                const withdrawSnapshot = await getDocs(query(collection(db, "withdraws"), where("userId", "==", uid)));
                 withdrawSnapshot.forEach((doc) => {
                     const data = doc.data();
                     allTransactions.push({
                         type: 'withdraw',
                         title: `Withdrawal via ${data.method || 'Method'}`,
-                        subtitle: `A/C: ${data.accountNumber || 'N/A'}`,
+                        subtitle: `A/C: ${data.accountNumber || data.number || 'N/A'}`,
                         amount: `-৳ ${Number(data.amount || 0).toFixed(2)}`,
                         status: data.status || 'pending',
                         amountClass: 'text-amber-600',
-                        timestamp: data.timestamp?.toDate() || new Date()
+                        timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
                     });
                 });
 
@@ -232,7 +231,7 @@
                         amount: `+৳ ${Number(data.amount || 0).toFixed(2)}`,
                         status: data.status || 'approved',
                         amountClass: 'text-emerald-600',
-                        timestamp: data.timestamp?.toDate() || new Date()
+                        timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
                     });
                 });
 
@@ -267,7 +266,7 @@
                 
                 let badgeClass = 'bg-amber-100 text-amber-700';
                 let statusText = tx.status.charAt(0).toUpperCase() + tx.status.slice(1);
-                if (tx.status === 'approved' || tx.status === 'completed' || tx.status === 'success') {
+                if (tx.status === 'approved' || tx.status === 'completed' || tx.status === 'success' || tx.status === 'paid') {
                     badgeClass = 'bg-emerald-100 text-emerald-700';
                 }
 
