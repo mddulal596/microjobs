@@ -47,11 +47,11 @@
 
     <!-- Firebase Logic for Team Details -->
     <script type="module">
-        import { db } from '../firebase/firebase-config.js';
-        import { observeAuthState } from '../firebase/auth.js';
+        import { db, auth } from '../firebase/firebase-config.js';
         import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        observeAuthState(async (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 window.location.href = 'login.html';
                 return;
@@ -64,13 +64,16 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     const totalRef = data.totalReferred ?? 0;
+                    const totalRefEarnings = data.referralEarnings ?? 0;
                     const levelsData = data.levels || {};
 
+                    // হেডার ব্যাজ আপডেট
                     document.getElementById('totalTeamBadge').innerText = `Team: ${totalRef}`;
 
                     const container = document.getElementById('fullLevelContainer');
                     container.innerHTML = '';
 
+                    // ১০ লেভেলের লজিক লুপ
                     for (let i = 1; i <= 10; i++) {
                         let levelMembers = 0;
                         let levelEarnings = 0;
@@ -79,9 +82,9 @@
                             levelMembers = levelsData[`level_${i}`].count || 0;
                             levelEarnings = levelsData[`level_${i}`].earnings || 0;
                         } else if (i === 1) {
-                            // সংশোধন করা হয়েছে: লেভেল ১-এ মেইন ব্যালেন্সের পরিবর্তে শূন্য (0) দেখানো হবে যদি কোনো রেফারেল না থাকে
+                            // লেভেল ১ এর জন্য সরাসরি সাইনআপের টোটাল রেফার ও আর্নিং দেখাবে
                             levelMembers = totalRef;
-                            levelEarnings = totalRef > 0 ? (data.referralEarnings ?? 0) : 0;
+                            levelEarnings = totalRefEarnings;
                         }
 
                         const card = document.createElement('div');
