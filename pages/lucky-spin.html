@@ -151,7 +151,7 @@
 
         <button id="spin-btn" disabled>Loading...</button>
         <div id="result-display"></div>
-        <a href="/microjobs/pages/spin.html" class="back-link">← Back to Dashboard</a>
+        <a href="../pages/spin.html" class="back-link">← Back to Dashboard</a>
     </div>
 
     <!-- Firebase & Spin Logic Integration -->
@@ -218,7 +218,7 @@
                 );
                 ctx.rotate(angle + arcSize / 2 + Math.PI / 2);
                 let text = prizes[i].text;
-                ctx.fillText(text, -ctx.measureText(text].width / 2, 0);
+                ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
                 ctx.restore();
             }
 
@@ -229,35 +229,42 @@
             ctx.stroke();
         }
 
-        // Authentication & Real-time Balance Fetching from Firebase
-        observeAuthState((user) => {
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
-            currentUser = user;
+        // পেজ লোডের শুরুতেই চাকাটি এঁকে নেওয়া হলো
+        drawWheel();
 
-            const userDocRef = doc(db, "users", user.uid);
-            
-            onSnapshot(userDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    if (data.balances && typeof data.balances.main !== 'undefined') {
-                        currentBalance = data.balances.main;
-                    } else if (typeof data.balance !== 'undefined') {
-                        currentBalance = data.balance;
-                    }
-                    balanceAmountElem.textContent = Number(currentBalance).toFixed(2);
-                    
-                    if (!isSpinning) {
-                        spinBtn.disabled = false;
-                        spinBtn.textContent = "SPIN NOW";
-                    }
+        // Authentication & Real-time Balance Fetching from Firebase
+        try {
+            observeAuthState((user) => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
                 }
-            }, (error) => {
-                console.error("Error fetching balance:", error);
+                currentUser = user;
+
+                const userDocRef = doc(db, "users", user.uid);
+                
+                onSnapshot(userDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        if (data.balances && typeof data.balances.main !== 'undefined') {
+                            currentBalance = data.balances.main;
+                        } else if (typeof data.balance !== 'undefined') {
+                            currentBalance = data.balance;
+                        }
+                        balanceAmountElem.textContent = Number(currentBalance).toFixed(2);
+                        
+                        if (!isSpinning) {
+                            spinBtn.disabled = false;
+                            spinBtn.textContent = "SPIN NOW";
+                        }
+                    }
+                }, (error) => {
+                    console.error("Error fetching balance:", error);
+                });
             });
-        });
+        } catch (error) {
+            console.error("Firebase auth check error:", error);
+        }
 
         function spinWheel() {
             if (isSpinning || !currentUser) return;
@@ -324,7 +331,6 @@
             spinBtn.textContent = "SPIN NOW";
         }
 
-        drawWheel();
         spinBtn.addEventListener('click', spinWheel);
     </script>
 </body>
