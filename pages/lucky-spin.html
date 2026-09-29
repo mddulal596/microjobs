@@ -159,6 +159,9 @@
         const resultDisplay = document.getElementById('result-display');
         const balanceAmountElem = document.getElementById('balance-amount');
 
+        // Adsterra Direct Link URL
+        const adsterraDirectLink = "https://chocolatefloweryron.com/rmm8pbwe?key=a42d11bce0966c10bc9b3f909ae44009";
+
         let currentUser = null;
         let currentBalance = 0;
 
@@ -298,6 +301,12 @@
                 });
 
                 resultDisplay.textContent = `🎉 Congratulations! You won: ${winningText}`;
+
+                // অটোমেটিক এড স্টারা ডাইরেক্ট লিংকে নিয়ে যাওয়া
+                setTimeout(() => {
+                    window.open(adsterraDirectLink, '_blank');
+                }, 1000);
+
             } catch (error) {
                 console.error("Error updating balance in Firebase:", error);
                 resultDisplay.textContent = "Error updating balance. Try again.";
