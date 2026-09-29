@@ -29,18 +29,19 @@
             background: linear-gradient(135deg, #1f4068, #162447);
             color: #ffffff;
             overflow-x: hidden;
+            padding: 10px;
         }
 
         .container {
             text-align: center;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(12px);
-            padding: 30px;
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 400px;
-            width: 90%;
+            max-width: 450px;
+            width: 100%;
         }
 
         h1 {
@@ -51,22 +52,22 @@
 
         .balance-box {
             font-size: 1rem;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             color: #2ed573;
             font-weight: bold;
         }
 
         p.instructions {
             font-size: 0.9rem;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #a4b0be;
         }
 
         .wheel-container {
             position: relative;
-            width: 300px;
-            height: 300px;
-            margin: 0 auto 20px auto;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 15px auto;
         }
 
         canvas {
@@ -75,7 +76,6 @@
             cursor: pointer;
         }
 
-        /* Triangle Pointer / Arrow */
         .pointer {
             position: absolute;
             top: -10px;
@@ -118,10 +118,10 @@
         }
 
         #result-display {
-            margin-top: 20px;
-            font-size: 1.2rem;
+            margin-top: 15px;
+            font-size: 1.1rem;
             font-weight: 600;
-            min-height: 30px;
+            min-height: 25px;
             color: #2ed573;
         }
 
@@ -135,9 +135,33 @@
         .back-link:hover {
             color: #fff;
         }
+
+        /* Banner Container Styles */
+        .ad-banner-box {
+            width: 100%;
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Top 728x90 Banner Ad -->
+    <div class="ad-banner-box">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'c7619526f45d18a40dc5400e806b411c',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://chocolatefloweryron.com/c7619526f45d18a40dc5400e806b411c/invoke.js"></script>
+    </div>
 
     <div class="container">
         <h1>Lucky Spin</h1>
@@ -151,10 +175,24 @@
 
         <button id="spin-btn" disabled>Loading...</button>
         <div id="result-display"></div>
+
         <a href="../dashboard.html" class="back-link">← Back to Dashboard</a>
     </div>
 
-    <!-- Firebase & Spin Logic Integration -->
+    <!-- Bottom 728x90 Banner Ad -->
+    <div class="ad-banner-box">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'c7619526f45d18a40dc5400e806b411c',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://chocolatefloweryron.com/c7619526f45d18a40dc5400e806b411c/invoke.js"></script>
+    </div>
+
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
         import { observeAuthState } from '../firebase/auth.js';
@@ -166,13 +204,11 @@
         const resultDisplay = document.getElementById('result-display');
         const balanceAmountElem = document.getElementById('balance-amount');
 
-        // Adsterra Direct Link URL
         const adsterraDirectLink = "https://chocolatefloweryron.com/rmm8pbwe?key=a42d11bce0966c10bc9b3f909ae44009";
 
         let currentUser = null;
         let currentBalance = 0;
 
-        // Wheel Segments
         const prizes = [
             { text: "1 Taka", color: "#f7f1e3" },
             { text: "2 Taka", color: "#aaa69d" },
@@ -229,10 +265,8 @@
             ctx.stroke();
         }
 
-        // ক্যানভাসে চাকাটি আঁকা
         drawWheel();
 
-        // Authentication & Real-time Balance Fetching from Firebase
         observeAuthState((user) => {
             if (!user) {
                 window.location.href = 'login.html';
@@ -303,7 +337,6 @@
             let wonAmount = parseInt(winningText); 
 
             try {
-                // Firebase Database আপডেট করা
                 const userDocRef = doc(db, "users", currentUser.uid);
                 
                 await updateDoc(userDocRef, {
@@ -312,7 +345,6 @@
 
                 resultDisplay.textContent = `🎉 Congratulations! You won: ${winningText}`;
 
-                // ১ সেকেন্ড পর অটোমেটিক ডাইরেক্ট লিংকে রিডাইরেক্ট হবে
                 setTimeout(() => {
                     window.open(adsterraDirectLink, '_blank');
                 }, 1000);
