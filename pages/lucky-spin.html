@@ -151,7 +151,7 @@
 
         <button id="spin-btn" disabled>Loading...</button>
         <div id="result-display"></div>
-        <a href="../pages/spin.html" class="back-link">← Back to Dashboard</a>
+        <a href="../dashboard.html" class="back-link">← Back to Dashboard</a>
     </div>
 
     <!-- Firebase & Spin Logic Integration -->
@@ -229,42 +229,38 @@
             ctx.stroke();
         }
 
-        // পেজ লোডের শুরুতেই চাকাটি এঁকে নেওয়া হলো
+        // ক্যানভাসে চাকাটি আঁকা
         drawWheel();
 
         // Authentication & Real-time Balance Fetching from Firebase
-        try {
-            observeAuthState((user) => {
-                if (!user) {
-                    window.location.href = 'login.html';
-                    return;
-                }
-                currentUser = user;
+        observeAuthState((user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = user;
 
-                const userDocRef = doc(db, "users", user.uid);
-                
-                onSnapshot(userDocRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        if (data.balances && typeof data.balances.main !== 'undefined') {
-                            currentBalance = data.balances.main;
-                        } else if (typeof data.balance !== 'undefined') {
-                            currentBalance = data.balance;
-                        }
-                        balanceAmountElem.textContent = Number(currentBalance).toFixed(2);
-                        
-                        if (!isSpinning) {
-                            spinBtn.disabled = false;
-                            spinBtn.textContent = "SPIN NOW";
-                        }
+            const userDocRef = doc(db, "users", user.uid);
+            
+            onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.balances && typeof data.balances.main !== 'undefined') {
+                        currentBalance = data.balances.main;
+                    } else if (typeof data.balance !== 'undefined') {
+                        currentBalance = data.balance;
                     }
-                }, (error) => {
-                    console.error("Error fetching balance:", error);
-                });
+                    balanceAmountElem.textContent = Number(currentBalance).toFixed(2);
+                    
+                    if (!isSpinning) {
+                        spinBtn.disabled = false;
+                        spinBtn.textContent = "SPIN NOW";
+                    }
+                }
+            }, (error) => {
+                console.error("Error fetching balance:", error);
             });
-        } catch (error) {
-            console.error("Firebase auth check error:", error);
-        }
+        });
 
         function spinWheel() {
             if (isSpinning || !currentUser) return;
@@ -316,7 +312,7 @@
 
                 resultDisplay.textContent = `🎉 Congratulations! You won: ${winningText}`;
 
-                // অটোমেটিক এড স্টারা ডাইরেক্ট লিংকে নিয়ে যাওয়া
+                // ১ সেকেন্ড পর অটোমেটিক ডাইরেক্ট লিংকে রিডাইরেক্ট হবে
                 setTimeout(() => {
                     window.open(adsterraDirectLink, '_blank');
                 }, 1000);
