@@ -63,13 +63,22 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 // ইউজার ডাটা ফেচ
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const data = userDoc.data();
-                    document.getElementById('userName').innerText = data.name || user.email.split('@')[0];
-                    document.getElementById('userInitial').innerText = (data.name || user.email)[0].toUpperCase();
-                    document.getElementById('mainBalance').innerText = (data.mainBalance || 0).toFixed(2);
-                    document.getElementById('depositBalance').innerText = (data.depositBalance || 0).toFixed(2);
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const data = userDoc.data();
+                        document.getElementById('userName').innerText = data.name || user.email.split('@')[0];
+                        document.getElementById('userInitial').innerText = (data.name || user.email)[0].toUpperCase();
+                        
+                        // ব্যালেন্স হ্যান্ডলিং (mainBalance / balances.main উভয় কাঠামোর জন্য)
+                        const main = data.mainBalance !== undefined ? data.mainBalance : (data.balances?.main || 0);
+                        const deposit = data.depositBalance !== undefined ? data.depositBalance : (data.balances?.deposit || 0);
+
+                        document.getElementById('mainBalance').innerText = Number(main).toFixed(2);
+                        document.getElementById('depositBalance').innerText = Number(deposit).toFixed(2);
+                    }
+                } catch (e) {
+                    console.error("Error loading user profile:", e);
                 }
                 loadActiveJobs();
             } else {
@@ -81,7 +90,7 @@
         async function loadActiveJobs() {
             const container = document.getElementById('jobsListContainer');
             try {
-                // 👈 status == "active" কুয়েরি
+                // Active এবং category ফিল্টার
                 const q = query(
                     collection(db, "tasks"), 
                     where("status", "==", "active")
@@ -99,10 +108,13 @@
                 }
 
                 container.innerHTML = "";
+                let count = 0;
+
                 querySnapshot.forEach((docSnap) => {
                     const job = docSnap.data();
                     const jobId = docSnap.id;
 
+                    count++;
                     const card = document.createElement('div');
                     card.className = "bg-white border border-gray-100 p-3.5 rounded-2xl shadow-sm hover:shadow-md transition flex items-center justify-between";
                     card.innerHTML = `
@@ -117,6 +129,14 @@
                     `;
                     container.appendChild(card);
                 });
+
+                if (count === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-10">
+                            <i class="fa-solid fa-briefcase text-4xl text-gray-300 mb-2"></i>
+                            <p class="text-xs text-gray-400 font-medium">কোনো ডেইলিজব উপলব্ধ নেই!</p>
+                        </div>`;
+                }
             } catch (error) {
                 console.error("Error loading active jobs:", error);
                 container.innerHTML = `<p class="text-xs text-red-500 text-center py-4">জব লোড করতে সমস্যা হয়েছে!</p>`;
