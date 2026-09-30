@@ -161,20 +161,17 @@
                     <textarea id="jobDescription" rows="3" placeholder="Write step-by-step instructions for workers..." required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"></textarea>
                 </div>
 
-                <!-- Required Time Option (নতুন অপশন যুক্ত করা হয়েছে) -->
+                <!-- Custom Task Time Option (ইউজার নিজের মত সময় দিতে পারবে) -->
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Estimated Task Time / Duration</label>
-                    <select id="taskDuration" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        <option value="30 Seconds">30 Seconds</option>
-                        <option value="1 Minute">1 Minute</option>
-                        <option value="2 Minutes">2 Minutes</option>
-                        <option value="3 Minutes">3 Minutes</option>
-                        <option value="5 Minutes">5 Minutes</option>
-                        <option value="10 Minutes">10 Minutes</option>
-                        <option value="15 Minutes">15 Minutes</option>
-                        <option value="30 Minutes">30 Minutes</option>
-                        <option value="1 Hour">1 Hour</option>
-                    </select>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Estimated Task Time</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="number" id="timeValue" min="1" placeholder="e.g. 45" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        <select id="timeUnit" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                            <option value="Seconds">Seconds</option>
+                            <option value="Minutes">Minutes</option>
+                            <option value="Hours">Hours</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Number of Workers & Reward per Worker -->
@@ -328,7 +325,12 @@
                 const title = document.getElementById('jobTitle').value;
                 const link = document.getElementById('jobLink').value;
                 const description = document.getElementById('jobDescription').value;
-                const duration = document.getElementById('taskDuration').value; // টাইম অপশন
+                
+                // ইউজার কর্তৃক প্রদত্ত কাস্টম সময় ও ইউনিট একত্র করা (যেমন: "45 Seconds")
+                const timeValue = document.getElementById('timeValue').value;
+                const timeUnit = document.getElementById('timeUnit').value;
+                const taskDuration = `${timeValue} ${timeUnit}`;
+
                 const workers = parseInt(workerInput.value);
                 const reward = parseFloat(rewardInput.value);
 
@@ -338,7 +340,7 @@
                     title: title,
                     link: link,
                     description: description,
-                    duration: duration,
+                    duration: taskDuration,
                     workers: workers,
                     reward: reward,
                     totalCost: totalCost,
