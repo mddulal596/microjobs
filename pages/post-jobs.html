@@ -226,7 +226,12 @@
             });  
         });  
           
-        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated:nth-child(3)")); 
+        // Home বাটন নির্বাচন করে সার্কেল সেট করার ব্যবস্থা
+        window.addEventListener("DOMContentLoaded", () => {
+            const homeBtn = Array.from(items).find(item => item.getAttribute("href") === "dashboard.html") || items[2];
+            moveIndicator(homeBtn);
+        });
+
         window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
 
