@@ -161,6 +161,22 @@
                     <textarea id="jobDescription" rows="3" placeholder="Write step-by-step instructions for workers..." required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"></textarea>
                 </div>
 
+                <!-- Required Time Option (নতুন অপশন যুক্ত করা হয়েছে) -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Estimated Task Time / Duration</label>
+                    <select id="taskDuration" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        <option value="30 Seconds">30 Seconds</option>
+                        <option value="1 Minute">1 Minute</option>
+                        <option value="2 Minutes">2 Minutes</option>
+                        <option value="3 Minutes">3 Minutes</option>
+                        <option value="5 Minutes">5 Minutes</option>
+                        <option value="10 Minutes">10 Minutes</option>
+                        <option value="15 Minutes">15 Minutes</option>
+                        <option value="30 Minutes">30 Minutes</option>
+                        <option value="1 Hour">1 Hour</option>
+                    </select>
+                </div>
+
                 <!-- Number of Workers & Reward per Worker -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -312,6 +328,7 @@
                 const title = document.getElementById('jobTitle').value;
                 const link = document.getElementById('jobLink').value;
                 const description = document.getElementById('jobDescription').value;
+                const duration = document.getElementById('taskDuration').value; // টাইম অপশন
                 const workers = parseInt(workerInput.value);
                 const reward = parseFloat(rewardInput.value);
 
@@ -321,6 +338,7 @@
                     title: title,
                     link: link,
                     description: description,
+                    duration: duration,
                     workers: workers,
                     reward: reward,
                     totalCost: totalCost,
