@@ -156,19 +156,19 @@
                         <option value="TiKTok Video" data-target="video.html">TiKTok Video</option>
                         <option value="Twitter Video" data-target="video.html">Twitter Video</option>
 
-                        <!-- Daily/Other Categories (Goes to daily-job.html) -->
-                        <option value="YouTube Comment & Like Shear" data-target="daily-job.html">YouTube Comment & Like Shear</option>
-                        <option value="Facebook Page Follow" data-target="daily-job.html">Facebook Page Follow</option>
-                        <option value="Facebook Like Comment & Shear" data-target="daily-job.html">Facebook Like Comment & Shear</option>
-                        <option value="Instagram Like Comment & Shear" data-target="daily-job.html">Instagram Like Comment & Shear</option>
-                        <option value="Twitter Like Comment & Shear" data-target="daily-job.html">Twitter Like Comment & Shear</option>
-                        <option value="Telegram Channel Join" data-target="daily-job.html">Telegram Channel Join</option>
-                        <option value="Telegram Bot Join" data-target="daily-job.html">Telegram Bot Join</option>
-                        <option value="Telegram Group Join" data-target="daily-job.html">Telegram Group Join</option>
-                        <option value="TiKTok Follow" data-target="daily-job.html">TiKTok Follow</option>
-                        <option value="TiKTok Like Comment & Shear" data-target="daily-job.html">TiKTok Like Comment & Shear</option>
-                        <option value="Website Visi" data-target="daily-job.html">Website Visi</option>
-                        <option value="Custom Task" data-target="daily-job.html">Custom Task</option>
+                        <!-- Daily/Other Categories (Goes to daily-jobs.html) -->
+                        <option value="YouTube Comment & Like Shear" data-target="daily-jobs.html">YouTube Comment & Like Shear</option>
+                        <option value="Facebook Page Follow" data-target="daily-jobs.html">Facebook Page Follow</option>
+                        <option value="Facebook Like Comment & Shear" data-target="daily-jobs.html">Facebook Like Comment & Shear</option>
+                        <option value="Instagram Like Comment & Shear" data-target="daily-jobs.html">Instagram Like Comment & Shear</option>
+                        <option value="Twitter Like Comment & Shear" data-target="daily-jobs.html">Twitter Like Comment & Shear</option>
+                        <option value="Telegram Channel Join" data-target="daily-jobs.html">Telegram Channel Join</option>
+                        <option value="Telegram Bot Join" data-target="daily-jobs.html">Telegram Bot Join</option>
+                        <option value="Telegram Group Join" data-target="daily-jobs.html">Telegram Group Join</option>
+                        <option value="TiKTok Follow" data-target="daily-jobs.html">TiKTok Follow</option>
+                        <option value="TiKTok Like Comment & Shear" data-target="daily-jobs.html">TiKTok Like Comment & Shear</option>
+                        <option value="Website Visi" data-target="daily-jobs.html">Website Visi</option>
+                        <option value="Custom Task" data-target="daily-jobs.html">Custom Task</option>
                     </select>
                     <!-- Hidden input to store target page automatically -->
                     <input type="hidden" id="targetPageInput" value="video.html">
@@ -262,7 +262,7 @@
         window.updateTargetPage = function() {
             const selectBox = document.getElementById('jobCategory');
             const selectedOption = selectBox.options[selectBox.selectedIndex];
-            const targetPage = selectedOption.getAttribute('data-target') || 'daily-job.html';
+            const targetPage = selectedOption.getAttribute('data-target') || 'daily-jobs.html';
             document.getElementById('targetPageInput').value = targetPage;
         }
 
