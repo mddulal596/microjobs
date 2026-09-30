@@ -112,10 +112,11 @@
             <div class="bg-white w-full max-w-sm rounded-2xl p-5 shadow-2xl space-y-4 transform transition-all">
                 <div>
                     <h3 id="modalTaskTitle" class="text-sm font-bold text-gray-800">Task Submission</h3>
-                    <p class="text-xs text-gray-500 mt-1">কাজটি সম্পন্ন করে স্ক্রিনশটের লিংক (ImgBB বা ড্রাইভ লিংক) নিচে প্রদান করুন:</p>
+                    <p id="modalTaskDesc" class="text-xs text-gray-600 bg-gray-50 p-2.5 rounded-xl border border-gray-100 my-2 whitespace-pre-line"></p>
+                    <p class="text-xs text-gray-500 mt-1">কাজটি সম্পন্ন করে প্রুফ বা স্ক্রিনশটের লিংক নিচে প্রদান করুন:</p>
                 </div>
                 
-                <input type="url" id="screenshotUrlInput" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-xs outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600" placeholder="https://i.ibb.co/... বা স্ক্রিনশট লিংক দিন" required>
+                <input type="url" id="screenshotUrlInput" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-xs outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600" placeholder="https://ibb.co/... বা প্রমাণ লিংক দিন" required>
                 
                 <div class="flex gap-2">
                     <button type="button" onclick="closeTaskModal()" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">Cancel</button>
@@ -138,7 +139,7 @@
                 <span>Wallet</span>  
             </a>  
             
-            <a href="dashboard.html" class="nav-item-animated">  
+            <a href="dashboard.html" class="nav-item-animated active">  
                 <i class="fa-solid fa-house"></i>  
                 <span>Home</span>  
             </a>  
@@ -174,7 +175,7 @@
             });  
         });  
           
-        window.addEventListener('load', () => moveIndicator(items[2]));  
+        window.addEventListener('load', () => moveIndicator(document.querySelector(".nav-item-animated.active") || items[2]));  
         window.addEventListener('resize', () => moveIndicator(document.querySelector(".nav-item-animated.active") || items[2]));  
     </script>
 
@@ -206,16 +207,23 @@
             }
         });
 
-        // Firebase থেকে 'daily-jobs' ক্যাটাগরির টাস্ক ফেচ করার ফাংশন
+        // Firebase থেকে ভিডিও বাদে অন্যান্য ক্যাটাগরির জব ফেচ করার ফাংশন
         async function loadDailyJobs() {
             const container = document.getElementById('dailyJobsContainer');
             try {
+                // যেখানে ক্যাটাগরি video.html নির্দেশ করে না সেইসব জব লোড করা হচ্ছে
                 const q = query(
-                    collection(db, "tasks"), 
-                    where("category", "==", "daily-jobs"), 
-                    where("status", "==", "active")
+                    collection(db, "tasks"),
+                    where("targetPage", "==", "daily-jobs.html")
                 );
-                const querySnapshot = await getDocs(q);
+                
+                let querySnapshot;
+                try {
+                    querySnapshot = await getDocs(q);
+                } catch (e) {
+                    // যদি targetPage ফিল্ড না থাকে, তবে সব টাস্ক এনে ফিল্টার করা হবে
+                    querySnapshot = await getDocs(collection(db, "tasks"));
+                }
 
                 if (querySnapshot.empty) {
                     container.innerHTML = `
@@ -228,54 +236,84 @@
                 }
 
                 container.innerHTML = "";
+                let hasJobs = false;
+
                 querySnapshot.forEach((docSnap) => {
                     const task = docSnap.data();
+                    
+                    // ভিডিও ক্যাটাগরি বাদে বাকিগুলো ফিল্টার করা
+                    if (task.targetPage && task.targetPage !== 'daily-jobs.html') return;
 
+                    hasJobs = true;
                     const card = document.createElement('div');
                     card.className = "bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex justify-between items-center";
+                    
+                    // নিরাপদ অবজেক্ট ডেটা পাস করা
+                    const taskData = JSON.stringify({
+                        title: task.title || 'Job Task',
+                        reward: task.reward || task.rewardPerWorker || 0,
+                        description: task.description || task.instructions || ''
+                    }).replace(/"/g, '&quot;');
+
                     card.innerHTML = `
-                        <div class="space-y-1">
-                            <h4 class="text-xs font-bold text-gray-800">${task.title}</h4>
+                        <div class="space-y-1 flex-1 mr-2">
+                            <h4 class="text-xs font-bold text-gray-800">${task.title || 'Daily Task'}</h4>
                             <p class="text-[11px] text-gray-500">
-                                Workers Left: <span class="font-semibold text-gray-700">${task.workers || 0}</span> | 
-                                <a href="${task.link}" target="_blank" class="text-indigo-600 font-semibold underline">Visit Link</a>
+                                Workers: <span class="font-semibold text-gray-700">${task.workers || task.quantity || 0}</span>
                             </p>
                             <span class="inline-block bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">
-                                +৳ ${Number(task.reward).toFixed(2)}
+                                +৳ ${Number(task.reward || task.rewardPerWorker || 0).toFixed(2)}
                             </span>
                         </div>
-                        <button onclick="openTaskModal('${task.title.replace(/'/g, "\\'")}', ${task.reward})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow transition cursor-pointer">
+                        <button onclick="openTaskModal(${taskData})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow transition cursor-pointer flex-shrink-0">
                             Start Task
                         </button>
                     `;
                     container.appendChild(card);
                 });
+
+                if (!hasJobs) {
+                    container.innerHTML = `
+                        <div class="text-center text-gray-400 text-xs py-8">
+                            <i class="fa-solid fa-briefcase text-2xl mb-2"></i>
+                            <p>কোনো ডেইলি জব উপলব্ধ নেই!</p>
+                        </div>
+                    `;
+                }
+
             } catch (error) {
                 console.error("Error loading daily jobs:", error);
                 container.innerHTML = `<p class="text-xs text-red-500 text-center py-4">টাস্ক লোড করতে সমস্যা হয়েছে।</p>`;
             }
         }
 
-        window.openTaskModal = function(taskTitle, reward) {
+        window.openTaskModal = function(task) {
             if (!currentUserUid) {
                 alert('লগইন করা অবস্থায় নেই!');
                 return;
             }
-            selectedTaskTitle = taskTitle;
-            selectedTaskReward = reward;
-            document.getElementById('modalTaskTitle').innerText = taskTitle;
+            selectedTaskTitle = task.title;
+            selectedTaskReward = task.reward;
+            
+            document.getElementById('modalTaskTitle').innerText = task.title;
+            document.getElementById('modalTaskDesc').innerText = task.description || 'নির্দেশনা অনুযায়ী কাজটি সম্পন্ন করুন।';
             document.getElementById('screenshotUrlInput').value = '';
-            document.getElementById('taskModal').style.display = 'flex';
+            
+            const modal = document.getElementById('taskModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         window.closeTaskModal = function() {
-            document.getElementById('taskModal').style.display = 'none';
+            const modal = document.getElementById('taskModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         window.submitTaskProof = async function() {
             const screenshotUrl = document.getElementById('screenshotUrlInput').value.trim();
             if (!screenshotUrl) {
-                alert('দয়া করে স্ক্রিনশটের সঠিক ইউআরএল (URL) প্রদান করুন!');
+                alert('দয়া করে প্রুফ বা স্ক্রিনশটের সঠিক ইউআরএল (URL) প্রদান করুন!');
                 return;
             }
 
@@ -294,8 +332,7 @@
                 });
 
                 alert(`অভিনন্দন! "${selectedTaskTitle}" এর প্রুফ সফলভাবে সাবমিট হয়েছে। অ্যাডমিন রিভিউ করে অ্যাপ্রুভ করলে ব্যালেন্স যোগ হবে।`);
-                closeTaskModal();
-                document.getElementById('screenshotUrlInput').value = '';
+                window.closeTaskModal();
             } catch (error) {
                 console.error("Error submitting task: ", error);
                 alert('দুঃখিত, টাস্ক সাবমিট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
