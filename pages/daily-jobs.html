@@ -6,9 +6,15 @@
     <title>Daily Jobs - Micro Job Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <style>
+        .custom-nav-bg {
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+        }
+    </style>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-16">
+    <!-- pb-24 দেওয়া হয়েছে যাতে বটম বার কন্টেন্ট না ঢেকে দেয় -->
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24 relative">
         
         <!-- Header -->
         <header class="p-5 bg-gradient-to-r from-purple-700 to-indigo-800 text-white rounded-b-3xl shadow-lg">
@@ -44,14 +50,44 @@
             </div>
         </main>
 
-        <!-- Bottom Navigation Bar -->
-        <nav class="fixed bottom-0 max-w-md w-full bg-white border-t border-gray-100 flex justify-around py-2.5 text-gray-500 text-[11px] font-medium shadow-lg z-50">
-            <a href="help.html" class="flex flex-col items-center hover:text-indigo-600"><i class="fa-solid fa-headset text-base mb-0.5"></i>Help</a>
-            <a href="wallet.html" class="flex flex-col items-center hover:text-indigo-600"><i class="fa-solid fa-wallet text-base mb-0.5"></i>Wallet</a>
-            <a href="dashboard.html" class="flex flex-col items-center text-indigo-600 font-bold"><i class="fa-solid fa-house text-base mb-0.5"></i>Home</a>
-            <a href="refer.html" class="flex flex-col items-center hover:text-indigo-600"><i class="fa-solid fa-users text-base mb-0.5"></i>Team</a>
-            <a href="profile.html" class="flex flex-col items-center hover:text-indigo-600"><i class="fa-solid fa-user text-base mb-0.5"></i>Profile</a>
-        </nav>
+        <!-- Dynamic Curved Bottom Navigation Bar (Matching Screenshot) -->
+        <div class="fixed bottom-3 left-0 right-0 max-w-md mx-auto px-3 z-50">
+            <nav class="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-3xl p-2 shadow-2xl flex justify-between items-center text-white relative">
+                
+                <!-- Support (Replacing Help) -->
+                <a href="help.html" class="flex-1 flex flex-col items-center text-indigo-100 hover:text-white transition">
+                    <i class="fa-solid fa-headset text-lg"></i>
+                    <span class="text-[10px] font-medium mt-0.5">Support</span>
+                </a>
+
+                <!-- Wallet -->
+                <a href="wallet.html" class="flex-1 flex flex-col items-center text-indigo-100 hover:text-white transition">
+                    <i class="fa-solid fa-wallet text-lg"></i>
+                    <span class="text-[10px] font-medium mt-0.5">Wallet</span>
+                </a>
+
+                <!-- Center Elevated Home Button -->
+                <div class="flex-1 flex justify-center -mt-6">
+                    <a href="dashboard.html" class="w-13 h-13 bg-white text-indigo-700 rounded-full p-3.5 flex flex-col items-center justify-center shadow-lg border-4 border-gray-100 hover:scale-105 transition">
+                        <i class="fa-solid fa-house text-lg"></i>
+                    </a>
+                </div>
+
+                <!-- Team -->
+                <a href="refer.html" class="flex-1 flex flex-col items-center text-indigo-100 hover:text-white transition">
+                    <i class="fa-solid fa-users text-lg"></i>
+                    <span class="text-[10px] font-medium mt-0.5">Team</span>
+                </a>
+
+                <!-- Profile -->
+                <a href="profile.html" class="flex-1 flex flex-col items-center text-indigo-100 hover:text-white transition">
+                    <i class="fa-solid fa-user text-lg"></i>
+                    <span class="text-[10px] font-medium mt-0.5">Profile</span>
+                </a>
+
+            </nav>
+        </div>
+
     </div>
 
     <!-- Firebase Script -->
@@ -62,7 +98,6 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // ইউজার ডাটা ফেচ
                 try {
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     if (userDoc.exists()) {
@@ -70,7 +105,6 @@
                         document.getElementById('userName').innerText = data.name || user.email.split('@')[0];
                         document.getElementById('userInitial').innerText = (data.name || user.email)[0].toUpperCase();
                         
-                        // ব্যালেন্স হ্যান্ডলিং (mainBalance / balances.main উভয় কাঠামোর জন্য)
                         const main = data.mainBalance !== undefined ? data.mainBalance : (data.balances?.main || 0);
                         const deposit = data.depositBalance !== undefined ? data.depositBalance : (data.balances?.deposit || 0);
 
@@ -86,11 +120,9 @@
             }
         });
 
-        // শুধুমাত্র Active জব লোড করা
         async function loadActiveJobs() {
             const container = document.getElementById('jobsListContainer');
             try {
-                // Active এবং category ফিল্টার
                 const q = query(
                     collection(db, "tasks"), 
                     where("status", "==", "active")
@@ -108,13 +140,10 @@
                 }
 
                 container.innerHTML = "";
-                let count = 0;
-
                 querySnapshot.forEach((docSnap) => {
                     const job = docSnap.data();
                     const jobId = docSnap.id;
 
-                    count++;
                     const card = document.createElement('div');
                     card.className = "bg-white border border-gray-100 p-3.5 rounded-2xl shadow-sm hover:shadow-md transition flex items-center justify-between";
                     card.innerHTML = `
@@ -129,14 +158,6 @@
                     `;
                     container.appendChild(card);
                 });
-
-                if (count === 0) {
-                    container.innerHTML = `
-                        <div class="text-center py-10">
-                            <i class="fa-solid fa-briefcase text-4xl text-gray-300 mb-2"></i>
-                            <p class="text-xs text-gray-400 font-medium">কোনো ডেইলিজব উপলব্ধ নেই!</p>
-                        </div>`;
-                }
             } catch (error) {
                 console.error("Error loading active jobs:", error);
                 container.innerHTML = `<p class="text-xs text-red-500 text-center py-4">জব লোড করতে সমস্যা হয়েছে!</p>`;
