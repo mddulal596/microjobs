@@ -174,7 +174,7 @@
             });  
         });  
           
-        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated:nth-child(4)")); // Default active center home or position
+        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated:nth-child(3)")); 
         window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
 
@@ -242,8 +242,8 @@
                             <h3 class="font-bold text-gray-800 text-xs">${job.title}</h3>
                             <p class="text-[10px] text-gray-500">Reward: <span class="font-bold text-emerald-600">৳ ${job.reward}</span> | Workers Left: ${job.workers || 0}</p>
                         </div>
-                        <a href="job-details.html?id=${jobId}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-4 py-2 rounded-full transition shadow-sm whitespace-nowrap">
-                            Do Task
+                        <a href="task-details.html?id=${jobId}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-4 py-2 rounded-full transition shadow-sm whitespace-nowrap">
+                            Start Task
                         </a>
                     `;
                     container.appendChild(card);
@@ -255,4 +255,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
