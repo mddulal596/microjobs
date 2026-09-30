@@ -4,88 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Jobs - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
-    <style>
-        .custom-nav-bg {
-            background: linear-gradient(135deg, #4f46e5, #3b82f6);
-        }
-    </style>
 </head>
-<body class="bg-gray-100 text-gray-800 antialiased">
-    <!-- pb-24 দেওয়া হয়েছে যাতে বটম বার কন্টেন্ট না ঢেকে দেয় -->
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-24 relative">
+<body class="bg-gray-50 text-gray-800 antialiased font-sans">
+    <div class="max-w-md mx-auto min-h-screen bg-gray-50 flex flex-col justify-between pb-24 relative shadow-xl">
         
-        <!-- Header -->
-        <header class="p-5 bg-gradient-to-r from-purple-700 to-indigo-800 text-white rounded-b-3xl shadow-lg">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center font-bold text-sm" id="userInitial">M</div>
-                    <span class="text-xs font-semibold" id="userName">User</span>
+        <!-- Header (Matching 2nd Screenshot) -->
+        <header class="p-5 bg-gradient-to-r from-purple-800 via-indigo-700 to-indigo-800 text-white rounded-b-3xl shadow-md">
+            <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center font-bold text-base shadow-inner" id="userInitial">M</div>
+                    <span class="text-sm font-semibold tracking-wide" id="userName">mddulalhosen0</span>
                 </div>
-                <a href="dashboard.html" class="text-xs bg-white/20 px-3 py-1 rounded-full hover:bg-white/30 transition">
-                    <i class="fa-solid fa-house"></i> Home
+                <a href="dashboard.html" class="text-xs bg-white/15 px-3.5 py-1.5 rounded-full hover:bg-white/25 transition flex items-center gap-1.5 font-medium border border-white/10">
+                    <i class="fa-solid fa-house text-xs"></i> Home
                 </a>
             </div>
 
             <!-- Balance Cards -->
-            <div class="grid grid-cols-2 gap-3 mt-2">
-                <div class="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/10">
-                    <p class="text-[10px] text-purple-200 font-medium">Main Balance</p>
-                    <h3 class="text-sm font-black mt-0.5">৳ <span id="mainBalance">0.00</span></h3>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white/10 p-3.5 rounded-2xl backdrop-blur-md border border-white/10">
+                    <p class="text-[11px] text-purple-200 font-medium">Main Balance</p>
+                    <h3 class="text-base font-black mt-1">৳ <span id="mainBalance">30777.50</span></h3>
                 </div>
-                <div class="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/10">
-                    <p class="text-[10px] text-purple-200 font-medium">Deposit Balance</p>
-                    <h3 class="text-sm font-black mt-0.5">৳ <span id="depositBalance">0.00</span></h3>
+                <div class="bg-white/10 p-3.5 rounded-2xl backdrop-blur-md border border-white/10">
+                    <p class="text-[11px] text-purple-200 font-medium">Deposit Balance</p>
+                    <h3 class="text-base font-black mt-1">৳ <span id="depositBalance">1900.00</span></h3>
                 </div>
             </div>
         </header>
 
-        <!-- Task List Content -->
+        <!-- Main Task List Container -->
         <main class="p-4 flex-grow space-y-3">
-            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Available Daily Jobs</h2>
+            <h2 class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Available Daily Jobs</h2>
             
             <div id="jobsListContainer" class="space-y-3">
                 <p class="text-center text-xs text-gray-400 py-6">Loading active jobs...</p>
             </div>
         </main>
 
-        <!-- Dynamic Curved Bottom Navigation Bar (Matching Screenshot) -->
-        <div class="fixed bottom-3 left-0 right-0 max-w-md mx-auto px-3 z-50">
-            <nav class="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-3xl p-2 shadow-2xl flex justify-between items-center text-white relative">
+        <!-- Dynamic Bottom Navigation Bar (Exact Match with 2nd Screenshot) -->
+        <div class="fixed bottom-0 max-w-md w-full left-1/2 -translate-x-1/2 px-2 pb-2 z-50">
+            <div class="bg-indigo-600 rounded-2xl p-2 shadow-2xl flex justify-between items-end text-white relative">
                 
-                <!-- Support (Replacing Help) -->
-                <a href="help.html" class="flex-1 flex flex-col items-center text-indigo-100 hover:text-white transition">
+                <!-- Support -->
+                <a href="help.html" class="flex-1 flex flex-col items-center py-1 text-indigo-100 hover:text-white transition">
                     <i class="fa-solid fa-headset text-lg"></i>
-                    <span class="text-[10px] font-medium mt-0.5">Support</span>
+                    <span class="text-[10px] font-medium mt-1">Support</span>
                 </a>
 
                 <!-- Wallet -->
-                <a href="wallet.html" class="flex-1 flex flex-col items-center text-indigo-100 hover:text-white transition">
+                <a href="wallet.html" class="flex-1 flex flex-col items-center py-1 text-indigo-100 hover:text-white transition">
                     <i class="fa-solid fa-wallet text-lg"></i>
-                    <span class="text-[10px] font-medium mt-0.5">Wallet</span>
+                    <span class="text-[10px] font-medium mt-1">Wallet</span>
                 </a>
 
-                <!-- Center Elevated Home Button -->
+                <!-- Center Floating White Circle Home Button -->
                 <div class="flex-1 flex justify-center -mt-6">
-                    <a href="dashboard.html" class="w-13 h-13 bg-white text-indigo-700 rounded-full p-3.5 flex flex-col items-center justify-center shadow-lg border-4 border-gray-100 hover:scale-105 transition">
-                        <i class="fa-solid fa-house text-lg"></i>
+                    <a href="dashboard.html" class="w-14 h-14 bg-white text-indigo-700 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition border-2 border-indigo-600">
+                        <i class="fa-solid fa-house text-xl"></i>
                     </a>
                 </div>
 
                 <!-- Team -->
-                <a href="refer.html" class="flex-1 flex flex-col items-center text-indigo-100 hover:text-white transition">
+                <a href="refer.html" class="flex-1 flex flex-col items-center py-1 text-indigo-100 hover:text-white transition">
                     <i class="fa-solid fa-users text-lg"></i>
-                    <span class="text-[10px] font-medium mt-0.5">Team</span>
+                    <span class="text-[10px] font-medium mt-1">Team</span>
                 </a>
 
                 <!-- Profile -->
-                <a href="profile.html" class="flex-1 flex flex-col items-center text-indigo-100 hover:text-white transition">
+                <a href="profile.html" class="flex-1 flex flex-col items-center py-1 text-indigo-100 hover:text-white transition">
                     <i class="fa-solid fa-user text-lg"></i>
-                    <span class="text-[10px] font-medium mt-0.5">Profile</span>
+                    <span class="text-[10px] font-medium mt-1">Profile</span>
                 </a>
 
-            </nav>
+            </div>
         </div>
 
     </div>
@@ -102,8 +98,10 @@
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     if (userDoc.exists()) {
                         const data = userDoc.data();
-                        document.getElementById('userName').innerText = data.name || user.email.split('@')[0];
-                        document.getElementById('userInitial').innerText = (data.name || user.email)[0].toUpperCase();
+                        const displayName = data.username || data.name || user.email.split('@')[0];
+                        
+                        document.getElementById('userName').innerText = displayName;
+                        document.getElementById('userInitial').innerText = displayName[0].toUpperCase();
                         
                         const main = data.mainBalance !== undefined ? data.mainBalance : (data.balances?.main || 0);
                         const deposit = data.depositBalance !== undefined ? data.depositBalance : (data.balances?.deposit || 0);
@@ -132,7 +130,7 @@
 
                 if (querySnapshot.empty) {
                     container.innerHTML = `
-                        <div class="text-center py-10">
+                        <div class="text-center py-10 bg-white rounded-2xl p-6 border border-gray-100">
                             <i class="fa-solid fa-briefcase text-4xl text-gray-300 mb-2"></i>
                             <p class="text-xs text-gray-400 font-medium">কোনো ডেইলিজব উপলব্ধ নেই!</p>
                         </div>`;
@@ -145,14 +143,14 @@
                     const jobId = docSnap.id;
 
                     const card = document.createElement('div');
-                    card.className = "bg-white border border-gray-100 p-3.5 rounded-2xl shadow-sm hover:shadow-md transition flex items-center justify-between";
+                    card.className = "bg-white border border-gray-100 p-4 rounded-2xl shadow-sm hover:shadow-md transition flex items-center justify-between";
                     card.innerHTML = `
-                        <div class="space-y-1 pr-2">
-                            <span class="text-[9px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider">${job.category || 'Daily Job'}</span>
+                        <div class="space-y-1.5 pr-2">
+                            <span class="text-[9px] bg-indigo-50 text-indigo-600 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">${job.category || 'DAILY-JOBS'}</span>
                             <h3 class="font-bold text-gray-800 text-xs">${job.title}</h3>
                             <p class="text-[10px] text-gray-500">Reward: <span class="font-bold text-emerald-600">৳ ${job.reward}</span> | Workers Left: ${job.workers || 0}</p>
                         </div>
-                        <a href="job-details.html?id=${jobId}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-3.5 py-2 rounded-xl transition shadow-sm whitespace-nowrap">
+                        <a href="job-details.html?id=${jobId}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-4 py-2 rounded-full transition shadow-sm whitespace-nowrap">
                             Do Task
                         </a>
                     `;
