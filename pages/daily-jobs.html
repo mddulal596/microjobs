@@ -116,7 +116,35 @@
 
         <!-- Main Task List Container -->
         <main class="p-4 flex-grow space-y-3">
-            <h2 class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Available Daily Jobs</h2>
+            
+            <!-- Category Filter Section -->
+            <div class="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between gap-2">
+                <label for="categoryFilter" class="text-xs font-bold text-gray-600 uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap">
+                    <i class="fa-solid fa-filter text-indigo-600"></i> Category:
+                </label>
+                <select id="categoryFilter" class="w-full bg-gray-50 border border-gray-200 text-xs font-semibold rounded-xl p-2 text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    <option value="ALL">All Categories</option>
+                    <option value="YouTube Video">YouTube Video</option>
+                    <option value="Facebook Video">Facebook Video</option>
+                    <option value="Instagram Video">Instagram Video</option>
+                    <option value="TikTok Video">TikTok Video</option>
+                    <option value="Twitter Video">Twitter Video</option>
+                    <option value="YouTube Comment & Like Share">YouTube Comment & Like Share</option>
+                    <option value="Facebook Page Follow">Facebook Page Follow</option>
+                    <option value="Facebook Like Comment & Share">Facebook Like Comment & Share</option>
+                    <option value="Instagram Like Comment & Share">Instagram Like Comment & Share</option>
+                    <option value="Twitter Like Comment & Share">Twitter Like Comment & Share</option>
+                    <option value="Telegram Channel Join">Telegram Channel Join</option>
+                    <option value="Telegram Bot Join">Telegram Bot Join</option>
+                    <option value="Telegram Group Join">Telegram Group Join</option>
+                    <option value="TikTok Follow">TikTok Follow</option>
+                    <option value="TikTok Like Comment & Share">TikTok Like Comment & Share</option>
+                    <option value="Website Visit">Website Visit</option>
+                    <option value="Custom Task">Custom Task</option>
+                </select>
+            </div>
+
+            <h2 class="text-[11px] font-bold text-gray-400 uppercase tracking-wider pt-2 mb-2">Available Jobs</h2>
             
             <div id="jobsListContainer" class="space-y-3">
                 <p class="text-center text-xs text-gray-400 py-6">Loading active jobs...</p>
@@ -174,7 +202,11 @@
             });  
         });  
           
-        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated:nth-child(3)")); 
+        window.addEventListener("DOMContentLoaded", () => {
+            const homeBtn = Array.from(items).find(item => item.getAttribute("href") === "dashboard.html") || items[2];
+            moveIndicator(homeBtn);
+        });
+
         window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
     </script>
 
@@ -183,6 +215,8 @@
         import { db, auth } from '../firebase/firebase-config.js';
         import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        let allTasks = [];
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -220,39 +254,59 @@
 
                 const querySnapshot = await getDocs(q);
 
-                if (querySnapshot.empty) {
-                    container.innerHTML = `
-                        <div class="text-center py-10 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                            <i class="fa-solid fa-briefcase text-4xl text-gray-300 mb-2"></i>
-                            <p class="text-xs text-gray-400 font-medium">কোনো ডেইলিজব উপলব্ধ নেই!</p>
-                        </div>`;
-                    return;
-                }
-
-                container.innerHTML = "";
+                allTasks = [];
                 querySnapshot.forEach((docSnap) => {
-                    const job = docSnap.data();
-                    const jobId = docSnap.id;
-
-                    const card = document.createElement('div');
-                    card.className = "bg-white border border-gray-100 p-4 rounded-2xl shadow-sm hover:shadow-md transition flex items-center justify-between";
-                    card.innerHTML = `
-                        <div class="space-y-1.5 pr-2">
-                            <span class="text-[9px] bg-indigo-50 text-indigo-600 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">${job.category || 'DAILY-JOBS'}</span>
-                            <h3 class="font-bold text-gray-800 text-xs">${job.title}</h3>
-                            <p class="text-[10px] text-gray-500">Reward: <span class="font-bold text-emerald-600">৳ ${job.reward}</span> | Workers Left: ${job.workers || 0}</p>
-                        </div>
-                        <a href="task-details.html?id=${jobId}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-4 py-2 rounded-full transition shadow-sm whitespace-nowrap">
-                            Start Task
-                        </a>
-                    `;
-                    container.appendChild(card);
+                    allTasks.push({
+                        id: docSnap.id,
+                        ...docSnap.data()
+                    });
                 });
+
+                renderFilteredJobs("ALL");
+
             } catch (error) {
                 console.error("Error loading active jobs:", error);
                 container.innerHTML = `<p class="text-xs text-red-500 text-center py-4">জব লোড করতে সমস্যা হয়েছে!</p>`;
             }
         }
+
+        function renderFilteredJobs(selectedCategory) {
+            const container = document.getElementById('jobsListContainer');
+            
+            const filteredTasks = selectedCategory === "ALL" 
+                ? allTasks 
+                : allTasks.filter(job => job.category === selectedCategory);
+
+            if (filteredTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                        <i class="fa-solid fa-briefcase text-4xl text-gray-300 mb-2"></i>
+                        <p class="text-xs text-gray-400 font-medium">এই ক্যাটাগরিতে কোনো জব উপলব্ধ নেই!</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = "";
+            filteredTasks.forEach((job) => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-gray-100 p-4 rounded-2xl shadow-sm hover:shadow-md transition flex items-center justify-between";
+                card.innerHTML = `
+                    <div class="space-y-1.5 pr-2">
+                        <span class="text-[9px] bg-indigo-50 text-indigo-600 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">${job.category || 'Custom Task'}</span>
+                        <h3 class="font-bold text-gray-800 text-xs">${job.title}</h3>
+                        <p class="text-[10px] text-gray-500">Reward: <span class="font-bold text-emerald-600">৳ ${job.reward}</span> | Workers Left: ${job.workers || 0}</p>
+                    </div>
+                    <a href="task-details.html?id=${job.id}" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-4 py-2 rounded-full transition shadow-sm whitespace-nowrap">
+                        Start Task
+                    </a>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        document.getElementById('categoryFilter').addEventListener('change', (e) => {
+            renderFilteredJobs(e.target.value);
+        });
     </script>
 </body>
-    </html>
+</html>
