@@ -107,7 +107,7 @@
         <!-- Main Task Content -->
         <main class="p-4 flex-grow space-y-4">
             
-            <!-- Loading Spinner / Message -->
+            <!-- Loading Spinner -->
             <div id="loadingContainer" class="text-center py-12">
                 <i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-600 mb-3"></i>
                 <p class="text-xs text-gray-500 font-medium">টাস্কের বিবরণ লোড হচ্ছে...</p>
@@ -125,13 +125,19 @@
             <!-- Task Details Card -->
             <div id="taskCard" class="hidden bg-white rounded-2xl p-5 border border-gray-100 shadow-sm space-y-4">
                 
-                <!-- Category & Title -->
+                <!-- Category, Title & Estimated Time Badge -->
                 <div>
-                    <span id="taskCategory" class="text-[9px] bg-indigo-50 text-indigo-600 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Category</span>
+                    <div class="flex items-center justify-between gap-2">
+                        <span id="taskCategory" class="text-[9px] bg-indigo-50 text-indigo-600 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Category</span>
+                        <!-- Estimated Time Display -->
+                        <span id="taskDuration" class="text-[10px] bg-amber-50 text-amber-700 px-2.5 py-0.5 rounded-full font-bold border border-amber-200 flex items-center gap-1">
+                            <i class="fa-regular fa-clock"></i> <span id="durationText">N/A</span>
+                        </span>
+                    </div>
                     <h2 id="taskTitle" class="text-sm font-bold text-gray-800 mt-2">Job Title Loading...</h2>
                 </div>
 
-                <!-- Reward Info -->
+                <!-- Reward & Workers Info -->
                 <div class="bg-indigo-50/70 p-3.5 rounded-xl border border-indigo-100 flex justify-between items-center">
                     <div>
                         <p class="text-[10px] text-gray-500 font-medium">Task Reward</p>
@@ -164,7 +170,7 @@
                 <form id="submissionForm" class="space-y-3 pt-2 border-t border-gray-100">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Proof / Submission Work</label>
-                        <textarea id="proofText" rows="3" required placeholder="প্রমাণের বিবরণ অথবা রিকোয়ার্ড টেক্সট এখানে লিখুন..." class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"></textarea>
+                        <textarea id="proofText" rows="3" required placeholder="প্রমাণের বিবরণ অথবা রিকোয়ার্ড লিঙ্ক/টেক্সট এখানে লিখুন..." class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"></textarea>
                     </div>
 
                     <button type="submit" id="submitProofBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-3.5 rounded-xl transition shadow-md flex justify-center items-center gap-2">
@@ -245,7 +251,6 @@
         let currentTaskId = null;
         let currentTaskData = null;
 
-        // URL থেকে ID নেওয়া
         const urlParams = new URLSearchParams(window.location.search);
         currentTaskId = urlParams.get('id');
 
@@ -270,11 +275,14 @@
                 if (taskSnap.exists()) {
                     currentTaskData = taskSnap.data();
                     
-                    document.getElementById('taskCategory').innerText = currentTaskData.category || 'DAILY-JOBS';
-                    document.getElementById('taskTitle').innerText = currentTaskData.title || 'No Title';
+                    document.getElementById('taskCategory').innerText = currentTaskData.category || 'Custom Task';
+                    document.getElementById('taskTitle').innerText = currentTaskData.title || 'Untitled Job';
                     document.getElementById('taskReward').innerText = Number(currentTaskData.reward || 0).toFixed(2);
                     document.getElementById('taskWorkers').innerText = currentTaskData.workers || 0;
                     
+                    // Task Duration / Time Display
+                    document.getElementById('durationText').innerText = currentTaskData.duration || 'Flexible';
+
                     const link = currentTaskData.link || '#';
                     document.getElementById('taskLink').href = link;
                     document.getElementById('taskLinkText').innerText = link;
@@ -298,11 +306,20 @@
             document.getElementById('errorContainer').classList.remove('hidden');
         }
 
-        // টাস্ক প্রুফ সাবমিট করা
+        // Safe Proof Submission Handler
         document.getElementById('submissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            if (!currentUser || !currentTaskId) return;
+            if (!currentUser) {
+                alert("আপনার সেশন এক্সপায়ার হয়েছে। অনুগ্রহ করে পুনরায় লগইন করুন।");
+                window.location.href = "login.html";
+                return;
+            }
+
+            if (!currentTaskId || !currentTaskData) {
+                alert("টাস্কের ডাটা পাওয়া যায়নি!");
+                return;
+            }
 
             const proofText = document.getElementById('proofText').value.trim();
             const submitBtn = document.getElementById('submitProofBtn');
@@ -311,23 +328,26 @@
             submitBtn.innerText = "Submitting Proof...";
 
             try {
-                await addDoc(collection(db, "taskSubmissions"), {
+                // undefined মান এড়াতে Safe Data Payload তৈরি
+                const submissionPayload = {
                     taskId: currentTaskId,
                     taskName: currentTaskData.title || 'Task',
-                    reward: currentTaskData.reward || 0,
+                    reward: Number(currentTaskData.reward) || 0,
                     userId: currentUser.uid,
-                    userEmail: currentUser.email,
+                    userEmail: currentUser.email || 'N/A',
                     proofText: proofText,
                     status: "pending",
                     submittedAt: serverTimestamp()
-                });
+                };
 
-                alert("আপনার টাস্কের প্রমাণ সফলভাবে জমা দেওয়া হয়েছে! রিভিউয়ের পর ব্যালেন্স যোগ হবে।");
+                await addDoc(collection(db, "taskSubmissions"), submissionPayload);
+
+                alert("আপনার টাস্কের প্রমাণ সফলভাবে জমা দেওয়া হয়েছে!");
                 window.location.href = "daily-jobs.html";
 
             } catch (error) {
                 console.error("Error submitting proof:", error);
-                alert("প্রমাণ জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+                alert("প্রমাণ জমা দিতে সমস্যা হয়েছে: " + error.message);
                 submitBtn.disabled = false;
                 submitBtn.innerText = "Submit Task Proof";
             }
