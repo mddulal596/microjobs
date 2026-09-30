@@ -328,7 +328,6 @@
             submitBtn.innerText = "Submitting Proof...";
 
             try {
-                // undefined মান এড়াতে Safe Data Payload তৈরি
                 const submissionPayload = {
                     taskId: currentTaskId,
                     taskName: currentTaskData.title || 'Task',
@@ -340,7 +339,8 @@
                     submittedAt: serverTimestamp()
                 };
 
-                await addDoc(collection(db, "taskSubmissions"), submissionPayload);
+                // কালেকশন নেম পরিবর্তন করে Firestore Rules অনুযায়ী "submissions" করা হলো
+                await addDoc(collection(db, "submissions"), submissionPayload);
 
                 alert("আপনার টাস্কের প্রমাণ সফলভাবে জমা দেওয়া হয়েছে!");
                 window.location.href = "daily-jobs.html";
