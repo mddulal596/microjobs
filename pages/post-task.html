@@ -1,165 +1,342 @@
 <!DOCTYPE html>
-<html lang="en" class="transform-gpu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Task - Micro Job Pro</title>
+    <title>Post Job - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    
+    <style>
+        /* Animated Bottom Nav Styles */
+        .nav-container {  
+            position: fixed;  
+            bottom: 15px;  
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;  
+            max-width: 440px;  
+            height: 70px;  
+            background: #4f46e5;  
+            border-radius: 22px;  
+            display: flex;  
+            justify-content: space-around;  
+            align-items: center;  
+            box-shadow: 0 10px 25px rgba(0,0,0,.2);  
+            overflow: visible;  
+            z-index: 100;
+        }  
+          
+        .nav-item-animated {  
+            flex: 1;  
+            text-decoration: none;  
+            color: #fff;  
+            text-align: center;  
+            position: relative;  
+            z-index: 2;  
+        }  
+          
+        .nav-item-animated i {  
+            font-size: 22px;  
+            transition: .35s;  
+        }  
+          
+        .nav-item-animated span {  
+            display: block;  
+            font-size: 11px;  
+            margin-top: 4px;  
+            transition: .35s;  
+        }  
+          
+        .nav-item-animated.active i {  
+            transform: translateY(-10px);  
+        }  
+          
+        .nav-item-animated.active span {  
+            font-weight: bold;  
+        }  
+          
+        .indicator {  
+            position: absolute;  
+            top: -15px;  
+            width: 60px;  
+            height: 60px;  
+            background: #312e81;  
+            border-radius: 50%;  
+            border: 4px solid #fff;  
+            transition: left .35s ease;  
+            box-shadow: 0 0 20px rgba(49,46,129,.5);  
+            z-index: 1;  
+        }  
+          
+        .indicator::before {  
+            content: "";  
+            position: absolute;  
+            inset: -6px;  
+            border-radius: 50%;  
+            border: 2px solid rgba(49,46,129,.4);  
+            animation: pulse 2s infinite;  
+        }  
+          
+        @keyframes pulse {  
+            0% { transform: scale(1); opacity: 1; }  
+            100% { transform: scale(1.4); opacity: 0; }  
+        } 
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-800 antialiased transform-gpu">
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-16">
+<body class="bg-gray-50 text-gray-800 antialiased font-sans">
+    <div class="max-w-md mx-auto min-h-screen bg-gray-50 flex flex-col justify-between pb-28 relative shadow-xl">
         
-        <!-- Top Header & Balances -->
-        <header class="p-4 bg-indigo-600 text-white rounded-b-3xl shadow-md">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-base font-extrabold tracking-wide">Post a New Task</h1>
-                <div class="flex items-center gap-2">
-                    <span id="userName" class="text-xs bg-indigo-700/80 px-3 py-1.5 rounded-xl font-medium tracking-wide shadow-inner">Loading...</span>
-                    <button id="logoutBtn" class="text-xs bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-xl font-semibold shadow-sm transition">Logout</button>
+        <!-- Header -->
+        <header class="p-5 bg-gradient-to-r from-purple-800 via-indigo-700 to-indigo-800 text-white rounded-b-3xl shadow-md">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                    <a href="dashboard.html" class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
+                        <i class="fa-solid fa-arrow-left text-sm"></i>
+                    </a>
+                    <h1 class="text-sm font-bold tracking-wide">Post a New Job</h1>
                 </div>
+                <a href="dashboard.html" class="text-xs bg-white/15 px-3.5 py-1.5 rounded-full hover:bg-white/25 transition flex items-center gap-1.5 font-medium border border-white/10">
+                    <i class="fa-solid fa-house text-xs"></i> Home
+                </a>
             </div>
-            <div class="grid grid-cols-2 gap-3 mt-2">
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Main Balance</p>
-                    <h2 id="mainBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
+
+            <!-- Balance Display -->
+            <div class="bg-white/10 p-3.5 rounded-2xl backdrop-blur-md border border-white/10 flex justify-between items-center">
+                <div>
+                    <p class="text-[11px] text-purple-200 font-medium">Deposit Balance</p>
+                    <h3 class="text-lg font-black mt-0.5">৳ <span id="depositBalance">0.00</span></h3>
                 </div>
-                <div class="bg-indigo-700/50 p-3 rounded-2xl backdrop-blur-sm border border-indigo-500/30">
-                    <p class="text-[11px] text-indigo-200 font-medium">Deposit Balance</p>
-                    <h2 id="depositBalance" class="text-lg font-extrabold mt-1">৳ 0.00</h2>
-                </div>
+                <a href="deposit.html" class="bg-white text-indigo-700 text-xs font-bold px-3 py-1.5 rounded-xl shadow hover:bg-purple-50 transition">
+                    + Deposit
+                </a>
             </div>
         </header>
 
-        <!-- Main Content Area -->
-        <main class="p-4 flex-grow space-y-4 overflow-y-auto">
-            <form id="postTaskForm" class="bg-gray-50 border border-gray-200 p-4 rounded-2xl space-y-3 shadow-sm">
-                <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide">Task Details</h3>
+        <!-- Main Form Area -->
+        <main class="p-4 flex-grow">
+            <form id="postJobForm" class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-4">
                 
-                <!-- Category Selection -->
-                <div class="space-y-1">
-                    <label class="text-[11px] font-semibold text-gray-600">Select Category</label>
-                    <select id="taskCategory" required class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
-                        <option value="">Choose a category</option>
-                        <option value="YouTube">YouTube Watch & Subscribe</option>
-                        <option value="Facebook">Facebook Like & Share</option>
-                        <option value="Website">Website Visit & Read</option>
-                        <option value="Micro Job">Other Micro Job</option>
+                <!-- Category Select -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Category</label>
+                    <select id="jobCategory" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        <option value="DAILY-JOBS">Daily Jobs</option>
+                        <option value="MICROJOBS">Microjobs</option>
+                        <option value="YOUTUBE">YouTube Subscription / Visit</option>
+                        <option value="WEBSITE">Website Visit</option>
+                        <option value="APP">App Download / Review</option>
                     </select>
                 </div>
 
-                <!-- Task Title -->
-                <div class="space-y-1">
-                    <label class="text-[11px] font-semibold text-gray-600">Task Title</label>
-                    <input type="text" id="taskTitle" required placeholder="e.g., Watch video and subscribe" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
+                <!-- Job Title -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Job Title</label>
+                    <input type="text" id="jobTitle" placeholder="e.g. Visit Website and Read 3 Posts" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                 </div>
 
-                <!-- Task Description -->
-                <div class="space-y-1">
-                    <label class="text-[11px] font-semibold text-gray-600">Task Description & Proof Requirement</label>
-                    <textarea id="taskDescription" required rows="3" placeholder="Explain what workers need to do and what proof to submit..." class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-indigo-500"></textarea>
+                <!-- Job Link / URL -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Job Link / Target URL</label>
+                    <input type="url" id="jobLink" placeholder="https://example.com" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                 </div>
 
-                <!-- Worker Quantity -->
-                <div class="space-y-1">
-                    <label class="text-[11px] font-semibold text-gray-600">Worker Quantity</label>
-                    <input type="number" id="taskWorkers" required min="1" placeholder="e.g., 100" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
+                <!-- Description / Instructions -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Work Description / Instructions</label>
+                    <textarea id="jobDescription" rows="3" placeholder="Write step-by-step instructions for workers..." required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"></textarea>
                 </div>
 
-                <!-- Reward Per Worker -->
-                <div class="space-y-1">
-                    <label class="text-[11px] font-semibold text-gray-600">Reward Per Worker (৳)</label>
-                    <input type="number" id="taskReward" required step="0.01" min="0.5" placeholder="e.g., 2.50" class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs text-gray-700 focus:outline-none focus:border-indigo-500">
+                <!-- Number of Workers & Reward per Worker -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Worker Count</label>
+                        <input type="number" id="workerCount" min="1" placeholder="100" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Reward (per worker)</label>
+                        <input type="number" step="0.01" id="rewardPerWorker" min="0.1" placeholder="৳ 0.50" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    </div>
+                </div>
+
+                <!-- Total Cost Preview -->
+                <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100 flex justify-between items-center text-xs">
+                    <span class="font-bold text-indigo-900">Total Cost:</span>
+                    <span class="font-black text-indigo-700 text-sm">৳ <span id="totalCost">0.00</span></span>
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
-                    Publish Task
+                <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-3.5 rounded-xl transition shadow-md flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> Publish Job
                 </button>
+
             </form>
         </main>
 
-        <!-- Bottom Navigation Bar -->
-        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-2 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center">
-            <a href="https://t.me/microjobspro" target="_blank" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">🎧</span>
-                <span>Help</span>
-            </a>
-            <a href="deposit.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👛</span>
-                <span>Wallet</span>
-            </a>
-            <a href="dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 text-base">
-                    🏠
-                </div>
-                <span class="font-medium mt-0.5">Home</span>
-            </a>
-            <a href="referral.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👥</span>
-                <span>Team</span>
-            </a>
-            <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600 text-[10px]">
-                <span class="text-lg">👤</span>
-                <span>Profile</span>
-            </a>
-        </nav>
+        <!-- Animated Bottom Navigation Bar -->
+        <div class="nav-container">  
+            <div class="indicator"></div>  
+            
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
+                <i class="fa-solid fa-headset"></i>  
+                <span>Help</span>  
+            </a>  
+
+            <a href="wallet.html" class="nav-item-animated">  
+                <i class="fa-solid fa-wallet"></i>  
+                <span>Wallet</span>  
+            </a>  
+            
+            <a href="dashboard.html" class="nav-item-animated">  
+                <i class="fa-solid fa-house"></i>  
+                <span>Home</span>  
+            </a>  
+            
+            <a href="referral.html" class="nav-item-animated">  
+                <i class="fa-solid fa-user-group"></i>  
+                <span>Team</span>  
+            </a>  
+            
+            <a href="profile.html" class="nav-item-animated">  
+                <i class="fa-solid fa-user"></i>  
+                <span>Profile</span>  
+            </a>  
+        </div>
+
     </div>
 
-    <!-- Firebase Script & Logic -->
+    <!-- Navigation Animation Script -->
+    <script>  
+        const items = document.querySelectorAll(".nav-item-animated");  
+        const indicator = document.querySelector(".indicator");  
+          
+        function moveIndicator(el){  
+            if (!el) return;
+            const left = el.offsetLeft + (el.offsetWidth / 2) - (indicator.offsetWidth / 2);  
+            indicator.style.left = left + "px";  
+            items.forEach(i => i.classList.remove("active"));  
+            el.classList.add("active");  
+        }  
+          
+        items.forEach(item => {  
+            item.addEventListener("click", () => {  
+                moveIndicator(item);  
+            });  
+        });  
+          
+        // Home বাটন নির্বাচন করে ইন্ডিকেটর সঠিকভাবে সেট করার লজিক
+        window.addEventListener("DOMContentLoaded", () => {
+            const homeBtn = Array.from(items).find(item => item.getAttribute("href") === "dashboard.html") || items[2];
+            moveIndicator(homeBtn);
+        });
+
+        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
+    </script>
+
+    <!-- Firebase Script -->
     <script type="module">
-        import { db } from '../firebase/firebase-config.js';
-        import { observeAuthState, logoutUser } from '../firebase/auth.js';
-        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { db, auth } from '../firebase/firebase-config.js';
+        import { doc, getDoc, updateDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        let currentUserUid = null;
+        let currentUser = null;
+        let userDepositBalance = 0;
 
-        observeAuthState((userData) => {
-            if (userData) {
-                currentUserUid = userData.uid;
-                document.getElementById('userName').innerText = userData.displayName || "User";
-                const mainBal = userData.balances?.main ?? userData.mainBalance ?? 0;
-                const depositBal = userData.balances?.deposit ?? userData.depositBalance ?? 0;
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+        // Auto Calculate Total Cost
+        const workerInput = document.getElementById('workerCount');
+        const rewardInput = document.getElementById('rewardPerWorker');
+        const totalCostSpan = document.getElementById('totalCost');
+
+        function calculateCost() {
+            const workers = parseFloat(workerInput.value) || 0;
+            const reward = parseFloat(rewardInput.value) || 0;
+            const total = workers * reward;
+            totalCostSpan.innerText = total.toFixed(2);
+            return total;
+        }
+
+        workerInput.addEventListener('input', calculateCost);
+        rewardInput.addEventListener('input', calculateCost);
+
+        // Check Auth User and Load Deposit Balance
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const data = userDoc.data();
+                        userDepositBalance = data.depositBalance !== undefined ? data.depositBalance : (data.balances?.deposit || 0);
+                        document.getElementById('depositBalance').innerText = Number(userDepositBalance).toFixed(2);
+                    }
+                } catch (e) {
+                    console.error("Error loading user profile:", e);
+                }
             } else {
-                window.location.href = 'login.html';
+                window.location.href = "login.html";
             }
         });
 
-        // Handle Task Submission
-        document.getElementById('postTaskForm').addEventListener('submit', async (e) => {
+        // Submit Job Form
+        document.getElementById('postJobForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!currentUserUid) return;
 
-            const category = document.getElementById('taskCategory').value;
-            const title = document.getElementById('taskTitle').value;
-            const description = document.getElementById('taskDescription').value;
-            const workers = Number(document.getElementById('taskWorkers').value);
-            const reward = Number(document.getElementById('taskReward').value);
+            const totalCost = calculateCost();
+
+            if (totalCost <= 0) {
+                alert("Please enter valid worker count and reward amount!");
+                return;
+            }
+
+            if (userDepositBalance < totalCost) {
+                alert("Insufficient Deposit Balance! Please deposit money first.");
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Publishing Job...";
 
             try {
+                // 1. Create Job Entry in "tasks" Collection
+                const category = document.getElementById('jobCategory').value;
+                const title = document.getElementById('jobTitle').value;
+                const link = document.getElementById('jobLink').value;
+                const description = document.getElementById('jobDescription').value;
+                const workers = parseInt(workerInput.value);
+                const reward = parseFloat(rewardInput.value);
+
                 await addDoc(collection(db, "tasks"), {
-                    employerUid: currentUserUid,
-                    category,
-                    title,
-                    description,
-                    workers,
-                    reward,
-                    totalBudget: workers * reward,
-                    status: 'active',
+                    creatorId: currentUser.uid,
+                    category: category,
+                    title: title,
+                    link: link,
+                    description: description,
+                    workers: workers,
+                    reward: reward,
+                    totalCost: totalCost,
+                    status: "active",
                     createdAt: serverTimestamp()
                 });
-                alert('টাস্কটি সফলভাবে প্রকাশিত হয়েছে!');
-                window.location.href = 'dashboard.html';
-            } catch (error) {
-                console.error("Error posting task: ", error);
-                alert('টাস্ক পোস্ট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
-            }
-        });
 
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await logoutUser();
-            window.location.href = 'login.html';
+                // 2. Deduct Balance from User's Deposit Balance
+                const newDepositBalance = userDepositBalance - totalCost;
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    depositBalance: newDepositBalance,
+                    "balances.deposit": newDepositBalance
+                });
+
+                alert("Job published successfully!");
+                window.location.href = "daily-jobs.html";
+
+            } catch (error) {
+                console.error("Error posting job:", error);
+                alert("Failed to publish job. Please try again.");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Publish Job";
+            }
         });
     </script>
 </body>
