@@ -119,22 +119,34 @@
         <main class="p-4 flex-grow">
             <form id="postJobForm" class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-4">
                 
-                <!-- Category Select -->
+                <!-- Category Select (১৭টি ক্যাটাগরি) -->
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Category</label>
                     <select id="jobCategory" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        <option value="DAILY-JOBS">Daily Jobs</option>
-                        <option value="MICROJOBS">Microjobs</option>
-                        <option value="YOUTUBE">YouTube Subscription / Visit</option>
-                        <option value="WEBSITE">Website Visit</option>
-                        <option value="APP">App Download / Review</option>
+                        <option value="YouTube Video">YouTube Video</option>
+                        <option value="Facebook Video">Facebook Video</option>
+                        <option value="Instagram Video">Instagram Video</option>
+                        <option value="TikTok Video">TikTok Video</option>
+                        <option value="Twitter Video">Twitter Video</option>
+                        <option value="YouTube Comment & Like Share">YouTube Comment & Like Share</option>
+                        <option value="Facebook Page Follow">Facebook Page Follow</option>
+                        <option value="Facebook Like Comment & Share">Facebook Like Comment & Share</option>
+                        <option value="Instagram Like Comment & Share">Instagram Like Comment & Share</option>
+                        <option value="Twitter Like Comment & Share">Twitter Like Comment & Share</option>
+                        <option value="Telegram Channel Join">Telegram Channel Join</option>
+                        <option value="Telegram Bot Join">Telegram Bot Join</option>
+                        <option value="Telegram Group Join">Telegram Group Join</option>
+                        <option value="TikTok Follow">TikTok Follow</option>
+                        <option value="TikTok Like Comment & Share">TikTok Like Comment & Share</option>
+                        <option value="Website Visit">Website Visit</option>
+                        <option value="Custom Task">Custom Task</option>
                     </select>
                 </div>
 
                 <!-- Job Title -->
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Job Title</label>
-                    <input type="text" id="jobTitle" placeholder="e.g. Visit Website and Read 3 Posts" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    <input type="text" id="jobTitle" placeholder="e.g. Subscribe channel and like video" required class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                 </div>
 
                 <!-- Job Link / URL -->
@@ -226,7 +238,6 @@
             });  
         });  
           
-        // Home বাটন নির্বাচন করে সার্কেল সেট করার ব্যবস্থা
         window.addEventListener("DOMContentLoaded", () => {
             const homeBtn = Array.from(items).find(item => item.getAttribute("href") === "dashboard.html") || items[2];
             moveIndicator(homeBtn);
@@ -244,7 +255,6 @@
         let currentUser = null;
         let userDepositBalance = 0;
 
-        // Auto Calculate Total Cost
         const workerInput = document.getElementById('workerCount');
         const rewardInput = document.getElementById('rewardPerWorker');
         const totalCostSpan = document.getElementById('totalCost');
@@ -260,7 +270,6 @@
         workerInput.addEventListener('input', calculateCost);
         rewardInput.addEventListener('input', calculateCost);
 
-        // Check Auth User and Load Deposit Balance
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -279,7 +288,6 @@
             }
         });
 
-        // Submit Job Form
         document.getElementById('postJobForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -300,7 +308,6 @@
             submitBtn.innerText = "Publishing Job...";
 
             try {
-                // 1. Create Job Entry in "tasks" Collection
                 const category = document.getElementById('jobCategory').value;
                 const title = document.getElementById('jobTitle').value;
                 const link = document.getElementById('jobLink').value;
@@ -317,18 +324,17 @@
                     workers: workers,
                     reward: reward,
                     totalCost: totalCost,
-                    status: "active",
+                    status: "pending",
                     createdAt: serverTimestamp()
                 });
 
-                // 2. Deduct Balance from User's Deposit Balance
                 const newDepositBalance = userDepositBalance - totalCost;
                 await updateDoc(doc(db, "users", currentUser.uid), {
                     depositBalance: newDepositBalance,
                     "balances.deposit": newDepositBalance
                 });
 
-                alert("Job published successfully!");
+                alert("Job submitted successfully! Waiting for Admin approval.");
                 window.location.href = "daily-jobs.html";
 
             } catch (error) {
