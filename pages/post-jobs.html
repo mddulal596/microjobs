@@ -3,296 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post a Job - Micro Job Pro</title>
-    <!-- FontAwesome CDN for Icons -->
+    <title>Post New Job - Micro Job Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 100px; }
-        
-        /* Header */
-        header { background-color: #4f46e5; color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #4f46e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
-        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        
-        .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .balance-card { background: rgba(255, 255, 255, 0.12); padding: 14px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.2); }
-        .balance-title { font-size: 11px; color: #e0e7ff; margin-bottom: 4px; }
-        .balance-amount { font-size: 18px; font-weight: 800; }
-
-        /* Main Content */
-        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
-        .section-title { font-size: 12px; font-weight: bold; color: #374151; text-transform: uppercase; margin-bottom: 12px; }
-
-        /* Form Inputs */
-        .form-group { margin-bottom: 14px; }
-        .form-label { display: block; font-size: 11px; font-weight: bold; color: #374151; margin-bottom: 6px; }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 12px; font-size: 12px; outline: none; transition: 0.2s; background: #f9fafb; color: #1f2937; }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #4f46e5; background: #ffffff; }
-        .form-textarea { resize: vertical; min-height: 80px; }
-
-        .calculation-box { background: #e0e7ff; border: 1px solid #c7d2fe; border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 11px; color: #3730a3; display: flex; justify-content: space-between; align-items: center; }
-        .calculation-box span { font-weight: 800; font-size: 13px; }
-
-        .submit-btn { width: 100%; background: #4f46e5; color: #ffffff; border: none; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 4px; }
-        .submit-btn:hover { background: #4338ca; }
-
-        /* Animated Bottom Nav Styles */
-        .nav-container {  
-            position: fixed;  
-            bottom: 15px;  
-            left: 50%;
-            transform: translateX(-50%);
-            width: 92%;  
-            max-width: 440px;  
-            height: 70px;  
-            background: #4f46e5;  
-            border-radius: 22px;  
-            display: flex;  
-            justify-content: space-around;  
-            align-items: center;  
-            box-shadow: 0 10px 25px rgba(0,0,0,.2);  
-            overflow: visible;  
-            z-index: 100;
-        }  
-          
-        .nav-item-animated {  
-            flex: 1;  
-            text-decoration: none;  
-            color: #fff;  
-            text-align: center;  
-            position: relative;  
-            z-index: 2;  
-        }  
-          
-        .nav-item-animated i {  
-            font-size: 22px;  
-            transition: .35s;  
-        }  
-          
-        .nav-item-animated span {  
-            display: block;  
-            font-size: 11px;  
-            margin-top: 4px;  
-            transition: .35s;  
-        }  
-          
-        .nav-item-animated.active i {  
-            transform: translateY(-10px);  
-        }  
-          
-        .nav-item-animated.active span {  
-            font-weight: bold;  
-        }  
-          
-        .indicator {  
-            position: absolute;  
-            top: -15px;  
-            width: 60px;  
-            height: 60px;  
-            background: #312e81;  
-            border-radius: 50%;  
-            border: 4px solid #fff;  
-            transition: left .35s ease;  
-            box-shadow: 0 0 20px rgba(49,46,129,.5);  
-            z-index: 1;  
-        }  
-          
-        .indicator::before {  
-            content: "";  
-            position: absolute;  
-            inset: -6px;  
-            border-radius: 50%;  
-            border: 2px solid rgba(49,46,129,.4);  
-            animation: pulse 2s infinite;  
-        }  
-          
-        @keyframes pulse {  
-            0% { transform: scale(1); opacity: 1; }  
-            100% { transform: scale(1.4); opacity: 0; }  
-        } 
-    </style>
 </head>
-<body>
-    <div class="container">
+<body class="bg-gray-100 text-gray-800 antialiased">
+    <div class="max-w-md mx-auto min-h-screen bg-white shadow-xl flex flex-col justify-between pb-12">
         
-        <!-- Top Header & Balances -->
-        <header>
-            <div class="header-top">
-                <a href="profile.html" class="profile-btn">
-                    <div id="profileIconBtn" class="profile-icon">U</div>
-                    <span id="userNameDisplay">Loading...</span>
+        <!-- Header -->
+        <header class="p-5 bg-gradient-to-r from-indigo-700 to-purple-800 text-white rounded-b-3xl shadow-lg flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="dashboard.html" class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
                 </a>
-                <a href="dashboard.html" class="home-link">Home</a>
+                <h1 class="text-sm font-bold">Post New Job</h1>
             </div>
-            <div class="balance-grid">
-                <div class="balance-card">
-                    <p class="balance-title">Main Balance</p>
-                    <h2 id="mainBalance" class="balance-amount">৳ 0.00</h2>
-                </div>
-                <div class="balance-card">
-                    <p class="balance-title">Deposit Balance</p>
-                    <h2 id="depositBalance" class="balance-amount">৳ 0.00</h2>
-                </div>
-            </div>
+            <span class="text-xs bg-indigo-500 px-3 py-1 rounded-full font-semibold">User Panel</span>
         </header>
 
-        <!-- Main Content Area -->
-        <main>
-            <h2 class="section-title">Create New Job Post</h2>
+        <!-- Main Form -->
+        <main class="p-4 flex-grow space-y-4">
+            <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
+                <form id="userPostJobForm" class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Category</label>
+                        <select id="jobCategory" required class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
+                            <option value="daily-jobs">Daily Jobs</option>
+                            <option value="video">Video Task</option>
+                            <option value="microjobs">Micro Jobs</option>
+                            <option value="social">Social Media</option>
+                            <option value="survey">Survey & Review</option>
+                        </select>
+                    </div>
 
-            <!-- Job Post Form -->
-            <form onsubmit="handlePostJob(event)">
-                <div class="form-group">
-                    <label class="form-label">Select Category</label>
-                    <select id="jobCategory" class="form-select" required onchange="updateTargetPage()">
-                        <!-- Video Categories (Goes to video.html) -->
-                        <option value="YouTube Video" data-target="video.html">YouTube Video</option>
-                        <option value="Facebook Video" data-target="video.html">Facebook Video</option>
-                        <option value="Instagram Video" data-target="video.html">Instagram Video</option>
-                        <option value="TiKTok Video" data-target="video.html">TiKTok Video</option>
-                        <option value="Twitter Video" data-target="video.html">Twitter Video</option>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Job Title</label>
+                        <input type="text" id="jobTitle" required placeholder="e.g. Website Visit & Article Read" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
+                    </div>
 
-                        <!-- Daily/Other Categories (Goes to daily-jobs.html) -->
-                        <option value="YouTube Comment & Like Shear" data-target="daily-jobs.html">YouTube Comment & Like Shear</option>
-                        <option value="Facebook Page Follow" data-target="daily-jobs.html">Facebook Page Follow</option>
-                        <option value="Facebook Like Comment & Shear" data-target="daily-jobs.html">Facebook Like Comment & Shear</option>
-                        <option value="Instagram Like Comment & Shear" data-target="daily-jobs.html">Instagram Like Comment & Shear</option>
-                        <option value="Twitter Like Comment & Shear" data-target="daily-jobs.html">Twitter Like Comment & Shear</option>
-                        <option value="Telegram Channel Join" data-target="daily-jobs.html">Telegram Channel Join</option>
-                        <option value="Telegram Bot Join" data-target="daily-jobs.html">Telegram Bot Join</option>
-                        <option value="Telegram Group Join" data-target="daily-jobs.html">Telegram Group Join</option>
-                        <option value="TiKTok Follow" data-target="daily-jobs.html">TiKTok Follow</option>
-                        <option value="TiKTok Like Comment & Shear" data-target="daily-jobs.html">TiKTok Like Comment & Shear</option>
-                        <option value="Website Visi" data-target="daily-jobs.html">Website Visi</option>
-                        <option value="Custom Task" data-target="daily-jobs.html">Custom Task</option>
-                    </select>
-                    <!-- Hidden input to store target page automatically -->
-                    <input type="hidden" id="targetPageInput" value="video.html">
-                </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Job Description / Instructions</label>
+                        <textarea id="jobInstructions" rows="3" required placeholder="Required Proof / প্রমাণের জন্য যা জমা দিতে হবে..." class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600"></textarea>
+                    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Job Title</label>
-                    <input type="text" id="jobTitle" class="form-input" placeholder="e.g. Watch full video and subscribe" required>
-                </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-gray-600 mb-1">Required Workers</label>
+                            <input type="number" id="jobWorkers" required placeholder="100" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-gray-600 mb-1">Reward Per Worker (৳)</label>
+                            <input type="number" step="0.01" id="jobReward" required placeholder="0.18" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Job Description / Instructions</label>
-                    <textarea id="jobDescription" class="form-textarea" placeholder="1. Go to this link... 2. Watch 2 minutes... 3. Submit proof..." required></textarea>
-                </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Task Link / Website URL</label>
+                        <input type="url" id="jobLink" required placeholder="https://example.com" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
+                    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Required Workers (Quantity)</label>
-                    <input type="number" id="jobWorkers" class="form-input" placeholder="e.g. 100" min="1" required oninput="calculateTotal()">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Reward Per Worker (৳)</label>
-                    <input type="number" id="jobReward" class="form-input" value="0.15" step="0.01" min="0.15" required oninput="calculateTotal()">
-                </div>
-
-                <!-- Total Cost Calculation Box -->
-                <div class="calculation-box">
-                    <span>Total Budget Needed:</span>
-                    <span id="totalBudget">৳ 0.00</span>
-                </div>
-
-                <button type="submit" class="submit-btn">Publish Job</button>
-            </form>
+                    <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition mt-2">
+                        Submit Job for Approval
+                    </button>
+                </form>
+            </div>
         </main>
-
-        <!-- Animated Bottom Navigation Bar -->
-        <div class="nav-container">  
-            <div class="indicator"></div>  
-            <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
-                <i class="fa-solid fa-headset"></i><span>Help</span>  
-            </a>  
-            <a href="wallet.html" class="nav-item-animated">  
-                <i class="fa-solid fa-wallet"></i><span>Wallet</span>  
-            </a>  
-            <a href="dashboard.html" class="nav-item-animated active">  
-                <i class="fa-solid fa-house"></i><span>Home</span>  
-            </a>  
-            <a href="referral.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user-group"></i><span>Team</span>  
-            </a>  
-            <a href="profile.html" class="nav-item-animated">  
-                <i class="fa-solid fa-user"></i><span>Profile</span>  
-            </a>  
-        </div>  
     </div>
 
-    <!-- Firebase Script & Logic -->
+    <!-- Firebase Script -->
     <script type="module">
-        import { observeAuthState } from '../firebase/auth.js';
+        import { db, auth } from '../firebase/firebase-config.js';
+        import { collection, addDoc, doc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Bottom Nav Indicator Movement Logic
-        const items = document.querySelectorAll(".nav-item-animated");  
-        const indicator = document.querySelector(".indicator");  
-          
-        function moveIndicator(el){  
-            if (!el) return;
-            const left = el.offsetLeft + (el.offsetWidth / 2) - (indicator.offsetWidth / 2);  
-            indicator.style.left = left + "px";  
-            items.forEach(i => i.classList.remove("active"));  
-            el.classList.add("active");  
-        }  
-        items.forEach(item => { item.addEventListener("click", () => moveIndicator(item)); });  
-        window.onload = () => moveIndicator(document.querySelector(".nav-item-animated.active"));
+        let currentUser = null;
 
-        observeAuthState((userData) => {
-            if (userData) {
-                const name = userData.fullName || userData.displayName || "User";
-                document.getElementById('profileIconBtn').innerText = name.charAt(0).toUpperCase();
-                document.getElementById('userNameDisplay').innerText = name;
-
-                const mainBal = userData.mainBalance ?? userData.balances?.main ?? 0;
-                const depositBal = userData.depositBalance ?? userData.balances?.deposit ?? 0;
-                document.getElementById('mainBalance').innerText = `৳ ${Number(mainBal).toFixed(2)}`;
-                document.getElementById('depositBalance').innerText = `৳ ${Number(depositBal).toFixed(2)}`;
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
             } else {
-                window.location.href = 'login.html';
+                window.location.href = "login.html";
             }
         });
 
-        // ডাইনামিক টার্গেট পেজ নির্ধারণ করার ফাংশন
-        window.updateTargetPage = function() {
-            const selectBox = document.getElementById('jobCategory');
-            const selectedOption = selectBox.options[selectBox.selectedIndex];
-            const targetPage = selectedOption.getAttribute('data-target') || 'daily-jobs.html';
-            document.getElementById('targetPageInput').value = targetPage;
-        }
+        document.getElementById('userPostJobForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!currentUser) return alert("Please login first!");
 
-        window.calculateTotal = function() {
-            const workers = parseFloat(document.getElementById('jobWorkers').value) || 0;
-            const reward = parseFloat(document.getElementById('jobReward').value) || 0;
-            const total = workers * reward;
-            document.getElementById('totalBudget').innerText = `৳ ${total.toFixed(2)}`;
-        }
-
-        window.handlePostJob = function(event) {
-            event.preventDefault();
             const category = document.getElementById('jobCategory').value;
-            const targetPage = document.getElementById('targetPageInput').value;
             const title = document.getElementById('jobTitle').value;
-            const description = document.getElementById('jobDescription').value;
+            const instructions = document.getElementById('jobInstructions').value;
             const workers = parseInt(document.getElementById('jobWorkers').value);
             const reward = parseFloat(document.getElementById('jobReward').value);
-            const totalBudget = workers * reward;
+            const link = document.getElementById('jobLink').value;
 
-            if(!title || !description || !workers || !reward) {
-                alert('দয়া করে সব তথ্য সঠিকভাবে পূরণ করুন!');
-                return;
+            const totalCost = workers * reward;
+            const targetPage = (category === 'video') ? 'video.html' : 'daily-jobs.html';
+
+            if (confirm(`Total budget: ৳${totalCost.toFixed(2)}. Do you want to proceed?`)) {
+                try {
+                    //১. ডাটাবেজে পেন্ডিং হিসেবে জব সেভ করা
+                    await addDoc(collection(db, "tasks"), {
+                        category,
+                        title,
+                        instructions,
+                        workers,
+                        reward,
+                        link,
+                        targetPage,
+                        status: "pending", // 👈 পেন্ডিং স্ট্যাটাস
+                        postedBy: currentUser.uid,
+                        timestamp: serverTimestamp()
+                    });
+
+                    // ২. ইউজারের ব্যালেন্স কেটে নেওয়া
+                    await updateDoc(doc(db, "users", currentUser.uid), {
+                        mainBalance: increment(-totalCost),
+                        "balances.main": increment(-totalCost)
+                    });
+
+                    alert(`আপনার জব পোস্ট সফলভাবে জমা হয়েছে! মোট বাজেট ৳${totalCost.toFixed(2)} কেটে নেওয়া হয়েছে। অ্যাডমিন রিভিউ করার পর কাজ এক্টিভ হবে।`);
+                    document.getElementById('userPostJobForm').reset();
+
+                } catch (error) {
+                    console.error("Error posting job: ", error);
+                    alert("জব পোস্ট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+                }
             }
-
-            alert(`আপনার জব পোস্ট সফলভাবে পাবলিশ হয়েছে! মোট বাজেট ৳${totalBudget.toFixed(2)} কেটে নেওয়া হয়েছে।`);
-
-            // ক্যাটাগরি অনুযায়ী রিডাইরেকশন লজিক (targetPage ইনপুট অনুযায়ী রিডাইরেক্ট করবে)
-            window.location.href = targetPage;
-        }
+        });
     </script>
 </body>
 </html>
