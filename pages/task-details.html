@@ -4,197 +4,334 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Details - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f3f4f6; color: #1f2937; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 480px; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: relative; padding-bottom: 30px; }
-        
-        /* Top Header - Matching main design */
-        header { background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); color: #ffffff; padding: 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; box-shadow: 0 4px 12px rgba(30, 27, 75, 0.2); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        
-        .profile-btn { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 6px 12px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        .profile-icon { width: 24px; height: 24px; background: #ffffff; color: #1e1b4b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
-        .home-link { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 50px; color: #fff; text-decoration: none; font-size: 12px; font-weight: bold; }
-        
-        .header-title { font-size: 16px; font-weight: 800; }
-
-        /* Main Content */
-        main { padding: 16px; flex-grow: 1; overflow-y: auto; }
-        .task-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .task-title { font-size: 14px; font-weight: 700; color: #1f2937; margin-bottom: 8px; }
-        .task-reward { font-size: 13px; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 8px; display: inline-block; margin-bottom: 12px; }
-        .section-heading { font-size: 11px; font-weight: bold; color: #374151; text-transform: uppercase; margin-top: 14px; margin-bottom: 6px; }
-        .task-desc { font-size: 11px; color: #6b7280; line-height: 1.5; }
-        
-        .proof-box { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
-        .form-label { font-size: 11px; font-weight: bold; color: #374151; }
-        .proof-input { width: 100%; padding: 12px; background: #f9fafb; border: 1px solid #d1d5db; border-radius: 12px; color: #1f2937; font-size: 12px; outline: none; }
-        .proof-input:focus { border-color: #4f46e5; background: #ffffff; }
-        
-        .btn-submit { width: 100%; background: #4f46e5; color: #ffffff; border: none; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; margin-top: 16px; transition: 0.2s; }
-        .btn-submit:hover { background: #4338ca; }
-        .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
-
-        .error-box { text-align: center; padding: 40px 20px; color: #6b7280; font-size: 12px; }
-        
-        /* Footer */
-        footer { text-align: center; font-size: 10px; color: #9ca3af; padding: 10px 0; }
+        /* Animated Bottom Nav Styles */
+        .nav-container {  
+            position: fixed;  
+            bottom: 15px;  
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;  
+            max-width: 440px;  
+            height: 70px;  
+            background: #4f46e5;  
+            border-radius: 22px;  
+            display: flex;  
+            justify-content: space-around;  
+            align-items: center;  
+            box-shadow: 0 10px 25px rgba(0,0,0,.2);  
+            overflow: visible;  
+            z-index: 100;
+        }  
+          
+        .nav-item-animated {  
+            flex: 1;  
+            text-decoration: none;  
+            color: #fff;  
+            text-align: center;  
+            position: relative;  
+            z-index: 2;  
+        }  
+          
+        .nav-item-animated i {  
+            font-size: 22px;  
+            transition: .35s;  
+        }  
+          
+        .nav-item-animated span {  
+            display: block;  
+            font-size: 11px;  
+            margin-top: 4px;  
+            transition: .35s;  
+        }  
+          
+        .nav-item-animated.active i {  
+            transform: translateY(-10px);  
+        }  
+          
+        .nav-item-animated.active span {  
+            font-weight: bold;  
+        }  
+          
+        .indicator {  
+            position: absolute;  
+            top: -15px;  
+            width: 60px;  
+            height: 60px;  
+            background: #312e81;  
+            border-radius: 50%;  
+            border: 4px solid #fff;  
+            transition: left .35s ease;  
+            box-shadow: 0 0 20px rgba(49,46,129,.5);  
+            z-index: 1;  
+        }  
+          
+        .indicator::before {  
+            content: "";  
+            position: absolute;  
+            inset: -6px;  
+            border-radius: 50%;  
+            border: 2px solid rgba(49,46,129,.4);  
+            animation: pulse 2s infinite;  
+        }  
+          
+        @keyframes pulse {  
+            0% { transform: scale(1); opacity: 1; }  
+            100% { transform: scale(1.4); opacity: 0; }  
+        } 
     </style>
 </head>
-<body>
-    <div class="container">
-        <div>
-            <!-- Top Header Matching Screenshot Design -->
-            <header>
-                <div class="header-top">
-                    <a href="microjobs.html" class="profile-btn">
-                        <div class="profile-icon">←</div>
-                        <span>Back</span>
+<body class="bg-gray-50 text-gray-800 antialiased font-sans">
+    <div class="max-w-md mx-auto min-h-screen bg-gray-50 flex flex-col justify-between pb-28 relative shadow-xl">
+        
+        <!-- Header -->
+        <header class="p-5 bg-gradient-to-r from-purple-800 via-indigo-700 to-indigo-800 text-white rounded-b-3xl shadow-md">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <a href="daily-jobs.html" class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
+                        <i class="fa-solid fa-arrow-left text-sm"></i>
                     </a>
-                    <a href="dashboard.html" class="home-link">Home</a>
+                    <h1 class="text-sm font-bold tracking-wide">Task Details</h1>
                 </div>
-                <div class="header-title">Task Details</div>
-            </header>
+                <a href="dashboard.html" class="text-xs bg-white/15 px-3.5 py-1.5 rounded-full hover:bg-white/25 transition flex items-center gap-1.5 font-medium border border-white/10">
+                    <i class="fa-solid fa-house text-xs"></i> Home
+                </a>
+            </div>
+        </header>
 
-            <!-- Main Content Area -->
-            <main id="mainContent">
-                <div class="error-box">টাস্ক লোড হচ্ছে...</div>
-            </main>
+        <!-- Main Task Content -->
+        <main class="p-4 flex-grow space-y-4">
+            
+            <!-- Loading Spinner / Message -->
+            <div id="loadingContainer" class="text-center py-12">
+                <i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-600 mb-3"></i>
+                <p class="text-xs text-gray-500 font-medium">টাস্কের বিবরণ লোড হচ্ছে...</p>
+            </div>
+
+            <!-- Error Container -->
+            <div id="errorContainer" class="hidden text-center py-10 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm space-y-3">
+                <i class="fa-solid fa-triangle-exclamation text-4xl text-amber-500"></i>
+                <p class="text-xs text-gray-600 font-medium">টাস্কটি খুঁজে পাওয়া যায়নি অথবা মুছে ফেলা হয়েছে।</p>
+                <a href="daily-jobs.html" class="inline-block bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow hover:bg-indigo-700 transition">
+                    Back to Tasks
+                </a>
+            </div>
+
+            <!-- Task Details Card -->
+            <div id="taskCard" class="hidden bg-white rounded-2xl p-5 border border-gray-100 shadow-sm space-y-4">
+                
+                <!-- Category & Title -->
+                <div>
+                    <span id="taskCategory" class="text-[9px] bg-indigo-50 text-indigo-600 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Category</span>
+                    <h2 id="taskTitle" class="text-sm font-bold text-gray-800 mt-2">Job Title Loading...</h2>
+                </div>
+
+                <!-- Reward Info -->
+                <div class="bg-indigo-50/70 p-3.5 rounded-xl border border-indigo-100 flex justify-between items-center">
+                    <div>
+                        <p class="text-[10px] text-gray-500 font-medium">Task Reward</p>
+                        <h3 class="text-base font-black text-emerald-600 mt-0.5">৳ <span id="taskReward">0.00</span></h3>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-gray-500 font-medium">Workers Remaining</p>
+                        <h3 class="text-sm font-bold text-indigo-700 mt-0.5" id="taskWorkers">0</h3>
+                    </div>
+                </div>
+
+                <!-- Task Link -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Task Link</label>
+                    <a id="taskLink" href="#" target="_blank" class="w-full bg-indigo-50 text-indigo-700 border border-indigo-100 rounded-xl p-3 text-xs font-bold flex items-center justify-between hover:bg-indigo-100 transition truncate">
+                        <span id="taskLinkText" class="truncate">https://example.com</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Instructions -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Work Description / Instructions</label>
+                    <div id="taskInstructions" class="bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-xl p-3 whitespace-pre-line leading-relaxed">
+                        Instructions will appear here...
+                    </div>
+                </div>
+
+                <!-- Submission Form -->
+                <form id="submissionForm" class="space-y-3 pt-2 border-t border-gray-100">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Proof / Submission Work</label>
+                        <textarea id="proofText" rows="3" required placeholder="প্রমাণের বিবরণ অথবা রিকোয়ার্ড টেক্সট এখানে লিখুন..." class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"></textarea>
+                    </div>
+
+                    <button type="submit" id="submitProofBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-3.5 rounded-xl transition shadow-md flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Submit Task Proof
+                    </button>
+                </form>
+
+            </div>
+
+        </main>
+
+        <!-- Animated Bottom Navigation Bar -->
+        <div class="nav-container">  
+            <div class="indicator"></div>  
+            
+            <a href="https://t.me/microjobspro" target="_blank" class="nav-item-animated">  
+                <i class="fa-solid fa-headset"></i>  
+                <span>Help</span>  
+            </a>  
+
+            <a href="wallet.html" class="nav-item-animated">  
+                <i class="fa-solid fa-wallet"></i>  
+                <span>Wallet</span>  
+            </a>  
+            
+            <a href="dashboard.html" class="nav-item-animated">  
+                <i class="fa-solid fa-house"></i>  
+                <span>Home</span>  
+            </a>  
+            
+            <a href="referral.html" class="nav-item-animated">  
+                <i class="fa-solid fa-user-group"></i>  
+                <span>Team</span>  
+            </a>  
+            
+            <a href="profile.html" class="nav-item-animated">  
+                <i class="fa-solid fa-user"></i>  
+                <span>Profile</span>  
+            </a>  
         </div>
 
-        <footer>
-            &copy; 2026 MicroJobPro. All rights reserved.
-        </footer>
     </div>
 
-    <!-- Firebase & Logic Script -->
+    <!-- Navigation Animation Script -->
+    <script>  
+        const items = document.querySelectorAll(".nav-item-animated");  
+        const indicator = document.querySelector(".indicator");  
+          
+        function moveIndicator(el){  
+            if (!el) return;
+            const left = el.offsetLeft + (el.offsetWidth / 2) - (indicator.offsetWidth / 2);  
+            indicator.style.left = left + "px";  
+            items.forEach(i => i.classList.remove("active"));  
+            el.classList.add("active");  
+        }  
+          
+        items.forEach(item => {  
+            item.addEventListener("click", () => {  
+                moveIndicator(item);  
+            });  
+        });  
+          
+        window.addEventListener("DOMContentLoaded", () => {
+            const homeBtn = Array.from(items).find(item => item.getAttribute("href") === "dashboard.html") || items[2];
+            moveIndicator(homeBtn);
+        });
+
+        window.onresize = () => moveIndicator(document.querySelector(".nav-item-animated.active"));  
+    </script>
+
+    <!-- Firebase Script -->
     <script type="module">
-        import { observeAuthState } from '../firebase/auth.js';
-        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const db = getFirestore();
-
-        const staticTasks = {
-            "1": {
-                title: "YouTube Video Watch & Subscribe",
-                reward: "+৳ 0.15",
-                amountValue: 0.15,
-                description: "1. Watch the full video without skipping.\n2. Like the video and subscribe to the channel permanently.\n3. Drop a positive comment.",
-                proofNote: "Submit your YouTube channel username / profile link and comment screenshot text."
-            },
-            "2": {
-                title: "Facebook Page Follow & Share",
-                reward: "+৳ 0.15",
-                amountValue: 0.15,
-                description: "1. Follow our official Facebook page.\n2. Share the pinned post on your personal timeline publicly.",
-                proofNote: "Submit your Facebook profile link and your share link."
-            },
-            "3": {
-                title: "Website Visit & Click Ads",
-                reward: "+৳ 0.25",
-                amountValue: 0.25,
-                description: "1. Browse our target website for at least 2 minutes.\n2. Click on any one banner advertisement on the site.",
-                proofNote: "Submit the visited page URL or proof of ad click."
-            }
-        };
+        import { db, auth } from '../firebase/firebase-config.js';
+        import { doc, getDoc, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         let currentUser = null;
-        const urlParams = new URLSearchParams(window.location.search);
-        const taskId = urlParams.get('id');
+        let currentTaskId = null;
+        let currentTaskData = null;
 
-        observeAuthState(async (userData) => {
-            if (userData) {
-                currentUser = userData;
-                await loadTaskDetails(taskId);
+        // URL থেকে ID নেওয়া
+        const urlParams = new URLSearchParams(window.location.search);
+        currentTaskId = urlParams.get('id');
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                if (currentTaskId) {
+                    loadTaskDetails(currentTaskId);
+                } else {
+                    showError();
+                }
             } else {
-                window.location.href = 'login.html';
+                window.location.href = "login.html";
             }
         });
 
-        async function loadTaskDetails(id) {
-            const mainContent = document.getElementById('mainContent');
-            if (!id) {
-                mainContent.innerHTML = `<div class="error-box">টাস্ক আইডি পাওয়া যায়নি! <br><br> <a href="microjobs.html" class="home-link" style="display:inline-block; background:#4f46e5; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none;">Back to Tasks</a></div>`;
-                return;
-            }
+        async function loadTaskDetails(taskId) {
+            try {
+                const taskRef = doc(db, "tasks", taskId);
+                const taskSnap = await getDoc(taskRef);
 
-            let taskData = null;
-
-            if (staticTasks[id]) {
-                taskData = staticTasks[id];
-            } else {
-                try {
-                    const docRef = doc(db, "microjobs", id);
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) {
-                        taskData = docSnap.data();
-                    }
-                } catch (err) {
-                    console.error(err);
-                }
-            }
-
-            if (!taskData) {
-                mainContent.innerHTML = `
-                    <div class="error-box">
-                        টাস্কটি খুঁজে পাওয়া যায়নি অথবা মুছে ফেলা হয়েছে।<br><br>
-                        <a href="microjobs.html" class="home-link" style="display:inline-block; background:#4f46e5; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none;">Back to Tasks</a>
-                    </div>`;
-                return;
-            }
-
-            mainContent.innerHTML = `
-                <div class="task-card">
-                    <h2 class="task-title">${taskData.title}</h2>
-                    <div class="task-reward">${taskData.reward || ('+৳ ' + taskData.amountValue)}</div>
+                if (taskSnap.exists()) {
+                    currentTaskData = taskSnap.data();
                     
-                    <div class="section-heading">Task Description</div>
-                    <p class="task-desc" style="white-space: pre-line;">${taskData.description}</p>
+                    document.getElementById('taskCategory').innerText = currentTaskData.category || 'DAILY-JOBS';
+                    document.getElementById('taskTitle').innerText = currentTaskData.title || 'No Title';
+                    document.getElementById('taskReward').innerText = Number(currentTaskData.reward || 0).toFixed(2);
+                    document.getElementById('taskWorkers').innerText = currentTaskData.workers || 0;
+                    
+                    const link = currentTaskData.link || '#';
+                    document.getElementById('taskLink').href = link;
+                    document.getElementById('taskLinkText').innerText = link;
 
-                    <div class="section-heading">Required Proof Submission</div>
-                    <p class="task-desc">${taskData.proofNote || 'Submit your work proof below:'}</p>
+                    document.getElementById('taskInstructions').innerText = currentTaskData.instructions || currentTaskData.description || 'কোনো নির্দেশনা দেওয়া হয়নি।';
 
-                    <div class="proof-box">
-                        <label class="form-label">Your Proof / Details</label>
-                        <input type="text" id="proofText" class="proof-input" placeholder="Enter your proof details (e.g. username / link)..." required>
-                        <button id="submitProofBtn" class="btn-submit">Submit Proof</button>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('submitProofBtn').addEventListener('click', async () => {
-                const proofVal = document.getElementById('proofText').value.trim();
-                if (!proofVal) {
-                    alert('দয়া করে প্রুফ বা প্রমাণ লিখুন।');
-                    return;
+                    document.getElementById('loadingContainer').classList.add('hidden');
+                    document.getElementById('taskCard').classList.remove('hidden');
+                } else {
+                    showError();
                 }
-
-                const btn = document.getElementById('submitProofBtn');
-                btn.disabled = true;
-                btn.innerText = 'Submitting...';
-
-                try {
-                    await addDoc(collection(db, "task_submissions"), {
-                        taskId: id,
-                        taskTitle: taskData.title,
-                        userId: currentUser.uid,
-                        userName: currentUser.fullName || currentUser.displayName || 'User',
-                        proof: proofVal,
-                        status: 'pending',
-                        timestamp: serverTimestamp()
-                    });
-
-                    alert('টাস্ক প্রুফ সফলভাবে জমা হয়েছে!');
-                    window.location.href = 'microjobs.html';
-                } catch (error) {
-                    console.error(error);
-                    alert('প্রুফ জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
-                    btn.disabled = false;
-                    btn.innerText = 'Submit Proof';
-                }
-            });
+            } catch (error) {
+                console.error("Error fetching task details:", error);
+                showError();
+            }
         }
+
+        function showError() {
+            document.getElementById('loadingContainer').classList.add('hidden');
+            document.getElementById('taskCard').classList.add('hidden');
+            document.getElementById('errorContainer').classList.remove('hidden');
+        }
+
+        // টাস্ক প্রুফ সাবমিট করা
+        document.getElementById('submissionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!currentUser || !currentTaskId) return;
+
+            const proofText = document.getElementById('proofText').value.trim();
+            const submitBtn = document.getElementById('submitProofBtn');
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Submitting Proof...";
+
+            try {
+                await addDoc(collection(db, "taskSubmissions"), {
+                    taskId: currentTaskId,
+                    taskName: currentTaskData.title || 'Task',
+                    reward: currentTaskData.reward || 0,
+                    userId: currentUser.uid,
+                    userEmail: currentUser.email,
+                    proofText: proofText,
+                    status: "pending",
+                    submittedAt: serverTimestamp()
+                });
+
+                alert("আপনার টাস্কের প্রমাণ সফলভাবে জমা দেওয়া হয়েছে! রিভিউয়ের পর ব্যালেন্স যোগ হবে।");
+                window.location.href = "daily-jobs.html";
+
+            } catch (error) {
+                console.error("Error submitting proof:", error);
+                alert("প্রমাণ জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Submit Task Proof";
+            }
+        });
     </script>
 </body>
 </html>
