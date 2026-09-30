@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Control Admin - Micro Job Pro</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>  
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased">
@@ -24,20 +26,20 @@
         <!-- Main Content -->
         <main class="p-4 flex-grow space-y-6">
             
-            <!-- 1. Review Pending User Jobs (নতুন যুক্ত করা হয়েছে) -->
+            <!-- 0. Pending User Posted Jobs Review (নতুন যুক্ত ফিচার) -->
             <div class="bg-white border border-amber-200 p-4 rounded-2xl shadow-sm space-y-3 bg-amber-50/20">
                 <h2 class="text-xs font-bold text-amber-800 uppercase tracking-wide flex items-center gap-2">
                     <i class="fa-solid fa-clock text-amber-500"></i> Pending User Posted Jobs
                 </h2>
                 <div id="pendingJobsContainer" class="space-y-2 text-xs text-gray-500">
-                    <p class="text-center py-2">Loading pending jobs...</p>
+                    <p class="text-center py-2">Loading pending user jobs...</p>
                 </div>
             </div>
 
-            <!-- 2. Post New Task / Job Direct by Admin -->
+            <!-- 1. Post New Task / Job with All Categories -->
             <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
                 <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
-                    <i class="fa-solid fa-plus-circle text-indigo-600"></i> Post Admin Job (Direct Active)
+                    <i class="fa-solid fa-plus-circle text-indigo-600"></i> Post New Task / Job (Direct Active)
                 </h2>
                 <form id="taskForm" class="space-y-3">
                     <input type="hidden" id="editTaskId">
@@ -49,6 +51,7 @@
                             <option value="microjobs">Micro Jobs</option>
                             <option value="social">Social Media Task</option>
                             <option value="survey">Survey & Review</option>
+                            <option value="app-install">App Install & Signup</option>
                         </select>
                     </div>
                     <div>
@@ -70,23 +73,39 @@
                         <input type="text" id="taskLink" required placeholder="https://example.com" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Instructions</label>
-                        <textarea id="taskInstructions" rows="2" placeholder="বর্ণনা লিখুন..." class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600"></textarea>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Task Instructions / Description</label>
+                        <textarea id="taskInstructions" rows="2" placeholder="বর্ণনা বা করণীয় কাজ বিস্তারিত লিখুন..." class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600"></textarea>
                     </div>
                     <button type="submit" id="taskSubmitBtn" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
-                        Publish Direct Active Task
+                        Publish Task
                     </button>
                 </form>
             </div>
 
-            <!-- 3. Manage User Balance -->
+            <!-- 2. Referral Commission Control -->
+            <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
+                <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear text-purple-600"></i> Referral Commission Settings
+                </h2>
+                <form id="referralForm" class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">Commission Amount (৳)</label>
+                        <input type="number" step="0.01" id="refBonus" required placeholder="5.00" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
+                    </div>
+                    <button type="submit" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+                        Save Commission
+                    </button>
+                </form>
+            </div>
+
+            <!-- 3. User Balance Management -->
             <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
                 <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
                     <i class="fa-solid fa-user-gear text-amber-600"></i> Manage User Balance
                 </h2>
                 <form id="userBalanceForm" class="space-y-3">
                     <div>
-                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">User Email</label>
+                        <label class="block text-[11px] font-semibold text-gray-600 mb-1">User Email / UID</label>
                         <input type="text" id="targetUserEmail" required placeholder="user@gmail.com" class="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-600">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
@@ -108,30 +127,76 @@
                 </form>
             </div>
 
-            <!-- 4. Active Tasks List -->
+            <!-- 4. Worker Submissions Review -->
+            <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
+                <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-green-600"></i> Worker Submissions Review
+                </h2>
+                <div id="submissionsContainer" class="space-y-2 text-xs text-gray-500">
+                    <p>Loading pending submissions...</p>
+                </div>
+            </div>
+
+            <!-- 5. Withdraw Requests Management -->
+            <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
+                <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
+                    <i class="fa-solid fa-wallet text-blue-600"></i> Withdraw Requests
+                </h2>
+                <div id="withdrawsContainer" class="space-y-2 text-xs text-gray-500">
+                    <p>Loading withdraw requests...</p>
+                </div>
+            </div>
+
+            <!-- 6. Deposit Requests Management -->
+            <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
+                <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
+                    <i class="fa-solid fa-money-bill-transfer text-emerald-600"></i> Deposit Requests
+                </h2>
+                <div id="depositsContainer" class="space-y-2 text-xs text-gray-500">
+                    <p>Loading deposit requests...</p>
+                </div>
+            </div>
+
+            <!-- 7. Active Tasks List (Edit & Delete) -->
             <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-3">
                 <h2 class="text-xs font-bold text-gray-800 uppercase tracking-wide flex items-center gap-2">
                     <i class="fa-solid fa-tasks text-rose-600"></i> Active Tasks List (Edit / Delete)
                 </h2>
                 <div id="tasksListContainer" class="space-y-2 text-xs text-gray-500">
-                    <p class="text-center py-2">Loading active tasks...</p>
+                    <p>Loading active tasks...</p>
                 </div>
             </div>
 
         </main>
     </div>
 
-    <!-- Firebase Script -->
+    <!-- Firebase Admin Logic -->
     <script type="module">
         import { db } from '../firebase/firebase-config.js';
-        import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, increment, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, setDoc, increment, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ১. পেন্ডিং জব লোড করা
+        // Helper function to handle fetch with timeout protection
+        async function fetchWithTimeout(promise, timeoutMs = 4000) {
+            let timeoutId;
+            const timeoutPromise = new Promise((_, reject) => {
+                timeoutId = setTimeout(() => reject(new Error("Timeout")), timeoutMs);
+            });
+            try {
+                const result = await Promise.race([promise, timeoutPromise]);
+                clearTimeout(timeoutId);
+                return result;
+            } catch (error) {
+                clearTimeout(timeoutId);
+                throw error;
+            }
+        }
+
+        // ==================== NEW FEATURE: USER PENDING JOBS APPROVAL ====================
         async function loadPendingJobs() {
             const container = document.getElementById('pendingJobsContainer');
             try {
                 const q = query(collection(db, "tasks"), where("status", "==", "pending"));
-                const querySnapshot = await getDocs(q);
+                const querySnapshot = await fetchWithTimeout(getDocs(q));
 
                 if (querySnapshot.empty) {
                     container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending jobs to approve.</p>`;
@@ -150,7 +215,7 @@
                             <span class="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-semibold uppercase">${task.category || 'Job'}</span>
                             <h4 class="font-bold text-gray-800 text-xs mt-1">${task.title}</h4>
                             <p class="text-[10px] text-gray-600 mt-0.5">Reward: ৳${task.reward} | Workers: ${task.workers}</p>
-                            <p class="text-[10px] text-gray-500 mt-0.5">Link: <a href="${task.link}" target="_blank" class="text-indigo-600 underline">View Task Link</a></p>
+                            <p class="text-[10px] text-gray-500 mt-0.5">Link: <a href="${task.link}" target="_blank" class="text-indigo-600 underline">View Link</a></p>
                             <p class="text-[10px] text-gray-600 mt-1 bg-gray-50 p-1.5 rounded"><b>Instructions:</b> ${task.instructions || 'N/A'}</p>
                         </div>
                         <div class="flex gap-2 mt-1">
@@ -162,11 +227,10 @@
                 });
             } catch (error) {
                 console.error("Error loading pending jobs:", error);
-                container.innerHTML = `<p class="text-red-500 text-center py-2">Failed to load pending jobs.</p>`;
+                container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending jobs found.</p>`;
             }
         }
 
-        // ২. জব এক্টিভ/অ্যাপ্রুভ করা
         window.approveJob = async function(taskId) {
             try {
                 await updateDoc(doc(db, "tasks", taskId), {
@@ -180,7 +244,6 @@
             }
         };
 
-        // ৩. জব রিজেক্ট করা
         window.rejectJob = async function(taskId) {
             if (confirm("আপনি কি নিশ্চিত এই জবটি রিজেক্ট ও ডিলিট করতে চান?")) {
                 try {
@@ -193,7 +256,7 @@
             }
         };
 
-        // ৪. অ্যাডমিন ডাইরেক্ট জব পোস্ট
+        // ==================== 1. Handle Task Post & Edit ====================
         document.getElementById('taskForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const editId = document.getElementById('editTaskId').value;
@@ -203,35 +266,269 @@
             const workers = parseInt(document.getElementById('taskWorkers').value);
             const link = document.getElementById('taskLink').value;
             const instructions = document.getElementById('taskInstructions').value;
+
             const targetPage = (category === 'video') ? 'video.html' : 'daily-jobs.html';
 
             try {
                 if (editId) {
-                    await updateDoc(doc(db, "tasks", editId), { category, title, reward, workers, link, instructions, targetPage });
-                    alert("Task updated!");
+                    await updateDoc(doc(db, "tasks", editId), { 
+                        category, title, reward, workers, link, instructions, targetPage 
+                    });
+                    alert("Task updated successfully!");
                     document.getElementById('editTaskId').value = "";
-                    document.getElementById('taskSubmitBtn').innerText = "Publish Direct Active Task";
+                    document.getElementById('taskSubmitBtn').innerText = "Publish Task";
                 } else {
                     await addDoc(collection(db, "tasks"), {
                         category, title, reward, workers, link, instructions, targetPage,
                         status: "active",
                         timestamp: serverTimestamp()
                     });
-                    alert("Task posted and activated directly!");
+                    alert("Task posted successfully!");
                 }
                 document.getElementById('taskForm').reset();
                 loadActiveTasks();
             } catch (error) {
+                console.error("Error saving task: ", error);
                 alert("Failed to save task.");
             }
         });
 
-        // ৫. এক্টিভ জব লোড ও ডিলিট
+        // ==================== 2. Handle Referral Commission Settings ====================
+        document.getElementById('referralForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const bonus = parseFloat(document.getElementById('refBonus').value);
+            try {
+                await setDoc(doc(db, "settings", "referral"), { commission: bonus }, { merge: true });
+                alert("Referral commission updated!");
+            } catch (error) {
+                alert("Failed to update.");
+            }
+        });
+
+        // ==================== 3. Manage User Balance ====================
+        document.getElementById('userBalanceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('targetUserEmail').value.trim().toLowerCase();
+            const action = document.getElementById('balanceAction').value;
+            const amount = parseFloat(document.getElementById('balanceAmount').value);
+
+            try {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("email", "==", email));
+                const querySnap = await getDocs(q);
+
+                if (querySnap.empty) {
+                    alert("User not found with this email!");
+                    return;
+                }
+
+                let userDocId = null;
+                querySnap.forEach((d) => { userDocId = d.id; });
+
+                const finalAmount = action === "add" ? amount : -amount;
+                await updateDoc(doc(db, "users", userDocId), {
+                    mainBalance: increment(finalAmount),
+                    "balances.main": increment(finalAmount)
+                });
+
+                alert("User balance updated uniformly!");
+                document.getElementById('userBalanceForm').reset();
+            } catch (error) {
+                console.error("Error updating user balance:", error);
+                alert("Failed to update balance.");
+            }
+        });
+
+        // ==================== 4. Load Submissions ====================
+        async function loadSubmissions() {
+            const container = document.getElementById('submissionsContainer');
+            try {
+                let querySnapshot;
+                try {
+                    querySnapshot = await fetchWithTimeout(getDocs(collection(db, "taskSubmissions")));
+                } catch(e) {
+                    querySnapshot = await fetchWithTimeout(getDocs(collection(db, "submissions")));
+                }
+                
+                container.innerHTML = "";
+                let count = 0;
+                querySnapshot.forEach((documentSnap) => {
+                    const sub = documentSnap.data();
+                    if (sub.status && sub.status.toLowerCase() !== "pending") return;
+                    count++;
+                    const subId = documentSnap.id;
+
+                    const card = document.createElement('div');
+                    card.className = "border border-gray-100 bg-gray-50 p-3 rounded-xl flex flex-col gap-2";
+                    card.innerHTML = `
+                        <div>
+                            <span class="font-bold text-gray-800">Task: ${sub.taskName || sub.taskTitle || 'N/A'}</span>
+                            <p class="text-[10px] text-gray-500 mt-0.5">Proof: <a href="${sub.screenshotUrl || sub.proofText || sub.proof || '#'}" target="_blank" class="text-indigo-600 underline">View Proof Link</a></p>
+                            <p class="text-[10px] text-indigo-600 font-semibold mt-1">Reward: ৳ ${sub.reward || 0}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="approveSub('${subId}', '${sub.userId}', ${sub.reward || 0})" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-1.5 rounded-lg font-bold text-[10px] transition">Approve</button>
+                            <button onclick="rejectSub('${subId}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-1.5 rounded-lg font-bold text-[10px] transition">Reject</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                if (count === 0) {
+                    container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending submissions.</p>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending submissions found.</p>`;
+            }
+        }
+
+        window.approveSub = async function(subId, userId, rewardAmount) {
+            try {
+                try {
+                    await updateDoc(doc(db, "taskSubmissions", subId), { status: "approved" });
+                } catch(e) {
+                    await updateDoc(doc(db, "submissions", subId), { status: "approved" });
+                }
+
+                await updateDoc(doc(db, "users", userId), {
+                    mainBalance: increment(rewardAmount),
+                    "balances.main": increment(rewardAmount)
+                });
+                alert("Submission approved & balance updated uniformly!");
+                loadSubmissions();
+            } catch (error) {
+                alert("Failed to approve.");
+            }
+        }
+
+        window.rejectSub = async function(subId) {
+            try {
+                try {
+                    await updateDoc(doc(db, "taskSubmissions", subId), { status: "rejected" });
+                } catch(e) {
+                    await updateDoc(doc(db, "submissions", subId), { status: "rejected" });
+                }
+                alert("Submission rejected.");
+                loadSubmissions();
+            } catch (error) {
+                alert("Failed to reject.");
+            }
+        }
+
+        // ==================== 5. Load Withdraw Requests ====================
+        async function loadWithdraws() {
+            const container = document.getElementById('withdrawsContainer');
+            try {
+                const querySnapshot = await fetchWithTimeout(getDocs(collection(db, "withdraws")));
+                
+                container.innerHTML = "";
+                let count = 0;
+                querySnapshot.forEach((documentSnap) => {
+                    const wd = documentSnap.data();
+                    if (wd.status && wd.status.toLowerCase() !== "pending") return;
+                    count++;
+                    const wdId = documentSnap.id;
+
+                    const card = document.createElement('div');
+                    card.className = "border border-gray-100 bg-gray-50 p-3 rounded-xl flex flex-col gap-1.5";
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-gray-800 uppercase">${wd.method || 'Wallet'}</span>
+                            <span class="font-black text-indigo-600 text-xs">৳ ${wd.amount || 0}</span>
+                        </div>
+                        <p class="text-[10px] text-gray-600">Account: <b class="text-gray-800">${wd.accountNumber || wd.number || 'N/A'}</b></p>
+                        <button onclick="completeWithdraw('${wdId}')" class="w-full mt-1 bg-blue-600 hover:bg-blue-700 text-white py-1.5 rounded-lg font-bold text-[10px] transition">Mark as Paid</button>
+                    `;
+                    container.appendChild(card);
+                });
+
+                if (count === 0) {
+                    container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending withdraw requests.</p>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending withdraw requests found.</p>`;
+            }
+        }
+
+        window.completeWithdraw = async function(wdId) {
+            try {
+                await updateDoc(doc(db, "withdraws", wdId), { status: "paid" });
+                alert("Withdraw marked as paid!");
+                loadWithdraws();
+            } catch (error) {
+                alert("Failed to update.");
+            }
+        }
+
+        // ==================== 6. Load Deposit Requests ====================
+        async function loadDeposits() {
+            const container = document.getElementById('depositsContainer');
+            try {
+                const querySnapshot = await fetchWithTimeout(getDocs(collection(db, "deposits")));
+                
+                container.innerHTML = "";
+                let count = 0;
+                querySnapshot.forEach((documentSnap) => {
+                    const dep = documentSnap.data();
+                    if (dep.status && dep.status.toLowerCase() !== "pending") return;
+                    count++;
+                    const depId = documentSnap.id;
+
+                    const card = document.createElement('div');
+                    card.className = "border border-gray-100 bg-gray-50 p-3 rounded-xl flex flex-col gap-1.5";
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-gray-800 uppercase">${dep.method || 'Deposit'}</span>
+                            <span class="font-black text-emerald-600 text-xs">৳ ${dep.amount || 0}</span>
+                        </div>
+                        <p class="text-[10px] text-gray-600">TrxID: <b class="text-gray-800">${dep.trxId || 'N/A'}</b></p>
+                        <div class="flex gap-2 mt-1">
+                            <button onclick="approveDeposit('${depId}', '${dep.userId}', ${dep.amount || 0})" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-1.5 rounded-lg font-bold text-[10px] transition">Approve</button>
+                            <button onclick="rejectDeposit('${depId}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-1.5 rounded-lg font-bold text-[10px] transition">Reject</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                if (count === 0) {
+                    container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending deposit requests.</p>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<p class="text-gray-400 text-center py-2">No pending deposit requests found.</p>`;
+            }
+        }
+
+        window.approveDeposit = async function(depId, userId, amount) {
+            try {
+                await updateDoc(doc(db, "deposits", depId), { status: "approved" });
+                await updateDoc(doc(db, "users", userId), {
+                    mainBalance: increment(amount),
+                    "balances.main": increment(amount),
+                    "balances.deposit": increment(amount),
+                    depositBalance: increment(amount)
+                });
+                alert("Deposit approved & balance updated uniformly!");
+                loadDeposits();
+            } catch (error) {
+                alert("Failed to approve deposit.");
+            }
+        }
+
+        window.rejectDeposit = async function(depId) {
+            try {
+                await updateDoc(doc(db, "deposits", depId), { status: "rejected" });
+                alert("Deposit rejected.");
+                loadDeposits();
+            } catch (error) {
+                alert("Failed to reject deposit.");
+            }
+        }
+
+        // ==================== 7. Load Active Tasks List (Edit & Delete) ====================
         async function loadActiveTasks() {
             const container = document.getElementById('tasksListContainer');
             try {
-                const q = query(collection(db, "tasks"), where("status", "==", "active"));
-                const querySnapshot = await getDocs(q);
+                const querySnapshot = await fetchWithTimeout(getDocs(collection(db, "tasks")));
                 
                 if (querySnapshot.empty) {
                     container.innerHTML = `<p class="text-gray-400 text-center py-2">No active tasks found.</p>`;
@@ -239,19 +536,34 @@
                 }
 
                 container.innerHTML = "";
-                querySnapshot.forEach((docSnap) => {
-                    const task = docSnap.data();
-                    const taskId = docSnap.id;
+                querySnapshot.forEach((documentSnap) => {
+                    const task = documentSnap.data();
+                    if (task.status && task.status === "pending") return; // Skip pending user jobs in active list
+
+                    const taskId = documentSnap.id;
+
+                    const safeTaskData = JSON.stringify({
+                        id: taskId,
+                        category: task.category || 'daily-jobs',
+                        title: task.title || '',
+                        reward: task.reward || 0,
+                        workers: task.workers || 0,
+                        link: task.link || '',
+                        instructions: task.instructions || ''
+                    }).replace(/"/g, '&quot;');
 
                     const card = document.createElement('div');
                     card.className = "border border-gray-100 bg-gray-50 p-2.5 rounded-xl flex items-center justify-between gap-2";
                     card.innerHTML = `
                         <div class="overflow-hidden">
-                            <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold uppercase">${task.category || 'Job'}</span>
+                            <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-semibold uppercase">${task.category || 'daily-jobs'}</span>
                             <h4 class="font-bold text-gray-800 truncate text-[11px] mt-0.5">${task.title}</h4>
                             <p class="text-[10px] text-gray-500">Reward: ৳ ${task.reward} | Workers: ${task.workers}</p>
                         </div>
-                        <button onclick="deleteTask('${taskId}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1.5 rounded-lg font-bold text-[10px] transition">Delete</button>
+                        <div class="flex gap-1.5">
+                            <button onclick="editTask(${safeTaskData})" class="bg-amber-500 hover:bg-amber-600 text-white px-2 py-1.5 rounded-lg font-bold text-[10px] transition">Edit</button>
+                            <button onclick="deleteTask('${taskId}')" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1.5 rounded-lg font-bold text-[10px] transition">Delete</button>
+                        </div>
                     `;
                     container.appendChild(card);
                 });
@@ -260,15 +572,35 @@
             }
         }
 
+        window.editTask = function(task) {
+            document.getElementById('editTaskId').value = task.id;
+            document.getElementById('taskCategory').value = task.category;
+            document.getElementById('taskTitle').value = task.title;
+            document.getElementById('taskReward').value = task.reward;
+            document.getElementById('taskWorkers').value = task.workers;
+            document.getElementById('taskLink').value = task.link;
+            document.getElementById('taskInstructions').value = task.instructions || '';
+            document.getElementById('taskSubmitBtn').innerText = "Update Task";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         window.deleteTask = async function(taskId) {
-            if (confirm("Delete this active task?")) {
-                await deleteDoc(doc(db, "tasks", taskId));
-                loadActiveTasks();
+            if (confirm("Are you sure you want to delete this task?")) {
+                try {
+                    await deleteDoc(doc(db, "tasks", taskId));
+                    alert("Task deleted successfully!");
+                    loadActiveTasks();
+                } catch (error) {
+                    alert("Failed to delete task.");
+                }
             }
         }
 
-        // ইনিশিয়ালাইজেশন
+        // Initialize All Loaders
         loadPendingJobs();
+        loadSubmissions();
+        loadWithdraws();
+        loadDeposits();
         loadActiveTasks();
     </script>
 </body>
